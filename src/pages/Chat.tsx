@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import ReactMarkdown from "react-markdown";
 import { Send, Mic, MicOff, LogOut, Settings, Search, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -43,6 +42,8 @@ type PromptPreset = {
   description: string;
   systemPrompt: string;
 };
+
+type MemorySearchResult = ChatMessage & { category?: string };
 
 const AI_PROVIDER_OPTIONS: { id: AiProvider; label: string }[] = [
   { id: "lovable", label: "Lovable" },
@@ -103,8 +104,9 @@ export default function Chat({
   const [shape, setShape] = useState<ParticleShape>("sphere");
   const [recording, setRecording] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState<ChatMessage[]>([]);
+  const [searchResults, setSearchResults] = useState<MemorySearchResult[]>([]);
   const [searching, setSearching] = useState(false);
+  const [memoryEnabled, setMemoryEnabled] = useState(true);
   const recognitionRef = useRef<ReturnType<typeof createRecognition> | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const lang = getVoiceConfig(voiceId).lang;
@@ -204,6 +206,33 @@ export default function Chat({
     }
   };
 
+  const searchMemoryEntries = async (query: string): Promise<MemorySearchResult[]> => {
+    const trimmed = query.trim();
+    if (!trimmed) return [];
+
+    const response = await fetch(
+      `${API_BASE}/api/v1/search?user_id=${encodeURIComponent(userId)}&q=${encodeURIComponent(trimmed)}`,
+      {
+        headers: AUTH_HEADERS,
+      },
+    );
+
+    if (!response.ok) {
+      throw new Error(`Search request failed: ${response.status}`);
+    }
+
+    const result = (await response.json()) as {
+      results?: Array<{ id: string; role: "user" | "assistant" | "system"; content: string; category: string }>;
+    };
+
+    return (result.results ?? []).map((item) => ({
+      id: item.id,
+      role: item.role,
+      content: item.content,
+      category: item.category,
+    }));
+  };
+
   const searchMessages = async (query = searchQuery) => {
     const trimmed = query.trim();
     if (!trimmed) {
@@ -213,25 +242,8 @@ export default function Chat({
 
     setSearching(true);
     try {
-      const response = await fetch(
-        `${API_BASE}/api/v1/search?user_id=${encodeURIComponent(userId)}&q=${encodeURIComponent(trimmed)}`,
-        {
-          headers: AUTH_HEADERS,
-        },
-      );
-
-      if (response.ok) {
-        const result = (await response.json()) as { results?: Array<{ id: string; role: "user" | "assistant" | "system"; content: string }> };
-        setSearchResults(
-          (result.results ?? []).map((item) => ({
-            id: item.id,
-            role: item.role,
-            content: item.content,
-          })),
-        );
-      } else {
-        throw new Error(`Search request failed: ${response.status}`);
-      }
+      const results = await searchMemoryEntries(trimmed);
+      setSearchResults(results);
     } catch (error) {
       console.error("Search error", error);
       toast.error("Erro ao buscar na conversa. Usando fallback local.");
@@ -308,11 +320,28 @@ export default function Chat({
     setState("thinking");
 
     try {
-      const selectedPreset = PROMPT_PRESETS.find((preset) => preset.id === presetId);
+        const selectedPreset = PROMPT_PRESETS.find((preset) => preset.id === presetId);
       const systemMessage = selectedPreset
         ? { role: "system" as const, content: selectedPreset.systemPrompt }
         : null;
-      const messagesForApi = systemMessage ? [systemMessage, ...next] : next;
+
+      const memoryEntries = memoryEnabled ? await searchMemoryEntries(trimmed) : [];
+      const memoryMessage = memoryEntries.length
+        ? {
+            role: "system" as const,
+            content:
+              "Use as memórias relevantes abaixo para responder de forma mais contextualizada:\n" +
+              memoryEntries
+                .slice(0, 3)
+                .map((item, index) =>
+                  `${index + 1}. [${item.role}] ${item.category ?? "chat"}: ${item.content}`,
+                )
+                .join("\n"),
+          }
+        : null;
+
+      const messagesForApi = [systemMessage, memoryMessage].filter(Boolean) as ChatMessage[];
+      const payloadMessages = messagesForApi.length > 0 ? [...messagesForApi, ...next] : next;
 
       const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
       const resp = await fetch(url, {
@@ -324,7 +353,7 @@ export default function Chat({
         body: JSON.stringify({
           aiName,
           provider,
-          messages: messagesForApi.map(({ role, content }) => ({ role, content })),
+          messages: payloadMessages.map(({ role, content }) => ({ role, content })),
         }),
       });
 
@@ -588,7 +617,18 @@ export default function Chat({
               </Select>
             </div>
           </div>
-          <div className="text-xs text-muted-foreground">Preset ativo: {PROMPT_PRESETS.find((preset) => preset.id === presetId)?.label}</div>
+          <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <div className="text-xs text-muted-foreground">Preset ativo: {PROMPT_PRESETS.find((preset) => preset.id === presetId)?.label}</div>
+            <Button
+              type="button"
+              variant={memoryEnabled ? "secondary" : "outline"}
+              size="sm"
+              className="h-10"
+              onClick={() => setMemoryEnabled((prev) => !prev)}
+            >
+              Memória {memoryEnabled ? "ativa" : "inativa"}
+            </Button>
+          </div>
         </div>
       </section>
 
