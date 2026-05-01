@@ -32,3 +32,8 @@ __pycache__/
 .env
 .env.*
 *.env
+
+# Android / Capacitor
+android/.gradle
+android/app/build
+android/app/src/main/assets/capacitor.config.json

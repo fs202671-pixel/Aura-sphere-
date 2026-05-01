@@ -25,6 +25,24 @@ const AI_PROVIDER_OPTIONS: { id: AiProvider; label: string }[] = [
   { id: "openai", label: "OpenAI" },
 ];
 
+const getDefaultApiBase = () => {
+  if (typeof window === "undefined") return "http://localhost:8000";
+
+  const ua = navigator.userAgent || "";
+  const isAndroidWebView = /Android/i.test(ua) && /\bwv\b|WebView/i.test(ua);
+
+  if (isAndroidWebView) {
+    return "http://10.0.2.2:8000";
+  }
+
+  return "http://localhost:8000";
+};
+
+const API_BASE = import.meta.env.VITE_API_URL || getDefaultApiBase();
+const AUTH_HEADERS = import.meta.env.VITE_API_KEY
+  ? { Authorization: `Bearer ${import.meta.env.VITE_API_KEY}` }
+  : {};
+
 export default function Chat({
   userId,
   aiName,

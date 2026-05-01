@@ -1,0 +1,16 @@
+{
+  "name": "Aura Sphere",
+  "short_name": "AuraSphere",
+  "description": "IA conversacional com voz para Android e web.",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#0a0d1a",
+  "theme_color": "#0a0d1a",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48 72x72 96x96 128x128 256x256 512x512",
+      "type": "image/x-icon"
+    }
+  ]
+}

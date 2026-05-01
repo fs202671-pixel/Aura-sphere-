@@ -1,7 +1,8 @@
 {
-  "name": "vite_react_shadcn_ts",
+  "name": "aura-sphere",
   "private": true,
   "version": "0.0.0",
+  "description": "Aura Sphere web app and Android wrapper built with Vite, React and Capacitor.",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -10,9 +11,17 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "cap:copy": "npx cap copy",
+    "cap:sync": "npm run build && npx cap sync",
+    "android:open": "npx cap open android",
+    "android:sync": "npm run build && npx cap sync android",
+    "android:build": "npm run android:sync && npx cap open android"
   },
   "dependencies": {
+    "@capacitor/android": "^8.3.1",
+    "@capacitor/cli": "^8.3.1",
+    "@capacitor/core": "^8.3.1",
     "@hookform/resolvers": "^3.10.0",
     "@lovable.dev/cloud-auth-js": "^1.1.2",
     "@radix-ui/react-accordion": "^1.2.11",
