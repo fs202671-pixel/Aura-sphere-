@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -52,7 +53,7 @@ export default function AIOnShell({
   const [projectName, setProjectName] = useState("");
   const [projectList, setProjectList] = useState<Project[]>(DEFAULT_PROJECTS);
   const [memoryQuery, setMemoryQuery] = useState("");
-  const [memoryResults, setMemoryResults] = useState<ChatMessage[]>([]);
+  const [memoryResults, setMemoryResults] = useState<(ChatMessage & { category?: string })[]>([]);
   const [imagePrompt, setImagePrompt] = useState("");
   const [imagePreview, setImagePreview] = useState<string>("");
   const [voiceText, setVoiceText] = useState("Olá, estou testando a voz da assistente.");
@@ -114,6 +115,7 @@ export default function AIOnShell({
     }
 
     try {
+      setIsSearchingMemory(true);
       const response = await fetch(
         `${apiBase}/api/v1/search?user_id=${encodeURIComponent(userId)}&q=${encodeURIComponent(trimmed)}`,
         { headers: authHeaders },
@@ -121,17 +123,28 @@ export default function AIOnShell({
       if (!response.ok) {
         throw new Error(`Search failed ${response.status}`);
       }
-      const data = (await response.json()) as { results?: Array<{ id: string; role: "user" | "assistant" | "system"; content: string }> };
+      const data = (await response.json()) as { results?: Array<{ id: string; role: "user" | "assistant" | "system"; content: string; category?: string }> };
       setMemoryResults(
         (data.results ?? []).map((item) => ({
           id: item.id,
           role: item.role,
           content: item.content,
+          category: item.category,
         })),
       );
     } catch (error) {
       console.error("Memory search failed", error);
       setMemoryResults([]);
+    } finally {
+      setIsSearchingMemory(false);
+    }
+  };
+
+  const copyMemoryResult = async (content: string) => {
+    try {
+      await navigator.clipboard.writeText(content);
+    } catch (error) {
+      console.error("Copy failed", error);
     }
   };
 
@@ -290,8 +303,22 @@ export default function AIOnShell({
             <div className="grid gap-3">
               {memoryResults.map((result) => (
                 <div key={result.id} className="rounded-3xl border border-border/70 bg-background p-4">
-                  <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">{result.role === "assistant" ? "IA" : "Você"}</p>
-                  <p className="mt-2 whitespace-pre-wrap text-sm">{result.content}</p>
+                  <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                      <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                        {result.role === "assistant" ? "IA" : result.role === "user" ? "Você" : "Sistema"}
+                      </p>
+                      {result.category ? (
+                        <span className="mt-1 inline-flex rounded-full bg-secondary px-2 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-secondary-foreground">
+                          {result.category}
+                        </span>
+                      ) : null}
+                    </div>
+                    <Button variant="secondary" size="sm" onClick={() => copyMemoryResult(result.content)}>
+                      <Copy className="mr-2 h-3.5 w-3.5" /> Copiar
+                    </Button>
+                  </div>
+                  <p className="whitespace-pre-wrap text-sm">{result.content}</p>
                 </div>
               ))}
               {memoryResults.length === 0 && memoryQuery.trim() && (
