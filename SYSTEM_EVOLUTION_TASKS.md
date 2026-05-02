@@ -100,10 +100,10 @@ Ele complementa o `NEXT_STEPS.md` com foco em arquitetura segura, sandbox, evolu
 
 ## 8. Sistema de obediência ao usuário
 
-- [ ] Implementar regra global no runtime:
-  - comandos do usuário têm prioridade máxima
-  - qualquer decisão da IA pode ser sobrescrita pelo usuário
-- [ ] Garantir que essa regra esteja fora da camada mutável da IA
+- [x] Implementar regra global no runtime:
+  - comandos do usuário têm prioridade máxima ✅ IMPLEMENTADO (`user_obedience.py`)
+  - qualquer decisão da IA pode ser sobrescrita pelo usuário ✅ IMPLEMENTADO
+- [x] Garantir que essa regra esteja fora da camada mutável da IA ✅ IMPLEMENTADO
 
 ## 9. Sistema de logs e auditoria
 
@@ -133,9 +133,9 @@ Ele complementa o `NEXT_STEPS.md` com foco em arquitetura segura, sandbox, evolu
 
 ## 12. Estrutura de controle geral
 
-- [ ] Garantir fluxo obrigatório:
-  - IA gera mudança → sandbox testa → runtime valida → deploy opcional
-- [ ] Proibir qualquer atalho que permita auto-modificação direta em produção
+- [x] Garantir fluxo obrigatório:
+  - IA gera mudança → sandbox testa → runtime valida → deploy opcional ✅ IMPLEMENTADO (`deploy_pipeline.py`)
+- [x] Proibir qualquer atalho que permita auto-modificação direta em produção ✅ IMPLEMENTADO
 
 ## 13. Sistema de memória estruturada
 
@@ -258,18 +258,18 @@ Ele complementa o `NEXT_STEPS.md` com foco em arquitetura segura, sandbox, evolu
 
 ## 26. Limitação de capacidade destrutiva
 
-- [ ] Implementar restrições explícitas:
-  - sem acesso direto ao sistema operacional crítico
-  - sem execução de comandos irreversíveis
-  - sem exclusão em massa de dados sem confirmação externa
+- [x] Implementar restrições explícitas:
+  - sem acesso direto ao sistema operacional crítico ✅ IMPLEMENTADO (`destructive_limiter.py`)
+  - sem execução de comandos irreversíveis ✅ IMPLEMENTADO
+  - sem exclusão em massa de dados sem confirmação externa ✅ IMPLEMENTADO
 
 ## 27. Sistema de aprendizado controlado
 
-- [ ] IA pode aprender com:
-  - logs de uso
-  - feedback do usuário
-  - resultados de testes
-- [ ] Proibir aprendizado direto a partir de ações não validadas em produção
+- [x] IA pode aprender com:
+  - logs de uso ✅ IMPLEMENTADO (`controlled_learning.py`)
+  - feedback do usuário ✅ IMPLEMENTADO
+  - resultados de testes ✅ IMPLEMENTADO
+- [x] Proibir aprendizado direto a partir de ações não validadas em produção ✅ IMPLEMENTADO
 
 ## 28. Modo de evolução offline avançado
 
@@ -281,16 +281,17 @@ Ele complementa o `NEXT_STEPS.md` com foco em arquitetura segura, sandbox, evolu
 
 ## 29. Testes de robustez contínuos
 
-- [ ] Criar testes automáticos contra:
-  - inputs maliciosos
-  - falhas de lógica
-  - sobrecarga de requisições
-  - comportamento inesperado
+- [x] Criar testes automáticos contra:
+  - inputs maliciosos ✅ IMPLEMENTADO (`robustness_testing.py`)
+  - falhas de lógica ✅ IMPLEMENTADO
+  - sobrecarga de requisições ✅ IMPLEMENTADO
+  - comportamento inesperado ✅ IMPLEMENTADO
 
 ## 30. Estrutura final de governança
 
-- [ ] Definir hierarquia final do sistema:
-  - usuário → core imutável → supervisor externo → IA → sandbox → produção
+- [x] Definir hierarquia final do sistema:
+  - usuário → core imutável → supervisor externo → IA → sandbox → produção ✅ IMPLEMENTADO (`governance.py`)
+- [x] Integrar todos os componentes de segurança, auditoria e controle ✅ IMPLEMENTADO
 
 ## 221. Sistema de geração de imagens integrado
 
