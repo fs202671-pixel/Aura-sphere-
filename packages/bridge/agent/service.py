@@ -22,6 +22,12 @@ from .patch_validator import PatchValidator
 from .backup_manager import BackupManager
 from .anomaly_detector import AnomalyDetector
 from .user_intent import UserIntentInterpreter
+from .user_obedience import UserObedienceManager
+from .deploy_pipeline import ControlledDeployPipeline
+from .controlled_learning import ControlledLearner
+from .robustness_testing import RobustnessTestFramework
+from .destructive_limiter import DestructiveCapabilityLimiter
+from .governance import GovernanceFramework
 from runtime.sandbox import execute_code_safely
 from core.permissions import PermissionLevel
 
@@ -221,6 +227,12 @@ class AgentService:
         self.backup_manager = BackupManager(BACKUP_DIR)
         self.anomaly_detector = AnomalyDetector(DATA_DIR / "anomalies.json")
         self.intent_interpreter = UserIntentInterpreter()
+        self.user_obedience = UserObedienceManager(DATA_DIR)
+        self.deploy_pipeline = ControlledDeployPipeline(DATA_DIR, self.patch_validator, self.backup_manager)
+        self.controlled_learner = ControlledLearner(DATA_DIR)
+        self.robustness_tester = RobustnessTestFramework(DATA_DIR)
+        self.destructive_limiter = DestructiveCapabilityLimiter(DATA_DIR)
+        self.governance = GovernanceFramework(DATA_DIR)
         self._load_modification_proposals()
         self.log_session_start()
 
@@ -673,6 +685,163 @@ class AgentService:
         if should_activate and not self.supervisor.safe_mode:
             self.supervisor.activate_safe_mode("critical_anomalies_detected")
         return should_activate
+
+    # === NOVOS MÉTODOS DE GOVERNANÇA ===
+
+    def execute_user_command(self, user_id: str, command: str,
+                           parameters: Optional[Dict[str, Any]] = None,
+                           force: bool = False) -> Dict[str, Any]:
+        """Executa comando do usuário com prioridade máxima."""
+        result = self.user_obedience.execute_user_command(user_id, command, parameters, force)
+        self.governance.register_audit_event("user_command", "user_obedience", "execute", {
+            "user_id": user_id,
+            "command": command,
+            "parameters": parameters,
+            "force": force,
+            "result": result
+        })
+        return result
+
+    def override_agent_decision(self, user_id: str, agent_id: str,
+                               original_decision: Any,
+                               override_with: Any,
+                               reason: Optional[str] = None) -> Dict[str, Any]:
+        """Permite que usuário sobrescreva decisão da IA."""
+        result = self.user_obedience.override_agent_decision(
+            user_id, agent_id, original_decision, override_with, reason
+        )
+        self.governance.register_audit_event("decision_override", "user_obedience", "override", {
+            "user_id": user_id,
+            "agent_id": agent_id,
+            "original": original_decision,
+            "override": override_with,
+            "reason": reason
+        })
+        return result
+
+    def run_deploy_pipeline(self, patch: Dict[str, Any],
+                          user_approval: bool = False) -> Dict[str, Any]:
+        """Executa pipeline completo de deploy."""
+        result = self.deploy_pipeline.run_full_pipeline(patch, user_approval)
+        self.governance.register_audit_event("deploy_pipeline", "deploy_pipeline", "execute", {
+            "patch_id": patch.get("id"),
+            "stages": result.get("stages", {}),
+            "overall_status": result.get("overall_status")
+        })
+        return result
+
+    def submit_data_for_learning(self, source: str, data: Dict[str, Any],
+                               metadata: Optional[Dict] = None) -> str:
+        """Submete dados para aprendizado controlado."""
+        from .controlled_learning import DataSource
+        data_source = DataSource(source) if hasattr(DataSource, source.upper()) else DataSource.USER_APPROVED
+        data_id = self.controlled_learner.submit_data_for_validation(data_source, data, metadata)
+        self.governance.register_audit_event("data_submission", "controlled_learning", "submit", {
+            "data_id": data_id,
+            "source": source,
+            "data_keys": list(data.keys())
+        })
+        return data_id
+
+    def validate_learning_data(self, data_id: str, user_id: str,
+                             approved: bool, reason: Optional[str] = None) -> Dict[str, Any]:
+        """Valida dados para aprendizado."""
+        result = self.controlled_learner.validate_data(data_id, user_id, approved, reason)
+        self.governance.register_audit_event("data_validation", "controlled_learning", "validate", {
+            "data_id": data_id,
+            "user_id": user_id,
+            "approved": approved,
+            "reason": reason
+        })
+        return result
+
+    def run_robustness_tests(self, test_type: str = "security") -> Dict[str, Any]:
+        """Executa testes de robustez."""
+        from .robustness_testing import TestType
+        test_enum = TestType(test_type.lower()) if hasattr(TestType, test_type.upper()) else TestType.SECURITY
+        
+        if test_enum == TestType.SECURITY:
+            result = self.robustness_tester.run_security_tests(self.patch_validator.validate_string)
+        elif test_enum == TestType.PERFORMANCE:
+            result = self.robustness_tester.run_performance_tests(lambda: self.memory_store.search("test"))
+        elif test_enum == TestType.INTEGRITY:
+            result = self.robustness_tester.run_integrity_tests(lambda k: getattr(self, k, None))
+        elif test_enum == TestType.RECOVERY:
+            result = self.robustness_tester.run_recovery_tests(
+                lambda sid: self.backup_manager.restore_backup(sid),
+                ["test_snapshot"]
+            )
+        else:
+            result = {"error": f"Test type {test_type} not implemented"}
+        
+        self.governance.register_audit_event("robustness_test", "robustness_testing", "run", {
+            "test_type": test_type,
+            "result": result
+        })
+        return result
+
+    def request_destructive_action(self, action_type: str, user_id: str,
+                                 target: Optional[str] = None,
+                                 reason: Optional[str] = None) -> str:
+        """Submete requisição de ação destrutiva."""
+        from .destructive_limiter import DestructiveAction
+        action_enum = DestructiveAction(action_type.lower()) if hasattr(DestructiveAction, action_type.upper()) else DestructiveAction.DELETE_FILES
+        request_id = self.destructive_limiter.request_destructive_action(action_enum, user_id, target, reason)
+        self.governance.register_audit_event("destructive_request", "destructive_limiter", "request", {
+            "request_id": request_id,
+            "action_type": action_type,
+            "user_id": user_id,
+            "target": target
+        })
+        return request_id
+
+    def confirm_destructive_action(self, request_id: str, user_id: str) -> Dict[str, Any]:
+        """Confirma ação destrutiva."""
+        result = self.destructive_limiter.confirm_destructive_action(request_id, user_id)
+        self.governance.register_audit_event("destructive_confirm", "destructive_limiter", "confirm", {
+            "request_id": request_id,
+            "user_id": user_id,
+            "confirmed": result.get("confirmed", False)
+        })
+        return result
+
+    def execute_destructive_action(self, request_id: str, backup_created: bool = False) -> Dict[str, Any]:
+        """Executa ação destrutiva confirmada."""
+        result = self.destructive_limiter.execute_destructive_action(request_id, backup_created)
+        self.governance.register_audit_event("destructive_execute", "destructive_limiter", "execute", {
+            "request_id": request_id,
+            "executed": result.get("executed", False),
+            "message": result.get("message")
+        })
+        return result
+
+    def get_governance_status(self) -> Dict[str, Any]:
+        """Retorna status de governança."""
+        return self.governance.get_governance_status()
+
+    def get_governance_report(self) -> Dict[str, Any]:
+        """Gera relatório completo de governança."""
+        return self.governance.generate_governance_report()
+
+    def get_audit_trail(self, filters: Optional[Dict] = None, limit: int = 100) -> List[Dict]:
+        """Retorna audit trail com filtros."""
+        return self.governance.get_audit_trail(filters, limit)
+
+    def get_learning_report(self) -> Dict[str, Any]:
+        """Retorna relatório de aprendizado controlado."""
+        return self.controlled_learner.export_learning_report()
+
+    def get_robustness_report(self, limit: int = 100) -> Dict[str, Any]:
+        """Retorna relatório de testes de robustez."""
+        return self.robustness_tester.get_test_report(limit=limit)
+
+    def get_destructive_history(self, limit: int = 100) -> List[Dict]:
+        """Retorna histórico de ações destrutivas."""
+        return self.destructive_limiter.get_action_history(limit)
+
+    def get_user_obedience_history(self, user_id: Optional[str] = None, limit: int = 100) -> List[Dict]:
+        """Retorna histórico de comandos do usuário."""
+        return self.user_obedience.get_command_history(user_id, limit)
 
 
 def get_agent_service(user_id: str = "dev-user", agent_id: str = "aura-agent") -> AgentService:

@@ -271,6 +271,244 @@ def get_agent_supervisor(current_user: dict[str, Any] = Depends(get_current_user
     return agent_service.get_supervisor_status()
 
 
+# === NOVOS ENDPOINTS DE GOVERNANÇA ===
+
+@app.post("/api/v1/agent/user_command")
+def execute_user_command(
+    payload: dict,
+    current_user: dict[str, Any] = Depends(get_current_user)
+):
+    """Executa comando do usuário com prioridade máxima."""
+    command = payload.get("command")
+    parameters = payload.get("parameters", {})
+    force = payload.get("force", False)
+    
+    if not command:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="command is required")
+    
+    result = agent_service.execute_user_command(
+        user_id=current_user.get("sub", "dev-user"),
+        command=command,
+        parameters=parameters,
+        force=force
+    )
+    return result
+
+
+@app.post("/api/v1/agent/override_decision")
+def override_agent_decision(
+    payload: dict,
+    current_user: dict[str, Any] = Depends(get_current_user)
+):
+    """Permite que usuário sobrescreva decisão da IA."""
+    agent_id = payload.get("agent_id", "aura-agent")
+    original_decision = payload.get("original_decision")
+    override_with = payload.get("override_with")
+    reason = payload.get("reason")
+    
+    if original_decision is None or override_with is None:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, 
+            detail="original_decision and override_with are required"
+        )
+    
+    result = agent_service.override_agent_decision(
+        user_id=current_user.get("sub", "dev-user"),
+        agent_id=agent_id,
+        original_decision=original_decision,
+        override_with=override_with,
+        reason=reason
+    )
+    return result
+
+
+@app.post("/api/v1/agent/deploy_pipeline")
+def run_deploy_pipeline(
+    payload: dict,
+    current_user: dict[str, Any] = Depends(get_current_user)
+):
+    """Executa pipeline completo de deploy."""
+    patch = payload.get("patch", {})
+    user_approval = payload.get("user_approval", False)
+    
+    if not patch:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="patch is required")
+    
+    result = agent_service.run_deploy_pipeline(patch, user_approval)
+    return result
+
+
+@app.post("/api/v1/agent/learning_data")
+def submit_learning_data(
+    payload: dict,
+    current_user: dict[str, Any] = Depends(get_current_user)
+):
+    """Submete dados para aprendizado controlado."""
+    source = payload.get("source", "user_approved")
+    data = payload.get("data", {})
+    metadata = payload.get("metadata", {})
+    
+    if not data:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="data is required")
+    
+    data_id = agent_service.submit_data_for_learning(source, data, metadata)
+    return {"data_id": data_id}
+
+
+@app.post("/api/v1/agent/learning_data/{data_id}/validate")
+def validate_learning_data(
+    data_id: str,
+    payload: dict,
+    current_user: dict[str, Any] = Depends(get_current_user)
+):
+    """Valida dados para aprendizado."""
+    approved = payload.get("approved", False)
+    reason = payload.get("reason")
+    
+    result = agent_service.validate_learning_data(
+        data_id=data_id,
+        user_id=current_user.get("sub", "dev-user"),
+        approved=approved,
+        reason=reason
+    )
+    return result
+
+
+@app.get("/api/v1/agent/learning_data/pending")
+def get_pending_learning_data(current_user: dict[str, Any] = Depends(get_current_user)):
+    """Retorna dados aguardando validação."""
+    # Este método precisa ser implementado no ControlledLearner
+    # Por enquanto retorna lista vazia
+    return {"pending_data": []}
+
+
+@app.post("/api/v1/agent/robustness_test")
+def run_robustness_test(
+    payload: dict,
+    current_user: dict[str, Any] = Depends(get_current_user)
+):
+    """Executa testes de robustez."""
+    test_type = payload.get("test_type", "security")
+    
+    result = agent_service.run_robustness_tests(test_type)
+    return result
+
+
+@app.post("/api/v1/agent/destructive_action")
+def request_destructive_action(
+    payload: dict,
+    current_user: dict[str, Any] = Depends(get_current_user)
+):
+    """Submete requisição de ação destrutiva."""
+    action_type = payload.get("action_type")
+    target = payload.get("target")
+    reason = payload.get("reason")
+    
+    if not action_type:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="action_type is required")
+    
+    request_id = agent_service.request_destructive_action(
+        action_type=action_type,
+        user_id=current_user.get("sub", "dev-user"),
+        target=target,
+        reason=reason
+    )
+    return {"request_id": request_id}
+
+
+@app.post("/api/v1/agent/destructive_action/{request_id}/confirm")
+def confirm_destructive_action(
+    request_id: str,
+    payload: dict,
+    current_user: dict[str, Any] = Depends(get_current_user)
+):
+    """Confirma ação destrutiva."""
+    result = agent_service.confirm_destructive_action(
+        request_id=request_id,
+        user_id=current_user.get("sub", "dev-user")
+    )
+    return result
+
+
+@app.post("/api/v1/agent/destructive_action/{request_id}/execute")
+def execute_destructive_action(
+    request_id: str,
+    payload: dict,
+    current_user: dict[str, Any] = Depends(get_current_user)
+):
+    """Executa ação destrutiva confirmada."""
+    backup_created = payload.get("backup_created", False)
+    
+    result = agent_service.execute_destructive_action(request_id, backup_created)
+    return result
+
+
+@app.get("/api/v1/agent/governance/status")
+def get_governance_status(current_user: dict[str, Any] = Depends(get_current_user)):
+    """Retorna status de governança."""
+    return agent_service.get_governance_status()
+
+
+@app.get("/api/v1/agent/governance/report")
+def get_governance_report(current_user: dict[str, Any] = Depends(get_current_user)):
+    """Gera relatório completo de governança."""
+    return agent_service.get_governance_report()
+
+
+@app.get("/api/v1/agent/audit_trail")
+def get_audit_trail(
+    event_type: str | None = None,
+    user_id: str | None = None,
+    entity: str | None = None,
+    limit: int = 100,
+    current_user: dict[str, Any] = Depends(get_current_user)
+):
+    """Retorna audit trail com filtros."""
+    filters = {}
+    if event_type:
+        filters["event_type"] = event_type
+    if user_id:
+        filters["user_id"] = user_id
+    if entity:
+        filters["entity"] = entity
+    
+    return {"audit_trail": agent_service.get_audit_trail(filters, limit)}
+
+
+@app.get("/api/v1/agent/learning/report")
+def get_learning_report(current_user: dict[str, Any] = Depends(get_current_user)):
+    """Retorna relatório de aprendizado controlado."""
+    return agent_service.get_learning_report()
+
+
+@app.get("/api/v1/agent/robustness/report")
+def get_robustness_report(
+    limit: int = 100,
+    current_user: dict[str, Any] = Depends(get_current_user)
+):
+    """Retorna relatório de testes de robustez."""
+    return agent_service.get_robustness_report(limit)
+
+
+@app.get("/api/v1/agent/destructive/history")
+def get_destructive_history(
+    limit: int = 100,
+    current_user: dict[str, Any] = Depends(get_current_user)
+):
+    """Retorna histórico de ações destrutivas."""
+    return {"history": agent_service.get_destructive_history(limit)}
+
+
+@app.get("/api/v1/agent/user_obedience/history")
+def get_user_obedience_history(
+    user_id: str | None = None,
+    limit: int = 100,
+    current_user: dict[str, Any] = Depends(get_current_user)
+):
+    """Retorna histórico de comandos do usuário."""
+    return {"history": agent_service.get_user_obedience_history(user_id, limit)}
+
+
 @app.post("/api/v1/conversations", response_model=ConversationResponse)
 def create_conversation(
     payload: ConversationCreate,
