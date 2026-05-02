@@ -78,6 +78,43 @@ class EvolutionManager:
         errors = float(metrics.get("errors", 0))
         return base_score + stability * 0.5 + security * 0.7 - errors * 1.0
 
+    def score_version_detailed(self, version: AgentVersion) -> Dict[str, Any]:
+        """Calcula score detalhado com breakdown."""
+        metrics = version.metrics
+        base_score = float(metrics.get("quality_score", 0))
+        stability = float(metrics.get("stability", 0))
+        security = float(metrics.get("security", 0))
+        errors = float(metrics.get("errors", 0))
+
+        components = {
+            "base_score": (base_score, 1.0),
+            "stability": (stability, 0.5),
+            "security": (security, 0.7),
+            "errors": (-errors, 1.0)
+        }
+
+        total = sum(value * weight for value, weight in components.values())
+
+        return {
+            "total_score": total,
+            "components": {
+                "base_score": base_score,
+                "stability_weighted": stability * 0.5,
+                "security_weighted": security * 0.7,
+                "errors_penalty": -errors * 1.0
+            },
+            "metrics": metrics
+        }
+
+    def meets_quality_threshold(self, version: AgentVersion, threshold: float = 5.0) -> bool:
+        """Verifica se version atende threshold de qualidade."""
+        score = self.score_version(version)
+        return score >= threshold
+
+    def get_versions_above_threshold(self, threshold: float = 5.0) -> List[AgentVersion]:
+        """Retorna versões que atendem threshold."""
+        return [v for v in self.versions if self.meets_quality_threshold(v, threshold)]
+
     def choose_best_version(self) -> Optional[AgentVersion]:
         if not self.versions:
             return None

@@ -18,6 +18,10 @@ from .tools import ToolRegistry, ToolExecutionResult
 from .memory import MemoryStore
 from .evolution import EvolutionManager, AgentVersion
 from .supervisor import AgentSupervisor
+from .patch_validator import PatchValidator
+from .backup_manager import BackupManager
+from .anomaly_detector import AnomalyDetector
+from .user_intent import UserIntentInterpreter
 from runtime.sandbox import execute_code_safely
 from core.permissions import PermissionLevel
 
@@ -213,6 +217,10 @@ class AgentService:
         self.memory_store = MemoryStore()
         self.evolution_manager = EvolutionManager()
         self.supervisor = AgentSupervisor()
+        self.patch_validator = PatchValidator()
+        self.backup_manager = BackupManager(BACKUP_DIR)
+        self.anomaly_detector = AnomalyDetector(DATA_DIR / "anomalies.json")
+        self.intent_interpreter = UserIntentInterpreter()
         self._load_modification_proposals()
         self.log_session_start()
 
@@ -362,6 +370,27 @@ class AgentService:
         proposal = self.session_state.find_modification_proposal(proposal_id)
         if not proposal or proposal.status != "pending":
             return None
+
+        # Validar patch antes de aprovar
+        if hasattr(proposal, 'file_patches') and proposal.file_patches:
+            is_safe, violations = self.patch_validator.validate_proposal(
+                proposal.target_files,
+                proposal.file_patches
+            )
+            if not is_safe:
+                audit_logger.log_event(
+                    event_type=LogEvent.SECURITY_VIOLATION,
+                    agent_id=self.session_state.agent_id,
+                    user_id=approved_by,
+                    action="modification_validation_failed",
+                    details={
+                        "proposal_id": proposal.id,
+                        "violations": violations
+                    },
+                    level=LogLevel.CRITICAL
+                )
+                return None
+
         proposal.approve(approved_by=approved_by, comment=approval_comment)
         self._persist_modification_proposals()
         self.add_session_task(
@@ -597,6 +626,53 @@ class AgentService:
 
     def get_supervisor_status(self) -> Dict[str, Any]:
         return self.supervisor.status()
+
+    def interpret_user_intent(self, user_input: str) -> Dict[str, Any]:
+        """Interpreta intenção do usuário."""
+        intent = self.intent_interpreter.interpret(user_input)
+        is_safe, reason = self.intent_interpreter.validate_intent_safety(intent)
+
+        return {
+            "intent_type": intent.intent_type.value,
+            "confidence": intent.confidence,
+            "action": intent.action,
+            "parameters": intent.parameters,
+            "risk_level": intent.risk_level,
+            "requires_confirmation": intent.requires_confirmation,
+            "ambiguities": intent.ambiguities,
+            "is_safe": is_safe,
+            "safety_reason": reason,
+            "user_has_priority": self.intent_interpreter.evaluate_user_override(intent)
+        }
+
+    def get_anomaly_summary(self) -> Dict[str, Any]:
+        """Retorna resumo de anomalias."""
+        return self.anomaly_detector.get_anomaly_summary(hours=24)
+
+    def get_active_anomalies(self) -> List[Dict[str, Any]]:
+        """Retorna anomalias ativas."""
+        anomalies = self.anomaly_detector.get_active_anomalies()
+        return [
+            {
+                "event_id": a.event_id,
+                "anomaly_type": a.anomaly_type,
+                "severity": a.severity,
+                "timestamp": a.timestamp,
+                "details": a.details
+            }
+            for a in anomalies
+        ]
+
+    def resolve_anomaly(self, anomaly_id: str, resolution: Dict[str, Any]) -> bool:
+        """Marca uma anomalia como resolvida."""
+        return self.anomaly_detector.resolve_anomaly(anomaly_id, resolution)
+
+    def check_if_safe_mode_should_activate(self) -> bool:
+        """Verifica se anomalias críticas justificam safe mode."""
+        should_activate = self.anomaly_detector.trigger_safe_mode_if_critical()
+        if should_activate and not self.supervisor.safe_mode:
+            self.supervisor.activate_safe_mode("critical_anomalies_detected")
+        return should_activate
 
 
 def get_agent_service(user_id: str = "dev-user", agent_id: str = "aura-agent") -> AgentService:
