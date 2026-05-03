@@ -37,3 +37,6 @@ __pycache__/
 android/.gradle
 android/app/build
 android/app/src/main/assets/capacitor.config.json
+external_repos/
+packages/bridge/edited_images/
+packages/bridge/generated_images/

@@ -1,3 +1,6 @@
+# Integrações com repositórios externos
+from .openjarvis_adapter import OpenJarvisAdapter
+from .mempalace_adapter import MemPalaceAdapter
 """
 Serviço de Agente - controle de sessão, tarefas e integração com auditoria.
 
