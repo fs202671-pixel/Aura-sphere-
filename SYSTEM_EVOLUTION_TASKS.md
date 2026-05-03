@@ -560,3 +560,250 @@ n
 - [ ] Testar thoroughly com casos edge
 - [ ] Implementar cleanup automático de sandboxes
 - [ ] Adicionar métricas de performance
+
+## 31. Arquitetura híbrida de inteligência coletiva
+
+- [ ] Expandir arquitetura existente para incluir:
+  - `colony/ants/` → agentes exploradores
+  - `hive/bees/` → agentes executores
+  - `wolves/defense/` → agentes de defesa ativa
+  - `orchestrator/` → coordenação central
+- [ ] Manter:
+  - `core/`
+  - `runtime/`
+  - `agent/`
+  - `sandbox/`
+- [ ] Separar responsabilidades:
+  - formigas → descoberta, análise, busca
+  - abelhas → organização, execução, decisão
+  - lobos → detecção, contenção, resposta a incidentes
+
+## 32. Sistema de colônia (formigas)
+
+- [ ] Implementar agentes leves e paralelos com funções:
+  - exploração de repositórios
+  - busca de dados externos
+  - análise de código
+  - testes de soluções
+- [ ] Características:
+  - execução massiva paralela
+  - baixo custo individual
+  - comunicação indireta via memória
+- [ ] Criar sistema de trilhas:
+  - registrar caminhos eficientes
+  - reforçar soluções bem-sucedidas
+  - descartar caminhos ruins
+
+## 33. Sistema de colmeia (abelhas)
+
+- [ ] Implementar agentes organizadores:
+  - Tipos:
+    - bees.scout → recebem dados das formigas
+    - bees.worker → executam tarefas
+    - bees.coordinator → distribuem tarefas
+    - bees.guard → validam segurança
+- [ ] Funções:
+  - organizar tarefas vindas das formigas
+  - priorizar execução
+  - garantir eficiência
+
+## 34. Sistema de defesa ativa (lobos)
+
+- [ ] Implementar agentes defensivos:
+  - wolves.scout → monitora sinais e logs
+  - wolves.sentinel → valida alertas e classifica risco
+  - wolves.responder → executa contenção controlada
+  - wolves.forensic → coleta evidências e logs
+  - wolves.recovery → executa recuperação e rollback
+- [ ] Funções:
+  - detecção de anomalias
+  - contenção de incidentes
+  - isolamento de componentes suspeitos
+  - coordenação de resposta
+
+## 35. Orquestrador central
+
+- [ ] Criar módulo:
+  - recebe comandos do usuário
+  - divide tarefas
+  - envia para formigas (explorar)
+  - envia para abelhas (executar)
+  - aciona lobos em caso de risco
+  - consolida resultados
+- [ ] Regras:
+  - não executa diretamente
+  - apenas coordena
+
+## 36. Integração com sistema existente
+
+- [ ] Adaptar pipeline:
+  - IA gera objetivo
+  - formigas exploram soluções
+  - abelhas estruturam execução
+  - lobos validam risco
+  - sandbox testa
+  - runtime valida
+  - core aprova
+
+## 37. Sistema de comunicação entre agentes
+
+- [ ] Implementar:
+  - fila de mensagens interna
+  - memória compartilhada estruturada
+  - comunicação indireta (formigas)
+  - comunicação direta (abelhas e lobos)
+- [ ] Garantir:
+  - isolamento entre agentes
+  - logs completos de comunicação
+
+## 38. Sistema de criação de agentes
+
+- [ ] Permitir que IA:
+  - crie novos agentes especializados
+  - combine funções existentes
+  - adapte comportamento
+- [ ] Regras:
+  - criação registrada
+  - validação obrigatória
+  - execução apenas em sandbox
+
+## 39. Memória coletiva expandida
+
+- [ ] Expandir memória para incluir:
+  - trilhas de formigas
+  - decisões das abelhas
+  - eventos de segurança dos lobos
+  - histórico de execuções
+  - aprendizado coletivo
+- [ ] Criar:
+  - indexação por agente
+  - relevância por sucesso
+
+## 40. Sistema de otimização emergente
+
+- [ ] Implementar:
+  - reforço de soluções bem-sucedidas
+  - penalização de falhas
+  - convergência automática para melhores decisões
+
+## 41. Sistema de priorização inteligente
+
+- [ ] Abelhas coordenadoras devem:
+  - classificar tarefas por:
+    - impacto
+    - risco
+    - custo
+  - decidir ordem de execução
+  - redistribuir tarefas dinamicamente
+
+## 42. Sistema de exploração contínua
+
+- [ ] Formigas operam em background:
+  - buscar melhorias
+  - testar alternativas
+  - analisar repositórios
+  - sugerir otimizações
+- [ ] Sem afetar produção diretamente
+
+## 43. Sistema de validação cruzada
+
+- [ ] Implementar:
+  - múltiplas formigas analisam soluções
+  - abelhas validam consenso
+  - lobos avaliam riscos
+- [ ] Bloquear decisões sem consenso mínimo
+
+## 44. Sistema de isolamento por função
+
+- [ ] Separar agentes:
+  - exploração (formigas)
+  - decisão (abelhas)
+  - defesa (lobos)
+  - execução (runtime)
+  - validação (core)
+- [ ] Proibir mistura de responsabilidades
+
+## 45. Sistema de aprendizado coletivo
+
+- [ ] IA deve:
+  - aprender com decisões de agentes
+  - registrar sucesso/erro
+  - ajustar comportamento futuro
+
+## 46. Sistema de adaptação dinâmica
+
+- [ ] Permitir:
+  - aumentar formigas em tarefas complexas
+  - aumentar abelhas em tarefas críticas
+  - ativar lobos em eventos suspeitos
+  - reduzir agentes ociosos
+
+## 47. Segurança na inteligência coletiva
+
+- [ ] Garantir:
+  - agentes não acessam core diretamente
+  - agentes não alteram permissões
+  - toda ação passa por runtime e core
+
+## 48. Simulação de decisões
+
+- [ ] Antes de executar:
+  - formigas simulam caminhos
+  - abelhas avaliam impacto
+  - lobos avaliam risco
+- [ ] Sistema escolhe melhor opção
+
+## 49. Sistema de carga distribuída
+
+- [ ] Implementar:
+  - distribuição automática de tarefas
+  - balanceamento entre agentes
+  - controle de uso de recursos
+
+## 50. Sistema de fallback coletivo
+
+- [ ] Se falha ocorrer:
+  - formigas buscam alternativas
+  - abelhas reorganizam execução
+  - lobos avaliam risco da nova abordagem
+- [ ] Sistema tenta novas soluções
+
+## 51. Camada de resposta a incidentes (lobos)
+
+- [ ] Criar módulo wolves/defense/
+- [ ] Funções:
+  - detecção de anomalias em tempo real
+  - contenção de incidentes
+  - isolamento de componentes suspeitos
+  - coordenação de resposta
+- [ ] Regras:
+  - nenhuma ação irreversível sem confirmação
+  - tudo auditado
+
+## 52. Pipeline de resposta a incidente
+
+- [ ] Detecção
+- [ ] Validação
+- [ ] Classificação de risco
+- [ ] Plano de contenção
+- [ ] Confirmação do usuário
+- [ ] Execução controlada
+- [ ] Forense
+- [ ] Recuperação
+- [ ] Aprendizado
+
+## 53. Políticas de contenção
+
+- [ ] Limitar taxa de requisições
+- [ ] Revogar credenciais comprometidas
+- [ ] Pausar serviços
+- [ ] Isolar containers
+- [ ] Bloquear endpoints
+- [ ] Tudo reversível e auditado
+
+## 54. Classificação de severidade
+
+- [ ] Baixo → monitorar
+- [ ] Médio → alertar
+- [ ] Alto → sugerir contenção
+- [ ] Crítico → conter e notificar usuário
