@@ -28,6 +28,25 @@ from .controlled_learning import ControlledLearner
 from .robustness_testing import RobustnessTestFramework
 from .destructive_limiter import DestructiveCapabilityLimiter
 from .governance import GovernanceFramework
+from .zero_recovery_system import ZeroRecoverySystem
+from .observability_dashboard import ObservabilityDashboard
+from .advanced_offline_evolution import AdvancedOfflineEvolution
+from .parallel_test_environment import ParallelTestEnvironmentManager
+from .identity_consistency_system import IdentityConsistencySystem
+from .dangerous_modification_protection import DangerousModificationProtection
+from .image_generation_system import ImageGenerationSystem
+from .image_editing_system import ImageEditingSystem
+from .video_pipeline import VideoPipeline
+from .media_analysis_system import MediaAnalysisSystem
+from .creative_assistance_system import CreativeAssistanceSystem
+from .prompt_evolution_system import PromptEvolutionSystem
+from .creative_pipeline_system import CreativePipelineSystem
+from .evolutionary_styles_system import EvolutionaryStylesSystem
+from .resource_control_system import ResourceControlSystem
+from .narrative_systems import NarrativeSystems, SemanticValidationSystem
+from .creative_universes import CreativeReinterpretationSystem, CreativeUniversesSystem
+from .visual_feedback_system import VisualFeedbackSystem, SaturationDetectionSystem
+from .cross_evolution_simulation import CrossEvolutionSystem, VisualScenarioSimulationSystem
 from runtime.sandbox import execute_code_safely
 from core.permissions import PermissionLevel
 
@@ -233,6 +252,46 @@ class AgentService:
         self.robustness_tester = RobustnessTestFramework(DATA_DIR)
         self.destructive_limiter = DestructiveCapabilityLimiter(DATA_DIR)
         self.governance = GovernanceFramework(DATA_DIR)
+        
+        # === SISTEMAS DE RECUPERAÇÃO E OBSERVABILIDADE ===
+        self.zero_recovery = ZeroRecoverySystem()
+        self.observability = ObservabilityDashboard()
+        
+        # === SISTEMAS DE EVOLUÇÃO AVANÇADA ===
+        self.advanced_evolution = AdvancedOfflineEvolution(DATA_DIR)
+        self.parallel_testing = ParallelTestEnvironmentManager(base_path=str(REPO_ROOT))
+
+        # === SISTEMAS DE IDENTIDADE E PROTEÇÃO ===
+        self.identity_consistency = IdentityConsistencySystem()
+        self.dangerous_modifications = DangerousModificationProtection()
+        
+        # === SISTEMAS CRIATIVOS MULTIMÍDIA ===
+        self.image_generation = ImageGenerationSystem()
+        self.image_editing = ImageEditingSystem()
+        self.video_pipeline = VideoPipeline()
+        self.media_analysis = MediaAnalysisSystem()
+        self.creative_assistance = CreativeAssistanceSystem()
+        self.prompt_evolution = PromptEvolutionSystem()
+        self.creative_pipeline = CreativePipelineSystem()
+        self.evolutionary_styles = EvolutionaryStylesSystem()
+        self.resource_control = ResourceControlSystem()
+        
+        # === SISTEMAS NARRATIVOS ===
+        self.narrative_systems = NarrativeSystems()
+        self.semantic_validation = SemanticValidationSystem()
+        
+        # === SISTEMAS DE REINTERPRETAÇÃO CRIATIVA ===
+        self.creative_reinterpretation = CreativeReinterpretationSystem()
+        self.creative_universes = CreativeUniversesSystem()
+        
+        # === SISTEMAS DE FEEDBACK VISUAL ===
+        self.visual_feedback = VisualFeedbackSystem()
+        self.saturation_detection = SaturationDetectionSystem()
+        
+        # === SISTEMAS DE EVOLUÇÃO CRUZADA ===
+        self.cross_evolution = CrossEvolutionSystem()
+        self.scenario_simulation = VisualScenarioSimulationSystem()
+        
         self._load_modification_proposals()
         self.log_session_start()
 
@@ -842,6 +901,126 @@ class AgentService:
     def get_user_obedience_history(self, user_id: Optional[str] = None, limit: int = 100) -> List[Dict]:
         """Retorna histórico de comandos do usuário."""
         return self.user_obedience.get_command_history(user_id, limit)
+
+    # === MÉTODOS PARA SISTEMAS DE RECUPERAÇÃO E OBSERVABILIDADE ===
+
+    def get_zero_recovery_status(self) -> Dict[str, Any]:
+        """Retorna status do sistema de recuperação zero."""
+        return self.zero_recovery.get_system_status()
+
+    def trigger_emergency_recovery(self, incident_type: str, details: Dict[str, Any]) -> Dict[str, Any]:
+        """Dispara recuperação de emergência."""
+        return self.zero_recovery.trigger_emergency_recovery(incident_type, details)
+
+    def get_observability_dashboard(self) -> Dict[str, Any]:
+        """Retorna dashboard de observabilidade."""
+        return self.observability.get_dashboard_data()
+
+    def record_system_metric(self, metric_name: str, value: float, tags: Dict[str, str] = None) -> None:
+        """Registra métrica do sistema."""
+        self.observability.record_metric(metric_name, value, tags or {})
+
+    # === MÉTODOS PARA SISTEMAS DE EVOLUÇÃO AVANÇADA ===
+
+    def create_evolution_candidate(self, description: str, candidate_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Cria candidato de evolução avançada."""
+        return self.advanced_evolution.create_evolution_candidate(description, candidate_data)
+
+    def run_parallel_tests(self, test_suite: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """Executa testes em paralelo."""
+        return self.parallel_testing.run_parallel_tests(test_suite)
+
+    # === MÉTODOS PARA SISTEMAS DE IDENTIDADE E PROTEÇÃO ===
+
+    def check_identity_consistency(self, entity_id: str, current_state: Dict[str, Any]) -> Dict[str, Any]:
+        """Verifica consistência de identidade."""
+        return self.identity_consistency.check_consistency(entity_id, current_state)
+
+    def validate_dangerous_modification(self, modification_type: str, target: str, user_id: str) -> Dict[str, Any]:
+        """Valida modificação perigosa."""
+        return self.dangerous_modifications.validate_modification(modification_type, target, user_id)
+
+    # === MÉTODOS PARA SISTEMAS CRIATIVOS MULTIMÍDIA ===
+
+    def generate_image(self, prompt: str, style: str = "realistic", size: str = "1024x1024") -> Dict[str, Any]:
+        """Gera imagem."""
+        return self.image_generation.generate_image(prompt, style, size)
+
+    def edit_image(self, image_path: str, edits: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """Edita imagem."""
+        return self.image_editing.apply_edits(image_path, edits)
+
+    def process_video(self, operation: str, input_path: str, **kwargs) -> Dict[str, Any]:
+        """Processa vídeo."""
+        return self.video_pipeline.process_video(operation, input_path, **kwargs)
+
+    def analyze_media(self, media_path: str, analysis_types: List[str] = None) -> Dict[str, Any]:
+        """Analisa mídia."""
+        return self.media_analysis.analyze_media(media_path, analysis_types)
+
+    def get_creative_assistance(self, project_id: str, request_type: str, **kwargs) -> Dict[str, Any]:
+        """Obtém assistência criativa."""
+        return self.creative_assistance.get_assistance(project_id, request_type, **kwargs)
+
+    def evolve_prompt(self, prompt_template: Dict[str, Any], evolution_strategy: str) -> Dict[str, Any]:
+        """Evolui prompt."""
+        return self.prompt_evolution.evolve_prompt(prompt_template, evolution_strategy)
+
+    def execute_creative_pipeline(self, pipeline_config: Dict[str, Any]) -> Dict[str, Any]:
+        """Executa pipeline criativo."""
+        return self.creative_pipeline.execute_pipeline(pipeline_config)
+
+    def evolve_creative_style(self, style_config: Dict[str, Any]) -> Dict[str, Any]:
+        """Evolui estilo criativo."""
+        return self.evolutionary_styles.evolve_style(style_config)
+
+    def check_resource_limits(self, resource_type: str, requested_amount: float) -> Dict[str, Any]:
+        """Verifica limites de recursos."""
+        return self.resource_control.check_limits(resource_type, requested_amount)
+
+    # === MÉTODOS PARA SISTEMAS NARRATIVOS ===
+
+    def create_narrative_structure(self, title: str, narrative_type: str, genre: str, **kwargs) -> Dict[str, Any]:
+        """Cria estrutura narrativa."""
+        return self.narrative_systems.create_narrative_structure(title, narrative_type, genre, **kwargs)
+
+    def generate_narrative_content(self, structure_id: str, segment_type: str, **kwargs) -> Dict[str, Any]:
+        """Gera conteúdo narrativo."""
+        return self.narrative_systems.generate_narrative_content(structure_id, segment_type, **kwargs)
+
+    def validate_content_semantically(self, content: str, validation_types: List[str] = None, **kwargs) -> List[Dict[str, Any]]:
+        """Valida conteúdo semanticamente."""
+        return self.semantic_validation.validate_content(content, "text", validation_types or ["semantic_coherence"], **kwargs)
+
+    # === MÉTODOS PARA SISTEMAS DE REINTERPRETAÇÃO CRIATIVA ===
+
+    def transform_content_creatively(self, content: str, transformation_type: str, **kwargs) -> Dict[str, Any]:
+        """Transforma conteúdo criativamente."""
+        return self.creative_reinterpretation.transform_content(content, "text", transformation_type, **kwargs)
+
+    def create_creative_universe(self, name: str, universe_type: str, **kwargs) -> Dict[str, Any]:
+        """Cria universo criativo."""
+        return self.creative_universes.create_universe(name, universe_type, **kwargs)
+
+    # === MÉTODOS PARA SISTEMAS DE FEEDBACK VISUAL ===
+
+    def submit_visual_feedback(self, content_id: str, feedback_type: str, user_id: str, **kwargs) -> Dict[str, Any]:
+        """Submete feedback visual."""
+        return self.visual_feedback.submit_feedback(content_id, "visual", feedback_type, user_id, **kwargs)
+
+    def analyze_saturation(self, target_type: str, target_id: str, saturation_type: str, **kwargs) -> Dict[str, Any]:
+        """Analisa saturação."""
+        return self.saturation_detection.analyze_saturation(target_type, target_id, saturation_type, **kwargs)
+
+    # === MÉTODOS PARA SISTEMAS DE EVOLUÇÃO CRUZADA ===
+
+    def perform_cross_evolution(self, evolution_type: str, source_systems: List[str], target_system: str, **kwargs) -> Dict[str, Any]:
+        """Realiza evolução cruzada."""
+        return self.cross_evolution.perform_cross_evolution(evolution_type, source_systems, target_system, **kwargs)
+
+    def run_scenario_simulation(self, simulation_type: str, initial_conditions: Dict[str, Any], **kwargs) -> Dict[str, Any]:
+        """Executa simulação de cenário."""
+        return self.scenario_simulation.run_scenario_simulation(simulation_type, initial_conditions, **kwargs)
 
 
 def get_agent_service(user_id: str = "dev-user", agent_id: str = "aura-agent") -> AgentService:

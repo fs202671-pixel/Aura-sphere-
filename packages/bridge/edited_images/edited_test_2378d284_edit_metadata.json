@@ -1,0 +1,22 @@
+{
+  "original_path": "generated_images/test.png",
+  "edited_path": "edited_images/edited_test_2378d284.png",
+  "operations_applied": 1,
+  "edits": [
+    {
+      "operation": "brightness",
+      "params": {
+        "factor": 1.5
+      }
+    }
+  ],
+  "timestamp": "2026-05-03T02:25:35.281727",
+  "original_size": [
+    100,
+    100
+  ],
+  "edited_size": [
+    100,
+    100
+  ]
+}

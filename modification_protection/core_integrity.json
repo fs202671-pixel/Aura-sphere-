@@ -1,0 +1,44 @@
+[
+  {
+    "timestamp": "2026-05-03T02:21:02.230291",
+    "core_hash": "b4c877f76825fcaa5edb13178395ad339198336ff5c32d840a10b911b522b458",
+    "critical_files_hashes": {
+      "/workspaces/Aura-sphere-/SYSTEM_EVOLUTION_TASKS.md": "4c411c398b3966479b8c341d7e964471da9235adc0b1a0950ea18eb8c8dbba74"
+    },
+    "integrity_status": false,
+    "violations": [
+      "Arquivo cr\u00edtico ausente: packages/bridge/agent/core/",
+      "Arquivo cr\u00edtico ausente: packages/bridge/agent/app.py",
+      "Arquivo cr\u00edtico ausente: packages/bridge/agent/database.py",
+      "Arquivo cr\u00edtico ausente: packages/bridge/agent/schemas.py"
+    ]
+  },
+  {
+    "timestamp": "2026-05-03T02:25:25.766784",
+    "core_hash": "b4c877f76825fcaa5edb13178395ad339198336ff5c32d840a10b911b522b458",
+    "critical_files_hashes": {
+      "/workspaces/Aura-sphere-/SYSTEM_EVOLUTION_TASKS.md": "4c411c398b3966479b8c341d7e964471da9235adc0b1a0950ea18eb8c8dbba74"
+    },
+    "integrity_status": false,
+    "violations": [
+      "Arquivo cr\u00edtico ausente: packages/bridge/agent/core/",
+      "Arquivo cr\u00edtico ausente: packages/bridge/agent/app.py",
+      "Arquivo cr\u00edtico ausente: packages/bridge/agent/database.py",
+      "Arquivo cr\u00edtico ausente: packages/bridge/agent/schemas.py"
+    ]
+  },
+  {
+    "timestamp": "2026-05-03T02:25:35.254734",
+    "core_hash": "b4c877f76825fcaa5edb13178395ad339198336ff5c32d840a10b911b522b458",
+    "critical_files_hashes": {
+      "/workspaces/Aura-sphere-/SYSTEM_EVOLUTION_TASKS.md": "4c411c398b3966479b8c341d7e964471da9235adc0b1a0950ea18eb8c8dbba74"
+    },
+    "integrity_status": false,
+    "violations": [
+      "Arquivo cr\u00edtico ausente: packages/bridge/agent/core/",
+      "Arquivo cr\u00edtico ausente: packages/bridge/agent/app.py",
+      "Arquivo cr\u00edtico ausente: packages/bridge/agent/database.py",
+      "Arquivo cr\u00edtico ausente: packages/bridge/agent/schemas.py"
+    ]
+  }
+]

@@ -22,10 +22,12 @@ class GovernanceLevel(Enum):
 
 class GovernancePolicy(Enum):
     """Políticas de governança."""
+    CORE_IMMUTABLE = "core_immutable"          # Núcleo imutável protegido
     USER_SUPREMACY = "user_supremacy"          # Usuário sempre tem prioridade
     TRANSPARENCY = "transparency"              # Todas operações são visíveis
     AUDITABILITY = "auditability"              # Tudo é auditável
     RECOVERABILITY = "recoverability"          # Sistema é sempre recuperável
+    SECURITY_LAYER = "security_layer"          # Camada de segurança do sistema
     LEAST_PRIVILEGE = "least_privilege"        # Privilégio mínimo por padrão
     DEFENSE_IN_DEPTH = "defense_in_depth"      # Múltiplas camadas de proteção
     OFFLINE_FIRST = "offline_first"            # Operação offline-first
