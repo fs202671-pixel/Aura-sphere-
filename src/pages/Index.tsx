@@ -28,8 +28,20 @@ const Index = () => {
       .select("ai_name, voice_id, onboarded")
       .eq("id", user.id)
       .maybeSingle()
-      .then(({ data }) => {
-        setProfile(data ?? { ai_name: null, voice_id: null, onboarded: false });
+      .then(async ({ data }) => {
+        if (!data) {
+          // Criar perfil padrão automaticamente
+          const defaultProfile = {
+            id: user.id,
+            ai_name: "Aurora",
+            voice_id: "pt-female",
+            onboarded: true
+          };
+          await supabase.from("profiles").insert(defaultProfile);
+          setProfile(defaultProfile);
+        } else {
+          setProfile(data);
+        }
         setProfileLoading(false);
       });
   }, [user]);

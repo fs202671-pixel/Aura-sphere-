@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { ParticleSphere } from "@/components/ParticleSphere";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarProvider, SidebarSeparator, SidebarTrigger } from "@/components/ui/sidebar";
 import Chat from "@/pages/Chat";
+import VisualMode from "@/pages/Visual";
 import { getApiBase, getAuthHeaders } from "@/lib/api";
 import { speak, getVoiceConfig } from "@/lib/speech";
 import type { AiMode, ChatMessage, Project, SphereState, VoiceId } from "@/lib/types";
@@ -19,6 +20,7 @@ const AI_MODES: { id: AiMode; label: string; description: string }[] = [
   { id: "Imagem", label: "Imagem", description: "Crie imagens rápidas com prompts inteligentes." },
   { id: "Voz", label: "Voz", description: "Fale com a IA e ajuste a assistente de voz." },
   { id: "Automação", label: "Automação", description: "Defina fluxos e rotinas para automatizar tarefas." },
+  { id: "Visual", label: "Visual", description: "Personalize a aparência e interface gráfica do sistema." },
   { id: "Dev Mode", label: "Dev Mode", description: "Acesse ferramentas de desenvolvedor e informações do ambiente." },
 ];
 
@@ -158,6 +160,8 @@ export default function AIOnShell({
       ? "torus"
       : activeMode === "Memória"
       ? "wave"
+      : activeMode === "Visual"
+      ? "heart"
       : activeMode === "Automação"
       ? "question"
       : "sphere";
@@ -461,6 +465,14 @@ export default function AIOnShell({
               </div>
             </div>
           </section>
+        );
+      case "Visual":
+        return (
+          <VisualMode
+            userId={userId}
+            aiName={aiName}
+            voiceId={voiceId}
+          />
         );
       default:
         return null;

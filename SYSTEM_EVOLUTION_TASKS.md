@@ -143,9 +143,9 @@ Ele complementa o `NEXT_STEPS.md` com foco em arquitetura segura, sandbox, evolu
   - memória de curto prazo (sessão atual) ✅ IMPLEMENTADO
   - memória de longo prazo (persistente) ✅ IMPLEMENTADO
   - memória de evolução (mudanças do próprio sistema) ✅ IMPLEMENTADO
-- [ ] Criar mecanismo de indexação de memória:
-  - busca semântica
-  - categorização por tipo (usuário, sistema, código, eventos)
+- [x] Criar mecanismo de indexação de memória:
+  - busca semântica ✅ IMPLEMENTADO (`packages/bridge/memory/indexer.py`)
+  - categorização por tipo (usuário, sistema, código, eventos) ✅ IMPLEMENTADO
 - [x] Implementar controle de escrita na memória:
   - IA pode sugerir registros ✅ IMPLEMENTADO
   - sistema valida antes de persistir dados críticos ✅ PARCIALMENTE IMPLEMENTADO
@@ -563,63 +563,65 @@ n
 
 ## 31. Arquitetura híbrida de inteligência coletiva
 
-- [ ] Expandir arquitetura existente para incluir:
-  - `colony/ants/` → agentes exploradores
+- [x] Expandir arquitetura existente para incluir:
+  - `colony/ants/` → agentes exploradores ✅ IMPLEMENTADO
   - `hive/bees/` → agentes executores
   - `wolves/defense/` → agentes de defesa ativa
-  - `orchestrator/` → coordenação central
-- [ ] Manter:
+  - `orchestrator/` → coordenação central ✅ IMPLEMENTADO (básico)
+- [x] Manter:
   - `core/`
   - `runtime/`
   - `agent/`
   - `sandbox/`
-- [ ] Separar responsabilidades:
-  - formigas → descoberta, análise, busca
+- [x] Separar responsabilidades:
+  - formigas → descoberta, análise, busca ✅ IMPLEMENTADO
   - abelhas → organização, execução, decisão
   - lobos → detecção, contenção, resposta a incidentes
+- [x] Implementar comunicação indireta via memória compartilhada ✅ IMPLEMENTADO
+- [x] Criar sistema de trilhas para reforço de soluções ✅ IMPLEMENTADO
 
 ## 32. Sistema de colônia (formigas)
 
-- [ ] Implementar agentes leves e paralelos com funções:
-  - exploração de repositórios
-  - busca de dados externos
-  - análise de código
-  - testes de soluções
-- [ ] Características:
-  - execução massiva paralela
-  - baixo custo individual
-  - comunicação indireta via memória
-- [ ] Criar sistema de trilhas:
-  - registrar caminhos eficientes
-  - reforçar soluções bem-sucedidas
-  - descartar caminhos ruins
+- [x] Implementar agentes leves e paralelos com funções:
+  - exploração de repositórios ✅ IMPLEMENTADO
+  - busca de dados externos ✅ IMPLEMENTADO
+  - análise de código ✅ IMPLEMENTADO
+  - testes de soluções ✅ IMPLEMENTADO
+- [x] Características:
+  - execução massiva paralela ✅ IMPLEMENTADO
+  - baixo custo individual ✅ IMPLEMENTADO
+  - comunicação indireta via memória ✅ IMPLEMENTADO
+- [x] Criar sistema de trilhas:
+  - registrar caminhos eficientes ✅ IMPLEMENTADO
+  - reforçar soluções bem-sucedidas ✅ IMPLEMENTADO
+  - descartar caminhos ruins ✅ IMPLEMENTADO
 
 ## 33. Sistema de colmeia (abelhas)
 
-- [ ] Implementar agentes organizadores:
+- [x] Implementar agentes organizadores:
   - Tipos:
-    - bees.scout → recebem dados das formigas
-    - bees.worker → executam tarefas
-    - bees.coordinator → distribuem tarefas
-    - bees.guard → validam segurança
-- [ ] Funções:
-  - organizar tarefas vindas das formigas
-  - priorizar execução
-  - garantir eficiência
+    - bees.scout → recebem dados das formigas ✅ IMPLEMENTADO
+    - bees.worker → executam tarefas ✅ IMPLEMENTADO
+    - bees.coordinator → distribuem tarefas ✅ IMPLEMENTADO
+    - bees.guard → validam segurança ✅ IMPLEMENTADO
+- [x] Funções:
+  - organizar tarefas vindas das formigas ✅ IMPLEMENTADO
+  - priorizar execução ✅ IMPLEMENTADO
+  - garantir eficiência ✅ IMPLEMENTADO
 
 ## 34. Sistema de defesa ativa (lobos)
 
-- [ ] Implementar agentes defensivos:
-  - wolves.scout → monitora sinais e logs
-  - wolves.sentinel → valida alertas e classifica risco
-  - wolves.responder → executa contenção controlada
-  - wolves.forensic → coleta evidências e logs
-  - wolves.recovery → executa recuperação e rollback
-- [ ] Funções:
-  - detecção de anomalias
-  - contenção de incidentes
-  - isolamento de componentes suspeitos
-  - coordenação de resposta
+- [x] Implementar agentes defensivos:
+  - wolves.scout → monitora sinais e logs ✅ IMPLEMENTADO
+  - wolves.sentinel → valida alertas e classifica risco ✅ IMPLEMENTADO
+  - wolves.responder → executa contenção controlada ✅ IMPLEMENTADO
+  - wolves.forensic → coleta evidências e logs ✅ IMPLEMENTADO
+  - wolves.recovery → executa recuperação e rollback ✅ IMPLEMENTADO
+- [x] Funções:
+  - detecção de anomalias ✅ IMPLEMENTADO
+  - contenção de incidentes ✅ IMPLEMENTADO
+  - isolamento de componentes suspeitos ✅ IMPLEMENTADO
+  - coordenação de resposta ✅ IMPLEMENTADO
 
 ## 35. Orquestrador central
 
