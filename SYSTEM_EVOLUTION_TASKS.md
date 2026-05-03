@@ -813,6 +813,71 @@ n
 - [ ] Alto → sugerir contenção
 - [ ] Crítico → conter e notificar usuário
 
+## 55. Regras do core para defesa
+
+- [ ] Proibir ações destrutivas
+- [ ] Exigir confirmação para alto impacto
+- [ ] Impedir acesso direto ao core
+- [ ] Exigir auditoria completa
+
+## 56. Simulação controlada
+
+- [ ] Criar cenários em sandbox:
+  - falhas
+  - picos de carga
+  - anomalias
+- [ ] Sem afetar produção
+
+## 57. Biblioteca de playbooks
+
+- [ ] Criar playbooks versionados:
+  - vazamento de credenciais
+  - falhas de sistema
+  - anomalias de comportamento
+- [ ] Cada playbook define:
+  - sinais
+  - ações
+  - validação
+
+## 58. Observabilidade integrada
+
+- [ ] Expandir dashboard:
+  - alertas
+  - ações
+  - estado dos agentes
+  - linha do tempo
+
+## 59. Aprendizado pós-incidente
+
+- [ ] Registrar:
+  - causa raiz
+  - eficácia da resposta
+  - ajustar playbooks
+  - melhorar detecção
+
+## 60. Governança final
+
+- [ ] Usuário → core → supervisor → lobos(Alcatéia) → abelhas → formigas → runtime → sandbox → produção
+
+## 61. Sistema de ataque controlado
+
+- [ ] Implementar módulo de ataque apenas sob solicitação explícita do usuário
+- [ ] Bloquear completamente quando não solicitado
+- [ ] Regras de segurança:
+  - apenas em ambientes isolados/teste
+  - auditoria completa de todas ações
+  - confirmação em múltiplas etapas
+  - rollback automático após teste
+- [ ] Funcionalidades permitidas apenas quando ativado:
+  - simulação de ataques para teste de defesa
+  - análise de vulnerabilidades controlada
+  - geração de payloads de teste
+- [ ] Bloqueios obrigatórios:
+  - nenhum acesso à rede externa sem permissão
+  - isolamento total do sistema de produção
+  - logs imutáveis de todas ações
+  - desativação automática após uso
+
 ---
 
 ## 📋 Instruções para o Próximo Programador/Copilot
@@ -829,15 +894,30 @@ n
    - Implementar comunicação indireta via memória compartilhada
    - Criar sistema de trilhas para reforço de soluções
 
-2. **Expandir sistema de defesa** (tarefas 34, 51-54)
+2. **Expandir sistema de defesa** (tarefas 34, 51-61)
    - wolves/defense/ como primeira implementação
    - Pipeline de resposta a incidentes
+   - Sistema de ataque controlado (tarefa 61) - IMPLEMENTAR COM EXTREMO CUIDADO
    - Integração com logs existentes
 
-3. **Refinar sandbox e runtime** (tarefas 6, 7, 19, 20)
+3. **Refinar sandbox e runtime** (tarefas 6, 7, 19, 20, 56)
    - Melhorar isolamento de containers
    - Implementar simulador de impacto
    - Criar ambiente de testes paralelos
+   - Adicionar simulação controlada de cenários
+
+4. **Implementar observabilidade** (tarefa 58)
+   - Dashboard expandido com alertas e estado dos agentes
+   - Biblioteca de playbooks versionados (tarefa 57)
+   - Aprendizado pós-incidente (tarefa 59)
+
+### ⚠️ ATENÇÃO ESPECIAL: Sistema de Ataque (Tarefa 61)
+- **NUNCA implementar sem confirmação explícita do usuário**
+- Deve ser completamente bloqueado por padrão
+- Requer múltiplas camadas de validação
+- Apenas para testes controlados em sandbox isolado
+- Auditoria obrigatória de 100% das ações
+- **Se implementar, documentar TODOS os bloqueios de segurança**
 
 ### Regras de Implementação
 - **Nunca modificar core/** diretamente - ele é imutável
@@ -845,6 +925,7 @@ n
 - Agentes devem ter isolamento completo entre si
 - Logs devem ser append-only e imutáveis
 - Qualquer mudança crítica requer aprovação explícita do usuário
+- **Sistema de ataque: BLOQUEADO por padrão, só ativar com solicitação direta**
 
 ### Estrutura de Diretórios Sugerida
 ```
@@ -857,8 +938,11 @@ packages/bridge/
 │   └── ants/
 ├── hive/           # NOVO - agentes executores
 │   └── bees/
-└── wolves/         # NOVO - defesa ativa
-    └── defense/
+├── wolves/         # NOVO - defesa ativa
+│   └── defense/
+├── attack/         # NOVO - sistema de ataque (BLOQUEADO)
+│   └── controlled/ # Apenas para testes autorizados
+└── playbooks/      # NOVO - biblioteca de playbooks
 ```
 
 ### Testes Obrigatórios
@@ -866,11 +950,13 @@ packages/bridge/
 - Validar isolamento entre agentes
 - Testar comunicação indireta
 - Verificar logs de auditoria
+- **Para sistema de ataque: testes em isolamento total, sem rede externa**
 
 ### Próximos Passos
 1. Ler tarefas 31-35 para entender arquitetura coletiva
 2. Implementar colony/ants/ primeiro (mais simples)
 3. Integrar com sistema existente via orchestrator/
-4. Testar thoroughly antes de expandir para bees/ e wolves/
+4. **NÃO implementar sistema de ataque ainda - aguardar solicitação explícita**
+5. Testar thoroughly antes de expandir para bees/ e wolves/
 
-**Lembre-se**: A IA propõe mudanças, mas nunca executa diretamente em produção. Sandbox é obrigatório!
+**Lembre-se**: A IA propõe mudanças, mas nunca executa diretamente em produção. Sandbox é obrigatório! Sistema de ataque é PROIBIDO sem autorização direta.
