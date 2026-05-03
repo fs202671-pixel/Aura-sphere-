@@ -27,6 +27,12 @@ from .tools import ToolRegistry
 from .memory import MemoryStore
 from .evolution import EvolutionManager
 from .supervisor import AgentSupervisor
+from .advanced_quality_evaluator import AdvancedQualityEvaluator, QualityEvolutionTracker
+from .advanced_anomaly_detector import (
+    BehavioralAnomalyDetector,
+    AnomalyType,
+    AnomalySeverity,
+)
 
 __version__ = "0.1.0"
 __all__ = [
@@ -42,6 +48,8 @@ __all__ = [
     "MemoryStore",
     "EvolutionManager",
     "AgentSupervisor",
+    "AdvancedQualityEvaluator",
+    "QualityEvolutionTracker",
 
     # Enums
     "LogEvent",

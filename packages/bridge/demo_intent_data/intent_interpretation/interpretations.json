@@ -1,0 +1,279 @@
+[
+  {
+    "timestamp": "2026-05-03T14:51:07.738273",
+    "user_input": "Crie uma função para calcular fibonacci",
+    "intent_type": "direct_command",
+    "confidence": 1.0,
+    "action": "create",
+    "parameters": {
+      "function": "para"
+    },
+    "risk_level": "low",
+    "requires_confirmation": false,
+    "ambiguities": []
+  },
+  {
+    "timestamp": "2026-05-03T14:51:07.738688",
+    "user_input": "Execute o script de teste",
+    "intent_type": "direct_command",
+    "confidence": 1.0,
+    "action": "execute",
+    "parameters": {},
+    "risk_level": "low",
+    "requires_confirmation": false,
+    "ambiguities": []
+  },
+  {
+    "timestamp": "2026-05-03T14:51:07.739175",
+    "user_input": "Delete o arquivo temporário",
+    "intent_type": "direct_command",
+    "confidence": 1.0,
+    "action": "delete",
+    "parameters": {},
+    "risk_level": "low",
+    "requires_confirmation": false,
+    "ambiguities": []
+  },
+  {
+    "timestamp": "2026-05-03T14:51:07.739556",
+    "user_input": "Modifique a configuração do banco de dados",
+    "intent_type": "direct_command",
+    "confidence": 1.0,
+    "action": "modify",
+    "parameters": {},
+    "risk_level": "low",
+    "requires_confirmation": false,
+    "ambiguities": []
+  },
+  {
+    "timestamp": "2026-05-03T14:51:07.740050",
+    "user_input": "Que tal implementar um sistema de cache?",
+    "intent_type": "suggestion",
+    "confidence": 0.7142857142857143,
+    "action": null,
+    "parameters": {},
+    "risk_level": "low",
+    "requires_confirmation": false,
+    "ambiguities": []
+  },
+  {
+    "timestamp": "2026-05-03T14:51:07.740464",
+    "user_input": "Talvez você poderia otimizar essa função",
+    "intent_type": "suggestion",
+    "confidence": 1.0,
+    "action": null,
+    "parameters": {},
+    "risk_level": "low",
+    "requires_confirmation": true,
+    "ambiguities": [
+      "Detected ambiguity pattern: '(talvez|possivelmente|quiçá)'"
+    ]
+  },
+  {
+    "timestamp": "2026-05-03T14:51:07.740818",
+    "user_input": "Considere usar async/await aqui",
+    "intent_type": "suggestion",
+    "confidence": 1.0,
+    "action": null,
+    "parameters": {},
+    "risk_level": "low",
+    "requires_confirmation": false,
+    "ambiguities": []
+  },
+  {
+    "timestamp": "2026-05-03T14:51:07.741215",
+    "user_input": "Seria bom adicionar validação de entrada",
+    "intent_type": "ambiguous",
+    "confidence": 0.3,
+    "action": null,
+    "parameters": {},
+    "risk_level": "low",
+    "requires_confirmation": true,
+    "ambiguities": [
+      "Detected ambiguity pattern: '(depende|se)'"
+    ]
+  },
+  {
+    "timestamp": "2026-05-03T14:51:07.741736",
+    "user_input": "Como funciona essa função?",
+    "intent_type": "question",
+    "confidence": 1.0,
+    "action": null,
+    "parameters": {},
+    "risk_level": "low",
+    "requires_confirmation": false,
+    "ambiguities": []
+  },
+  {
+    "timestamp": "2026-05-03T14:51:07.742200",
+    "user_input": "Qual é a melhor prática para tratamento de erros?",
+    "intent_type": "question",
+    "confidence": 1.0,
+    "action": null,
+    "parameters": {},
+    "risk_level": "low",
+    "requires_confirmation": false,
+    "ambiguities": []
+  },
+  {
+    "timestamp": "2026-05-03T14:51:07.742640",
+    "user_input": "Onde está definido esse parâmetro?",
+    "intent_type": "question",
+    "confidence": 1.0,
+    "action": null,
+    "parameters": {},
+    "risk_level": "low",
+    "requires_confirmation": true,
+    "ambiguities": [
+      "Detected ambiguity pattern: '(depende|se)'"
+    ]
+  },
+  {
+    "timestamp": "2026-05-03T14:51:07.743122",
+    "user_input": "Por que o teste está falhando?",
+    "intent_type": "question",
+    "confidence": 1.0,
+    "action": null,
+    "parameters": {},
+    "risk_level": "low",
+    "requires_confirmation": false,
+    "ambiguities": []
+  },
+  {
+    "timestamp": "2026-05-03T14:51:07.743662",
+    "user_input": "Talvez delete esse arquivo ou não",
+    "intent_type": "suggestion",
+    "confidence": 1.0,
+    "action": "delete",
+    "parameters": {},
+    "risk_level": "low",
+    "requires_confirmation": true,
+    "ambiguities": [
+      "Detected ambiguity pattern: '(talvez|possivelmente|quiçá)'",
+      "Detected ambiguity pattern: '(ou|alternativamente)'",
+      "Detected ambiguity pattern: '(depende|se)'",
+      "Multiple options detected - clarification needed"
+    ]
+  },
+  {
+    "timestamp": "2026-05-03T14:51:07.744175",
+    "user_input": "Pode ser que a função precise ser alterada",
+    "intent_type": "ambiguous",
+    "confidence": 0.3,
+    "action": "modify",
+    "parameters": {
+      "function": "precise"
+    },
+    "risk_level": "low",
+    "requires_confirmation": true,
+    "ambiguities": [
+      "Detected ambiguity pattern: '(depende|se)'"
+    ]
+  },
+  {
+    "timestamp": "2026-05-03T14:51:07.746997",
+    "user_input": "Não sei se devemos implementar isso",
+    "intent_type": "rejection",
+    "confidence": 1.0,
+    "action": null,
+    "parameters": {},
+    "risk_level": "low",
+    "requires_confirmation": true,
+    "ambiguities": [
+      "Detected ambiguity pattern: '(depende|se)'",
+      "Detected ambiguity pattern: '(não sei|não tenho certeza)'"
+    ]
+  },
+  {
+    "timestamp": "2026-05-03T14:51:07.747540",
+    "user_input": "Qualquer uma das opções pode funcionar",
+    "intent_type": "question",
+    "confidence": 1.0,
+    "action": null,
+    "parameters": {},
+    "risk_level": "low",
+    "requires_confirmation": true,
+    "ambiguities": [
+      "Detected ambiguity pattern: '(qualquer|algum|um dos)'"
+    ]
+  },
+  {
+    "timestamp": "2026-05-03T14:51:07.748069",
+    "user_input": "Mostre o conteúdo do arquivo",
+    "intent_type": "ambiguous",
+    "confidence": 0.3,
+    "action": "show",
+    "parameters": {},
+    "risk_level": "low",
+    "requires_confirmation": false,
+    "ambiguities": []
+  },
+  {
+    "timestamp": "2026-05-03T14:51:07.748755",
+    "user_input": "Crie um novo arquivo de configuração",
+    "intent_type": "direct_command",
+    "confidence": 1.0,
+    "action": "create",
+    "parameters": {},
+    "risk_level": "low",
+    "requires_confirmation": false,
+    "ambiguities": []
+  },
+  {
+    "timestamp": "2026-05-03T14:51:07.749431",
+    "user_input": "Delete todos os arquivos de log",
+    "intent_type": "direct_command",
+    "confidence": 1.0,
+    "action": "delete",
+    "parameters": {},
+    "risk_level": "low",
+    "requires_confirmation": false,
+    "ambiguities": []
+  },
+  {
+    "timestamp": "2026-05-03T14:51:07.750006",
+    "user_input": "Formate o disco rígido",
+    "intent_type": "ambiguous",
+    "confidence": 0.3,
+    "action": null,
+    "parameters": {},
+    "risk_level": "low",
+    "requires_confirmation": false,
+    "ambiguities": []
+  },
+  {
+    "timestamp": "2026-05-03T14:51:07.750538",
+    "user_input": "Crie uma função simples",
+    "intent_type": "direct_command",
+    "confidence": 1.0,
+    "action": "create",
+    "parameters": {
+      "function": "simples"
+    },
+    "risk_level": "low",
+    "requires_confirmation": false,
+    "ambiguities": []
+  },
+  {
+    "timestamp": "2026-05-03T14:51:07.751035",
+    "user_input": "Delete o banco de dados",
+    "intent_type": "direct_command",
+    "confidence": 1.0,
+    "action": "delete",
+    "parameters": {},
+    "risk_level": "low",
+    "requires_confirmation": false,
+    "ambiguities": []
+  },
+  {
+    "timestamp": "2026-05-03T14:51:07.751613",
+    "user_input": "O que é uma variável?",
+    "intent_type": "question",
+    "confidence": 1.0,
+    "action": null,
+    "parameters": {},
+    "risk_level": "low",
+    "requires_confirmation": false,
+    "ambiguities": []
+  }
+]
