@@ -13,7 +13,7 @@ import { Volume2 } from "lucide-react";
 import { toast } from "sonner";
 
 export default function Onboarding({ userId, onDone }: { userId: string; onDone: () => void }) {
-  const [aiName, setAiName] = useState("Aurora");
+  const [aiName, setAiName] = useState("Caos");
   const [voiceId, setVoiceId] = useState<VoiceId>("pt-female");
   const [tone, setTone] = useState<LocalProfile["tone"]>("friendly");
   const [interests, setInterests] = useState("");
@@ -88,7 +88,7 @@ export default function Onboarding({ userId, onDone }: { userId: string; onDone:
             id="ai-name"
             value={aiName}
             onChange={(e) => setAiName(e.target.value)}
-            placeholder="Ex: Aurora"
+            placeholder="Ex: Caos"
             maxLength={32}
             className="h-12 text-base"
           />

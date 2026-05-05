@@ -8,7 +8,7 @@ the agent's capabilities to AI models like Claude.
 import logging
 from typing import Any, Dict, List
 
-from mcp import Server
+from mcp.server import Server
 from mcp.types import (
     TextContent,
     Tool,
@@ -20,7 +20,7 @@ from mcp.types import (
 from agent import get_agent_service
 from llm_service import get_llm_service
 from embedding_service import get_embedding_service
-from memory import MemoryEngine
+from mempalace.memory import MemoryEngine
 
 logger = logging.getLogger(__name__)
 
@@ -352,5 +352,4 @@ async def call_tool(request: CallToolRequest) -> List[TextContent]:
 
 
 # Import here to avoid circular imports
-from database import SessionLocal, MemoryEntry</content>
-<parameter name="filePath">/workspaces/Aura-sphere-/packages/bridge/mcp_server.py
+from database import SessionLocal, MemoryEntry

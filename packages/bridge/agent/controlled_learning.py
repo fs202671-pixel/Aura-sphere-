@@ -80,6 +80,8 @@ class ControlledLearner:
             "validator_user_id": None
         }
         
+        self.validated_data.append(submission)
+        
         # Registrar na linhagem
         self.data_lineage.append({
             "data_id": data_id,

@@ -10,9 +10,9 @@ Características:
 - Decisão coletiva
 """
 
-from .worker import BeeWorker
-from .scout import BeeScout
-from .coordinator import BeeCoordinator
-from .guard import BeeGuard
+from .bees.worker import BeeWorker
+from .bees.scout import BeeScout
+from .bees.coordinator import BeeCoordinator
+from .bees.guard import BeeGuard
 
 __all__ = ['BeeWorker', 'BeeScout', 'BeeCoordinator', 'BeeGuard']

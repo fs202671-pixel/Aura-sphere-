@@ -1,0 +1,152 @@
+{
+  "inglês": {
+    "topic": "inglês",
+    "level": 1,
+    "score": 0,
+    "correct": 0,
+    "incorrect": 4,
+    "weaknesses": [
+      "saudar",
+      "perguntas simples",
+      "present simple",
+      "diálogo curto"
+    ],
+    "history": [
+      "Avaliação: errada - A resposta está incompleta. Vamos revisar a ideia principal e tentar novamente. Preste atenção em: saudar, nomes comuns.",
+      "Avaliação: errada - A resposta está incompleta. Vamos revisar a ideia principal e tentar novamente. Preste atenção em: perguntas simples, respostas.",
+      "Avaliação: errada - A resposta está incompleta. Vamos revisar a ideia principal e tentar novamente. Preste atenção em: present simple, pronomes.",
+      "Avaliação: errada - A resposta está incompleta. Vamos revisar a ideia principal e tentar novamente. Preste atenção em: diálogo curto, perguntas pessoais."
+    ],
+    "active_plan": {
+      "topic": "inglês",
+      "level": 1,
+      "steps": [
+        {
+          "title": "vocabulário básico",
+          "goals": [
+            "saudar",
+            "nomes comuns",
+            "cores"
+          ]
+        },
+        {
+          "title": "frases importantes",
+          "goals": [
+            "perguntas simples",
+            "respostas",
+            "expressões úteis"
+          ]
+        },
+        {
+          "title": "gramática inicial",
+          "goals": [
+            "present simple",
+            "pronomes",
+            "preposições"
+          ]
+        },
+        {
+          "title": "conversação básica",
+          "goals": [
+            "diálogo curto",
+            "perguntas pessoais",
+            "situações cotidianas"
+          ]
+        }
+      ]
+    },
+    "last_updated": "Avaliação: errada - A resposta está incompleta. Vamos revisar a ideia principal e tentar novamente. Preste atenção em: diálogo curto, perguntas pessoais."
+  },
+  "como se vestir": {
+    "topic": "como se vestir",
+    "level": 1,
+    "score": 0,
+    "correct": 0,
+    "incorrect": 0,
+    "weaknesses": [],
+    "history": [],
+    "active_plan": {
+      "topic": "como se vestir",
+      "level": 1,
+      "steps": [
+        {
+          "title": "Introdução a como se vestir",
+          "goals": [
+            "entender a finalidade",
+            "identificar conceitos básicos"
+          ]
+        },
+        {
+          "title": "Princípios centrais de como se vestir",
+          "goals": [
+            "descobrir termos-chave",
+            "comparar exemplos"
+          ]
+        },
+        {
+          "title": "Aplicações práticas de como se vestir",
+          "goals": [
+            "criar um pequeno exercício",
+            "analisar resultados"
+          ]
+        },
+        {
+          "title": "Melhorias e próximas etapas em como se vestir",
+          "goals": [
+            "planejar progresso",
+            "definir objetivos"
+          ]
+        }
+      ]
+    },
+    "last_updated": "plan_assigned"
+  },
+  "programação": {
+    "topic": "programação",
+    "level": 1,
+    "score": 0,
+    "correct": 0,
+    "incorrect": 0,
+    "weaknesses": [],
+    "history": [],
+    "active_plan": {
+      "topic": "programação",
+      "level": 1,
+      "steps": [
+        {
+          "title": "fundamentos",
+          "goals": [
+            "variáveis",
+            "tipos",
+            "fluxo de controle"
+          ]
+        },
+        {
+          "title": "estruturas de dados",
+          "goals": [
+            "listas",
+            "dicionários",
+            "funções"
+          ]
+        },
+        {
+          "title": "design de código",
+          "goals": [
+            "modularidade",
+            "legibilidade",
+            "documentação"
+          ]
+        },
+        {
+          "title": "projeto prático",
+          "goals": [
+            "mini-projeto",
+            "testes",
+            "refatoração"
+          ]
+        }
+      ]
+    },
+    "last_updated": "plan_assigned"
+  }
+}

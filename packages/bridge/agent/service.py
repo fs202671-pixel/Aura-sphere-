@@ -1,6 +1,4 @@
-# Integrações com repositórios externos
-from .openjarvis_adapter import OpenJarvisAdapter
-from .mempalace_adapter import MemPalaceAdapter
+from .learning.learning_controller import LearningController
 """
 Serviço de Agente - controle de sessão, tarefas e integração com auditoria.
 
@@ -50,6 +48,8 @@ from .narrative_systems import NarrativeSystems, SemanticValidationSystem
 from .creative_universes import CreativeReinterpretationSystem, CreativeUniversesSystem
 from .visual_feedback_system import VisualFeedbackSystem, SaturationDetectionSystem
 from .cross_evolution_simulation import CrossEvolutionSystem, VisualScenarioSimulationSystem
+from .offline_scheduler import OfflineEvolutionScheduler, ExecutionMode
+from .alternative_code_generator import AlternativeCodeGenerator
 from runtime.sandbox import execute_code_safely
 from core.permissions import PermissionLevel
 
@@ -263,6 +263,14 @@ class AgentService:
         # === SISTEMAS DE EVOLUÇÃO AVANÇADA ===
         self.advanced_evolution = AdvancedOfflineEvolution(DATA_DIR)
         self.parallel_testing = ParallelTestEnvironmentManager(base_path=str(REPO_ROOT))
+        self.offline_scheduler = OfflineEvolutionScheduler(self.evolution_manager)
+        self.alternative_code_generator = AlternativeCodeGenerator()
+
+        # Inicia o agendador de evolução offline automaticamente.
+        self.offline_scheduler.set_execution_mode(
+            ExecutionMode.EVOLUTION if self.offline_mode else ExecutionMode.ACTIVE
+        )
+        self.offline_scheduler.start_scheduler()
 
         # === SISTEMAS DE IDENTIDADE E PROTEÇÃO ===
         self.identity_consistency = IdentityConsistencySystem()
@@ -295,8 +303,8 @@ class AgentService:
         self.cross_evolution = CrossEvolutionSystem()
         self.scenario_simulation = VisualScenarioSimulationSystem()
         
-        self._load_modification_proposals()
-        self.log_session_start()
+        # === SISTEMA DE ENSINO ADAPTATIVO ===
+        self.learning_controller = LearningController(persistence_base=str(DATA_DIR / "learning"))
 
     def log_session_start(self) -> None:
         log_agent_action(
@@ -404,6 +412,89 @@ class AgentService:
             level=LogLevel.INFO
         )
         return version.to_dict()
+
+    def schedule_offline_evolution(self, description: str, task_type: str,
+                                   priority: int = 5,
+                                   should_run_at: Optional[datetime] = None) -> Dict[str, Any]:
+        task = self.offline_scheduler.schedule_task(
+            description=description,
+            task_type=task_type,
+            priority=priority,
+            should_run_at=should_run_at
+        )
+        log_agent_action(
+            agent_id=self.session_state.agent_id,
+            action="offline_evolution_task_scheduled",
+            details={"task_id": task.task_id, "description": task.description, "task_type": task.task_type},
+            level=LogLevel.INFO
+        )
+        return task.to_dict()
+
+    def set_offline_evolution_mode(self, enabled: bool) -> None:
+        mode = ExecutionMode.EVOLUTION if enabled else ExecutionMode.ACTIVE
+        self.offline_scheduler.set_execution_mode(mode)
+        log_agent_action(
+            agent_id=self.session_state.agent_id,
+            action="offline_evolution_mode_changed",
+            details={"enabled": enabled, "mode": mode.value},
+            level=LogLevel.INFO
+        )
+
+    def get_offline_evolution_status(self) -> Dict[str, Any]:
+        return self.offline_scheduler.get_scheduler_status()
+
+    def generate_alternative_code_variant(self, module_name: str, variant_type: str,
+                                          description: str, algorithm_name: Optional[str] = None) -> Dict[str, Any]:
+        if variant_type == "optimization":
+            variant = self.alternative_code_generator.generate_optimization_variant(module_name, description)
+        elif variant_type == "refactor":
+            variant = self.alternative_code_generator.generate_refactor_variant(module_name, description)
+        elif variant_type == "alternative_algorithm":
+            if not algorithm_name:
+                raise ValueError("algorithm_name is required for alternative_algorithm variants")
+            variant = self.alternative_code_generator.generate_algorithm_variant(module_name, algorithm_name, description)
+        else:
+            raise ValueError(f"Unknown variant_type: {variant_type}")
+
+        log_agent_action(
+            agent_id=self.session_state.agent_id,
+            action="alternative_code_variant_generated",
+            details={"variant_id": variant.variant_id, "module": module_name, "variant_type": variant.variant_type},
+            level=LogLevel.INFO
+        )
+        return {
+            "variant_id": variant.variant_id,
+            "original_module": variant.original_module,
+            "variant_type": variant.variant_type,
+            "description": variant.description,
+            "metrics": variant.metrics,
+            "complexity_score": variant.complexity_score,
+            "code_changes": variant.code_changes
+        }
+
+    def list_code_variants(self, module_name: Optional[str] = None,
+                           variant_type: Optional[str] = None) -> List[Dict[str, Any]]:
+        variants = self.alternative_code_generator.get_variants(module_name=module_name, variant_type=variant_type)
+        return [
+            {
+                "variant_id": v.variant_id,
+                "original_module": v.original_module,
+                "variant_type": v.variant_type,
+                "description": v.description,
+                "metrics": v.metrics,
+                "complexity_score": v.complexity_score,
+                "code_changes": v.code_changes
+            }
+            for v in variants
+        ]
+
+    def compare_code_variants(self, variant_a_id: str, variant_b_id: str) -> Optional[Dict[str, Any]]:
+        variants = self.alternative_code_generator.get_variants()
+        variant_a = next((v for v in variants if v.variant_id == variant_a_id), None)
+        variant_b = next((v for v in variants if v.variant_id == variant_b_id), None)
+        if not variant_a or not variant_b:
+            return None
+        return self.alternative_code_generator.compare_variants(variant_a, variant_b)
 
     def submit_modification_proposal(self, description: str, target_files: List[str], patch_summary: str,
                                      file_patches: Optional[Dict[str, str]] = None,
@@ -637,14 +728,361 @@ class AgentService:
             "pending": len([task for task in all_entries if task["status"] != "completed"])
         }
 
-    def suggest_patch(self) -> Dict[str, Any]:
-        summary = self.analyze_logs()
-        return {
-            "suggestion": "Avaliar tarefas pendentes e consolidar documentação de evolução.",
-            "pending": summary["pending"],
-            "completed": summary["completed"],
-            "recommendation": "Gerar candidatos de evolução offline e validar no sandbox antes de deploy."
+    def analyze_system_and_logs(self) -> Dict[str, Any]:
+        """Analisa sistema e logs para identificar padrões e oportunidades de melhoria."""
+        analysis = {
+            "timestamp": datetime.now().isoformat(),
+            "system_health": {},
+            "log_patterns": {},
+            "performance_metrics": {},
+            "security_insights": {},
+            "improvement_opportunities": []
         }
+
+        # Análise de saúde do sistema
+        analysis["system_health"] = {
+            "total_sessions": 1,  # Simplificado para esta sessão
+            "active_components": len([attr for attr in dir(self) if not attr.startswith('_') and hasattr(getattr(self, attr), '__call__')]),
+            "memory_usage": "unknown",  # Poderia ser implementado com psutil
+            "error_rate": 0.0  # Calcular baseado em logs
+        }
+
+        # Análise de padrões nos logs
+        log_entries = audit_logger.get_recent_logs(limit=100)
+        analysis["log_patterns"] = self._analyze_log_patterns(log_entries)
+
+        # Métricas de performance
+        analysis["performance_metrics"] = {
+            "average_task_completion_time": "unknown",
+            "memory_operations": len(self.memory_store.search("", limit=1000)),
+            "tool_executions": len(self.tool_registry.list_tools()),
+            "evolution_candidates": len(self.evolution_manager.list_versions())
+        }
+
+        # Insights de segurança
+        analysis["security_insights"] = {
+            "supervisor_events": len(self.supervisor.get_recent_events()),
+            "anomaly_detections": len(self.anomaly_detector.get_recent_anomalies()),
+            "patch_validations": len(self.get_modification_proposals())
+        }
+
+        # Oportunidades de melhoria
+        analysis["improvement_opportunities"] = self._identify_improvement_opportunities(analysis)
+
+        log_agent_action(
+            agent_id=self.session_state.agent_id,
+            action="system_analysis_completed",
+            details={"analysis_summary": {k: len(str(v)) for k, v in analysis.items() if k != "timestamp"}},
+            level=LogLevel.INFO
+        )
+
+        return analysis
+
+    def _analyze_log_patterns(self, log_entries: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """Analisa padrões nos logs."""
+        patterns = {
+            "error_frequency": 0,
+            "security_events": 0,
+            "user_interactions": 0,
+            "system_operations": 0,
+            "most_common_actions": {},
+            "time_patterns": {}
+        }
+
+        action_counts = {}
+        for entry in log_entries:
+            action = entry.get("action", "unknown")
+            action_counts[action] = action_counts.get(action, 0) + 1
+
+            if "error" in action.lower():
+                patterns["error_frequency"] += 1
+            if "security" in action.lower():
+                patterns["security_events"] += 1
+            if "user" in action.lower():
+                patterns["user_interactions"] += 1
+            if any(word in action.lower() for word in ["task", "memory", "tool", "evolution"]):
+                patterns["system_operations"] += 1
+
+        patterns["most_common_actions"] = dict(sorted(action_counts.items(), key=lambda x: x[1], reverse=True)[:5])
+
+        return patterns
+
+    def _identify_improvement_opportunities(self, analysis: Dict[str, Any]) -> List[str]:
+        """Identifica oportunidades de melhoria baseado na análise."""
+        opportunities = []
+
+        # Verificar alta frequência de erros
+        if analysis["log_patterns"]["error_frequency"] > 10:
+            opportunities.append("Implementar melhor tratamento de erros e validações adicionais")
+
+        # Verificar baixa atividade do usuário
+        if analysis["log_patterns"]["user_interactions"] < 5:
+            opportunities.append("Melhorar interface e experiência do usuário")
+
+        # Verificar oportunidades de otimização
+        if analysis["performance_metrics"]["memory_operations"] > 100:
+            opportunities.append("Otimizar operações de memória e implementar cache")
+
+        # Verificar segurança
+        if analysis["security_insights"]["anomaly_detections"] > 0:
+            opportunities.append("Reforçar detecção e resposta a anomalias")
+
+        # Verificar evolução
+        if analysis["performance_metrics"]["evolution_candidates"] < 3:
+            opportunities.append("Expandir capacidades de auto-evolução offline")
+
+        return opportunities
+
+    def generate_code_improvement_proposals(self) -> List[Dict[str, Any]]:
+        """Gera propostas de melhoria de código baseado na análise do sistema."""
+        analysis = self.analyze_system_and_logs()
+        proposals = []
+
+        # Proposta baseada em padrões de erro
+        if analysis["log_patterns"]["error_frequency"] > 5:
+            proposals.append({
+                "type": "error_handling",
+                "title": "Melhorar tratamento de erros",
+                "description": "Implementar try-catch mais robusto e validações adicionais",
+                "target_files": ["agent/service.py", "runtime/executor.py"],
+                "estimated_impact": "high",
+                "complexity": "medium"
+            })
+
+        # Proposta baseada em performance
+        if analysis["performance_metrics"]["memory_operations"] > 50:
+            proposals.append({
+                "type": "performance",
+                "title": "Otimizar operações de memória",
+                "description": "Implementar cache LRU e reduzir operações desnecessárias",
+                "target_files": ["agent/memory.py"],
+                "estimated_impact": "medium",
+                "complexity": "high"
+            })
+
+        # Proposta baseada em segurança
+        if analysis["security_insights"]["supervisor_events"] > 0:
+            proposals.append({
+                "type": "security",
+                "title": "Reforçar supervisão de segurança",
+                "description": "Adicionar mais verificações automáticas e alertas",
+                "target_files": ["agent/supervisor.py"],
+                "estimated_impact": "high",
+                "complexity": "medium"
+            })
+
+        # Proposta de evolução
+        proposals.append({
+            "type": "evolution",
+            "title": "Expandir capacidades de aprendizado",
+            "description": "Adicionar novos algoritmos de aprendizado controlado",
+            "target_files": ["agent/controlled_learning.py"],
+            "estimated_impact": "medium",
+            "complexity": "high"
+        })
+
+        log_agent_action(
+            agent_id=self.session_state.agent_id,
+            action="code_improvement_proposals_generated",
+            details={"proposal_count": len(proposals)},
+            level=LogLevel.INFO
+        )
+
+        return proposals
+
+    def suggest_patch_updates(self) -> List[Dict[str, Any]]:
+        """Sugere patches de atualização baseado na análise."""
+        proposals = self.generate_code_improvement_proposals()
+        patches = []
+
+        for proposal in proposals:
+            patch = {
+                "proposal_id": str(uuid.uuid4()),
+                "title": proposal["title"],
+                "description": proposal["description"],
+                "target_files": proposal["target_files"],
+                "patch_type": proposal["type"],
+                "suggested_changes": self._generate_patch_suggestions(proposal),
+                "risk_assessment": self._assess_patch_risk(proposal),
+                "testing_requirements": self._generate_testing_requirements(proposal)
+            }
+            patches.append(patch)
+
+        log_agent_action(
+            agent_id=self.session_state.agent_id,
+            action="patch_updates_suggested",
+            details={"patch_count": len(patches)},
+            level=LogLevel.INFO
+        )
+
+        return patches
+
+    def _generate_patch_suggestions(self, proposal: Dict[str, Any]) -> Dict[str, str]:
+        """Gera sugestões de código para o patch."""
+        suggestions = {}
+
+        if proposal["type"] == "error_handling":
+            suggestions["agent/service.py"] = """
+# Adicionar validação adicional
+try:
+    result = self.execute_tool(tool_name, **kwargs)
+    if not result.success:
+        self.supervisor.record_event("tool_execution_failed", {"tool": tool_name})
+except Exception as e:
+    self.anomaly_detector.record_anomaly("tool_error", {"error": str(e)})
+    raise
+"""
+        elif proposal["type"] == "performance":
+            suggestions["agent/memory.py"] = """
+# Implementar cache LRU
+from functools import lru_cache
+
+@lru_cache(maxsize=128)
+def cached_search(self, query: str, layer: str) -> List[MemoryEntry]:
+    return self._perform_search(query, layer)
+"""
+
+        return suggestions
+
+    def _assess_patch_risk(self, proposal: Dict[str, Any]) -> str:
+        """Avalia risco do patch."""
+        if proposal["complexity"] == "high" and proposal["estimated_impact"] == "high":
+            return "high"
+        elif proposal["complexity"] == "medium" or proposal["estimated_impact"] == "high":
+            return "medium"
+        else:
+            return "low"
+
+    def _generate_testing_requirements(self, proposal: Dict[str, Any]) -> List[str]:
+        """Gera requisitos de teste para o patch."""
+        requirements = ["Teste unitário básico"]
+
+        if proposal["type"] == "security":
+            requirements.extend([
+                "Teste de penetração",
+                "Análise de vulnerabilidades",
+                "Teste de carga com cenários de ataque"
+            ])
+        elif proposal["type"] == "performance":
+            requirements.extend([
+                "Benchmarking antes/depois",
+                "Teste de carga",
+                "Análise de uso de memória"
+            ])
+
+        requirements.append("Teste de regressão completo")
+        return requirements
+
+    def detect_failure_patterns(self) -> Dict[str, Any]:
+        """Identifica padrões de falha ou ataque no sistema."""
+        detection_results = {
+            "timestamp": datetime.now().isoformat(),
+            "anomalies_detected": [],
+            "attack_patterns": [],
+            "failure_patterns": [],
+            "recommendations": []
+        }
+
+        # Verificar anomalias recentes
+        recent_anomalies = self.anomaly_detector.get_recent_anomalies(limit=50)
+        detection_results["anomalies_detected"] = recent_anomalies
+
+        # Analisar padrões de falha
+        log_entries = audit_logger.get_recent_logs(limit=200)
+        failure_patterns = self._analyze_failure_patterns(log_entries)
+        detection_results["failure_patterns"] = failure_patterns
+
+        # Detectar possíveis ataques
+        attack_indicators = self._detect_attack_patterns(log_entries)
+        detection_results["attack_patterns"] = attack_indicators
+
+        # Gerar recomendações
+        detection_results["recommendations"] = self._generate_security_recommendations(
+            recent_anomalies, failure_patterns, attack_indicators
+        )
+
+        # Registrar detecção
+        if detection_results["anomalies_detected"] or detection_results["attack_patterns"]:
+            log_agent_action(
+                agent_id=self.session_state.agent_id,
+                action="threat_detection_completed",
+                details={
+                    "anomalies": len(detection_results["anomalies_detected"]),
+                    "attacks": len(detection_results["attack_patterns"]),
+                    "failures": len(detection_results["failure_patterns"])
+                },
+                level=LogLevel.WARNING
+            )
+
+        return detection_results
+
+    def _analyze_failure_patterns(self, log_entries: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """Analisa padrões de falha nos logs."""
+        patterns = []
+
+        # Contar erros por tipo
+        error_counts = {}
+        for entry in log_entries:
+            if entry.get("level") in ["ERROR", "CRITICAL"]:
+                error_type = entry.get("action", "unknown_error")
+                error_counts[error_type] = error_counts.get(error_type, 0) + 1
+
+        # Identificar padrões frequentes
+        for error_type, count in error_counts.items():
+            if count > 3:  # Mais de 3 ocorrências
+                patterns.append({
+                    "pattern": "frequent_error",
+                    "error_type": error_type,
+                    "frequency": count,
+                    "severity": "medium" if count < 10 else "high"
+                })
+
+        return patterns
+
+    def _detect_attack_patterns(self, log_entries: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """Detecta padrões de possível ataque."""
+        attack_patterns = []
+
+        # Procurar por tentativas de acesso não autorizado
+        unauthorized_attempts = 0
+        suspicious_actions = []
+
+        for entry in log_entries:
+            action = entry.get("action", "")
+            if any(keyword in action.lower() for keyword in ["unauthorized", "forbidden", "violation", "attack"]):
+                unauthorized_attempts += 1
+                suspicious_actions.append(action)
+
+        if unauthorized_attempts > 0:
+            attack_patterns.append({
+                "pattern": "unauthorized_access_attempts",
+                "frequency": unauthorized_attempts,
+                "actions": suspicious_actions[:5],  # Limitar para não sobrecarregar
+                "severity": "high" if unauthorized_attempts > 5 else "medium"
+            })
+
+        return attack_patterns
+
+    def _generate_security_recommendations(self, anomalies: List[Dict[str, Any]],
+                                         failures: List[Dict[str, Any]],
+                                         attacks: List[Dict[str, Any]]) -> List[str]:
+        """Gera recomendações de segurança."""
+        recommendations = []
+
+        if anomalies:
+            recommendations.append("Revisar e ajustar detector de anomalias")
+
+        if failures:
+            recommendations.append("Implementar circuit breakers para operações críticas")
+
+        if attacks:
+            recommendations.append("Reforçar autenticação e autorização")
+            recommendations.append("Implementar rate limiting para APIs")
+
+        if not recommendations:
+            recommendations.append("Sistema de segurança funcionando adequadamente")
+
+        return recommendations
 
     def run_offline_evolution_candidate(self, description: str, candidate_code: Optional[str] = None,
                                        target_files: Optional[List[str]] = None,
@@ -1024,6 +1462,132 @@ class AgentService:
     def run_scenario_simulation(self, simulation_type: str, initial_conditions: Dict[str, Any], **kwargs) -> Dict[str, Any]:
         """Executa simulação de cenário."""
         return self.scenario_simulation.run_scenario_simulation(simulation_type, initial_conditions, **kwargs)
+
+    # === MÉTODOS PARA SISTEMA DE ENSINO ADAPTATIVO ===
+
+    def start_adaptive_learning(self, topic: str, user_id: str = "dev-user") -> Dict[str, Any]:
+        """Inicia modo de ensino adaptativo para um tópico."""
+        result = self.learning_controller.start_learning(topic)
+        
+        # Registra no audit log
+        log_agent_action(
+            agent_id=self.session_state.agent_id,
+            action="adaptive_learning_started",
+            details={
+                "topic": topic,
+                "user_id": user_id,
+                "learning_mode": result.get("learning_mode", False)
+            },
+            level=LogLevel.INFO
+        )
+        
+        # Adiciona tarefa de sessão
+        self.add_session_task(
+            description=f"Aprendizado ativo: {topic}",
+            details={"topic": topic, "learning_mode": True}
+        )
+        
+        return result
+
+    def teach_topic(self, topic: str, user_id: str = "dev-user") -> Dict[str, Any]:
+        """Ensina o tópico atual no modo de aprendizado."""
+        result = self.learning_controller.teach(topic)
+        
+        # Registra no audit log
+        log_agent_action(
+            agent_id=self.session_state.agent_id,
+            action="topic_teaching_delivered",
+            details={
+                "topic": topic,
+                "user_id": user_id,
+                "lesson": result.get("lesson", ""),
+                "level": result.get("level", "")
+            },
+            level=LogLevel.DEBUG
+        )
+        
+        return result
+
+    def evaluate_learning_response(self, topic: str, user_response: str, user_id: str = "dev-user") -> Dict[str, Any]:
+        """Avalia resposta do usuário no aprendizado."""
+        result = self.learning_controller.evaluate(topic, user_response)
+        
+        # Registra no audit log
+        log_agent_action(
+            agent_id=self.session_state.agent_id,
+            action="learning_response_evaluated",
+            details={
+                "topic": topic,
+                "user_id": user_id,
+                "outcome": result.get("outcome", ""),
+                "current_level": result.get("current_level", "")
+            },
+            level=LogLevel.INFO
+        )
+        
+        return result
+
+    def get_learning_progress(self, topic: str, user_id: str = "dev-user") -> Dict[str, Any]:
+        """Retorna progresso do usuário em um tópico."""
+        result = self.learning_controller.progress(topic)
+        
+        # Registra no audit log
+        log_agent_action(
+            agent_id=self.session_state.agent_id,
+            action="learning_progress_checked",
+            details={
+                "topic": topic,
+                "user_id": user_id,
+                "level": result.get("level", 0),
+                "score": result.get("score", 0)
+            },
+            level=LogLevel.DEBUG
+        )
+        
+        return result
+
+    def stop_adaptive_learning(self, user_id: str = "dev-user") -> Dict[str, Any]:
+        """Finaliza modo de ensino adaptativo."""
+        result = self.learning_controller.stop_learning()
+        
+        # Registra no audit log
+        log_agent_action(
+            agent_id=self.session_state.agent_id,
+            action="adaptive_learning_stopped",
+            details={
+                "user_id": user_id,
+                "topic": result.get("topic", ""),
+                "learning_mode": result.get("learning_mode", False)
+            },
+            level=LogLevel.INFO
+        )
+        
+        # Completa tarefa de sessão
+        self.complete_session_task(
+            task_id=None,  # TODO: implementar busca por tarefa de aprendizado ativa
+            details={"topic": result.get("topic", ""), "learning_completed": True}
+        )
+        
+        return result
+
+    def is_learning_mode_active(self) -> bool:
+        """Verifica se o modo de aprendizado está ativo."""
+        return self.learning_controller.is_learning_active()
+
+    def get_learning_status(self) -> Dict[str, Any]:
+        """Retorna status completo do sistema de aprendizado."""
+        return {
+            "learning_mode_active": self.is_learning_mode_active(),
+            "current_topic": getattr(self.learning_controller.session_manager, 'current_topic', None),
+            "available_topics": self.learning_controller.student_model.list_topics(),
+            "learning_capabilities": [
+                "start_adaptive_learning",
+                "teach_topic", 
+                "evaluate_learning_response",
+                "get_learning_progress",
+                "stop_adaptive_learning"
+            ]
+        }
 
 
 def get_agent_service(user_id: str = "dev-user", agent_id: str = "aura-agent") -> AgentService:

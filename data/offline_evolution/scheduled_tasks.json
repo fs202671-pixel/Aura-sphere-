@@ -1,0 +1,1034 @@
+{
+  "pending": [
+    {
+      "task_id": "33c14b90-855a-4864-b034-283ff958aefd",
+      "description": "Gerar variações de arquitetura interna",
+      "task_type": "version_generation",
+      "priority": 8,
+      "scheduled_at": "2026-05-05T08:40:56.283453",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "076e0536-e019-4090-819f-f12006545449",
+      "description": "Reorganizar módulos do agente para melhor modularidade",
+      "task_type": "reorganization",
+      "priority": 7,
+      "scheduled_at": "2026-05-04T16:04:58.305121",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "65284d13-22d9-466a-9f9d-a1ec7cccd1e9",
+      "description": "Otimizar algoritmos críticos",
+      "task_type": "optimization",
+      "priority": 7,
+      "scheduled_at": "2026-05-04T16:04:58.305673",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "01018d7b-5ff9-46e5-afd0-636523839819",
+      "description": "Otimizar algoritmos críticos",
+      "task_type": "optimization",
+      "priority": 7,
+      "scheduled_at": "2026-05-05T03:23:45.929129",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "212712f1-d9af-44ff-bcda-5a17c3bb53a5",
+      "description": "Otimizar algoritmos críticos",
+      "task_type": "optimization",
+      "priority": 7,
+      "scheduled_at": "2026-05-05T03:24:21.252691",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "70e91569-ce03-4e90-a770-2cde84f882b5",
+      "description": "Otimizar algoritmos críticos",
+      "task_type": "optimization",
+      "priority": 7,
+      "scheduled_at": "2026-05-05T03:25:27.395283",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "289dd5af-5e8e-4df4-a3f6-5a94c9f5c5e5",
+      "description": "Otimizar algoritmos críticos",
+      "task_type": "optimization",
+      "priority": 7,
+      "scheduled_at": "2026-05-05T03:25:27.442125",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "4e8aea93-f673-4dbb-bcc5-9bab8cef58a4",
+      "description": "Otimizar algoritmos críticos",
+      "task_type": "optimization",
+      "priority": 7,
+      "scheduled_at": "2026-05-05T03:26:00.600109",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "21d4246b-a8ed-4185-a1ed-894b6428dc2b",
+      "description": "Otimizar algoritmos críticos",
+      "task_type": "optimization",
+      "priority": 7,
+      "scheduled_at": "2026-05-05T03:26:00.717986",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "e51cb663-2b0f-4803-b61c-20441d9ab591",
+      "description": "Otimizar algoritmos críticos",
+      "task_type": "optimization",
+      "priority": 7,
+      "scheduled_at": "2026-05-05T03:26:18.887977",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "be00e26b-22ea-4479-958f-65965d411550",
+      "description": "Otimizar algoritmos críticos",
+      "task_type": "optimization",
+      "priority": 7,
+      "scheduled_at": "2026-05-05T03:26:18.984190",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "1e0eab30-088d-4a83-8b8a-54a5bb6e1ea6",
+      "description": "Otimizar algoritmos críticos",
+      "task_type": "optimization",
+      "priority": 7,
+      "scheduled_at": "2026-05-05T03:26:44.107499",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "9d0acfee-92a0-4615-9bdb-71a2ab447ab7",
+      "description": "Otimizar algoritmos críticos",
+      "task_type": "optimization",
+      "priority": 7,
+      "scheduled_at": "2026-05-05T03:26:44.136282",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "b2a6972a-246c-4e9b-9f6c-93b1cc32e6dc",
+      "description": "Otimizar algoritmos críticos",
+      "task_type": "optimization",
+      "priority": 7,
+      "scheduled_at": "2026-05-05T08:20:07.617401",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "cbe86681-2eca-4cee-b9bb-e17a80fe9c82",
+      "description": "Otimizar algoritmos críticos",
+      "task_type": "optimization",
+      "priority": 7,
+      "scheduled_at": "2026-05-05T08:20:07.788915",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "737c651b-e949-411b-b093-ead5e671581d",
+      "description": "Otimizar algoritmos críticos",
+      "task_type": "optimization",
+      "priority": 7,
+      "scheduled_at": "2026-05-05T08:23:36.234457",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "933da153-0e7c-4123-b01c-c6212344eb7f",
+      "description": "Otimizar algoritmos críticos",
+      "task_type": "optimization",
+      "priority": 7,
+      "scheduled_at": "2026-05-05T08:23:36.263940",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "593fa546-7446-4088-b461-e1ef0f0a142d",
+      "description": "Otimizar algoritmos críticos",
+      "task_type": "optimization",
+      "priority": 7,
+      "scheduled_at": "2026-05-05T08:24:07.027797",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "29d5a832-4db7-4643-9c74-c87a6c7b80ea",
+      "description": "Otimizar algoritmos críticos",
+      "task_type": "optimization",
+      "priority": 7,
+      "scheduled_at": "2026-05-05T08:24:07.134850",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "a176febb-5fc9-4b1d-99d4-afecd8771ced",
+      "description": "Otimizar algoritmos críticos",
+      "task_type": "optimization",
+      "priority": 7,
+      "scheduled_at": "2026-05-05T08:24:25.034109",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "95e33c56-25aa-4d03-af0c-b527f5cbaba7",
+      "description": "Otimizar algoritmos críticos",
+      "task_type": "optimization",
+      "priority": 7,
+      "scheduled_at": "2026-05-05T08:24:25.139673",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "fa743c21-4895-4276-a390-d1346c4db883",
+      "description": "Otimizar algoritmos críticos",
+      "task_type": "optimization",
+      "priority": 7,
+      "scheduled_at": "2026-05-05T08:30:02.888159",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "a6c4eb8d-1c10-4c74-8d80-335a54f91a66",
+      "description": "Otimizar algoritmos críticos",
+      "task_type": "optimization",
+      "priority": 7,
+      "scheduled_at": "2026-05-05T08:30:02.996750",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "0d67999a-b49d-4aa1-aeed-10238317d63c",
+      "description": "Otimizar algoritmos críticos",
+      "task_type": "optimization",
+      "priority": 7,
+      "scheduled_at": "2026-05-05T08:32:11.279515",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "aeecade8-90da-435a-a257-476c65a5521e",
+      "description": "Otimizar algoritmos críticos",
+      "task_type": "optimization",
+      "priority": 7,
+      "scheduled_at": "2026-05-05T08:32:11.393910",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "131442f7-67ce-457b-865f-ba4f6ca29676",
+      "description": "Otimizar algoritmos críticos",
+      "task_type": "optimization",
+      "priority": 7,
+      "scheduled_at": "2026-05-05T08:40:56.285223",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "bb9a139b-036a-4106-97e8-94484e8f2c50",
+      "description": "Reorganizar estrutura de módulos",
+      "task_type": "reorganization",
+      "priority": 6,
+      "scheduled_at": "2026-05-04T16:04:58.305940",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "409a0d7c-ed67-473b-9960-a957d9e336fb",
+      "description": "Reorganizar estrutura de módulos",
+      "task_type": "reorganization",
+      "priority": 6,
+      "scheduled_at": "2026-05-05T03:23:45.929484",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "0005b32c-e81b-45fa-b9ff-d786b9a7ab65",
+      "description": "Reorganizar estrutura de módulos",
+      "task_type": "reorganization",
+      "priority": 6,
+      "scheduled_at": "2026-05-05T03:24:21.253070",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "56d20abd-9d48-4138-9222-8652b3a1ec79",
+      "description": "Reorganizar estrutura de módulos",
+      "task_type": "reorganization",
+      "priority": 6,
+      "scheduled_at": "2026-05-05T03:25:27.395744",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "06b16ba8-d1c1-4ac8-865e-edb502f9abaa",
+      "description": "Reorganizar estrutura de módulos",
+      "task_type": "reorganization",
+      "priority": 6,
+      "scheduled_at": "2026-05-05T03:25:27.442551",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "5ab7e1f1-5a91-4b80-ace4-b71a58fe2629",
+      "description": "Reorganizar estrutura de módulos",
+      "task_type": "reorganization",
+      "priority": 6,
+      "scheduled_at": "2026-05-05T03:26:00.600638",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "2d713f14-eac7-44d5-9795-6dee81e0f5d3",
+      "description": "Reorganizar estrutura de módulos",
+      "task_type": "reorganization",
+      "priority": 6,
+      "scheduled_at": "2026-05-05T03:26:00.718474",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "2b5ecdca-2e05-4236-b414-427e66b590e1",
+      "description": "Reorganizar estrutura de módulos",
+      "task_type": "reorganization",
+      "priority": 6,
+      "scheduled_at": "2026-05-05T03:26:18.888579",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "be8bdd0b-245c-4875-b7e8-2faa1c4de480",
+      "description": "Reorganizar estrutura de módulos",
+      "task_type": "reorganization",
+      "priority": 6,
+      "scheduled_at": "2026-05-05T03:26:18.984708",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "26895008-f674-4212-8536-443debc6312b",
+      "description": "Reorganizar estrutura de módulos",
+      "task_type": "reorganization",
+      "priority": 6,
+      "scheduled_at": "2026-05-05T03:26:44.108056",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "8ef0f461-0ca7-4ac6-98ca-facf42847910",
+      "description": "Reorganizar estrutura de módulos",
+      "task_type": "reorganization",
+      "priority": 6,
+      "scheduled_at": "2026-05-05T03:26:44.136900",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "ceb77779-4098-476f-bf1b-96de141ed88f",
+      "description": "Reorganizar estrutura de módulos",
+      "task_type": "reorganization",
+      "priority": 6,
+      "scheduled_at": "2026-05-05T08:20:07.618132",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "0f105eb0-7516-4a93-a841-37155c788a1d",
+      "description": "Reorganizar estrutura de módulos",
+      "task_type": "reorganization",
+      "priority": 6,
+      "scheduled_at": "2026-05-05T08:20:07.789581",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "15338b47-4d32-491d-9055-f405e2841eae",
+      "description": "Reorganizar estrutura de módulos",
+      "task_type": "reorganization",
+      "priority": 6,
+      "scheduled_at": "2026-05-05T08:23:36.235122",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "a4b63e66-1188-48c2-8d27-508daf1cd363",
+      "description": "Reorganizar estrutura de módulos",
+      "task_type": "reorganization",
+      "priority": 6,
+      "scheduled_at": "2026-05-05T08:23:36.264639",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "7c49c8c7-e4e4-445a-a58e-203989fa9bf4",
+      "description": "Reorganizar estrutura de módulos",
+      "task_type": "reorganization",
+      "priority": 6,
+      "scheduled_at": "2026-05-05T08:24:07.028986",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "996fc7ba-db42-4572-9995-54baac25c64f",
+      "description": "Reorganizar estrutura de módulos",
+      "task_type": "reorganization",
+      "priority": 6,
+      "scheduled_at": "2026-05-05T08:24:07.135580",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "0975df19-c59c-4a32-bc0c-9186c7e392ec",
+      "description": "Reorganizar estrutura de módulos",
+      "task_type": "reorganization",
+      "priority": 6,
+      "scheduled_at": "2026-05-05T08:24:25.034942",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "c2e6e8ac-3a40-4d15-ae35-d4e6306b9074",
+      "description": "Reorganizar estrutura de módulos",
+      "task_type": "reorganization",
+      "priority": 6,
+      "scheduled_at": "2026-05-05T08:24:25.140503",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "9142894f-da73-4234-a4a5-cdf4eb3e0d17",
+      "description": "Reorganizar estrutura de módulos",
+      "task_type": "reorganization",
+      "priority": 6,
+      "scheduled_at": "2026-05-05T08:30:02.889008",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "f7eda554-6d5e-491e-915f-0707237adcfe",
+      "description": "Reorganizar estrutura de módulos",
+      "task_type": "reorganization",
+      "priority": 6,
+      "scheduled_at": "2026-05-05T08:30:02.997619",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "f8782c04-578b-411f-94dc-64b9e8e6ef7c",
+      "description": "Testar agendamento de evolução offline",
+      "task_type": "optimization",
+      "priority": 6,
+      "scheduled_at": "2026-05-05T08:30:05.193572",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "3ee94710-f444-4de2-89c9-81939838a928",
+      "description": "Reorganizar estrutura de módulos",
+      "task_type": "reorganization",
+      "priority": 6,
+      "scheduled_at": "2026-05-05T08:32:11.280441",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "0ea3aedc-8d7a-4bfd-acea-a88459cafefd",
+      "description": "Reorganizar estrutura de módulos",
+      "task_type": "reorganization",
+      "priority": 6,
+      "scheduled_at": "2026-05-05T08:32:11.394886",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "a1120ef3-cb4b-4360-a281-6754f692644f",
+      "description": "Testar agendamento de evolução offline",
+      "task_type": "optimization",
+      "priority": 6,
+      "scheduled_at": "2026-05-05T08:32:13.523674",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    },
+    {
+      "task_id": "6bda2d97-ed32-4fae-b7bf-7746059773c7",
+      "description": "Reorganizar estrutura de módulos",
+      "task_type": "reorganization",
+      "priority": 6,
+      "scheduled_at": "2026-05-05T08:40:56.286756",
+      "should_run_at": null,
+      "status": "pending",
+      "result": null,
+      "error": null,
+      "completed_at": null
+    }
+  ],
+  "completed": [
+    {
+      "task_id": "ffc583a2-4d04-495c-b531-c8acca844e10",
+      "description": "Gerar variação de arquitetura interna para teste offline",
+      "task_type": "version_generation",
+      "priority": 9,
+      "scheduled_at": "2026-05-04T16:04:58.304568",
+      "should_run_at": null,
+      "status": "completed",
+      "result": {
+        "success": true,
+        "version_id": "v8",
+        "message": "Versão v8 gerada com sucesso"
+      },
+      "error": null,
+      "completed_at": "2026-05-04T16:04:58.306842"
+    },
+    {
+      "task_id": "e0837d5d-986b-45d7-a052-e14a7c35a2e3",
+      "description": "Otimizar algoritmo de processamento de dados",
+      "task_type": "optimization",
+      "priority": 8,
+      "scheduled_at": "2026-05-04T16:04:58.304809",
+      "should_run_at": null,
+      "status": "completed",
+      "result": {
+        "success": true,
+        "optimizations": [
+          "Cache implementation",
+          "Memory optimization",
+          "Algorithm improvement"
+        ],
+        "message": "Otimizações aplicadas com sucesso"
+      },
+      "error": null,
+      "completed_at": "2026-05-04T16:05:03.307278"
+    },
+    {
+      "task_id": "48b3eb7f-f995-4cd9-b18d-1553a4885bed",
+      "description": "Gerar variações de arquitetura interna",
+      "task_type": "version_generation",
+      "priority": 8,
+      "scheduled_at": "2026-05-04T16:04:58.305437",
+      "should_run_at": null,
+      "status": "completed",
+      "result": {
+        "success": true,
+        "version_id": "v9",
+        "message": "Versão v9 gerada com sucesso"
+      },
+      "error": null,
+      "completed_at": "2026-05-05T03:23:45.930648"
+    },
+    {
+      "task_id": "1d3c0fa9-e428-47d6-92be-633a18c3fad7",
+      "description": "Gerar variações de arquitetura interna",
+      "task_type": "version_generation",
+      "priority": 8,
+      "scheduled_at": "2026-05-05T03:23:45.928736",
+      "should_run_at": null,
+      "status": "completed",
+      "result": {
+        "success": true,
+        "version_id": "v10",
+        "message": "Versão v10 gerada com sucesso"
+      },
+      "error": null,
+      "completed_at": "2026-05-05T03:24:21.254338"
+    },
+    {
+      "task_id": "23be44c7-bb24-44e9-b518-b54352513c8d",
+      "description": "Gerar variações de arquitetura interna",
+      "task_type": "version_generation",
+      "priority": 8,
+      "scheduled_at": "2026-05-05T03:24:21.252275",
+      "should_run_at": null,
+      "status": "completed",
+      "result": {
+        "success": true,
+        "version_id": "v11",
+        "message": "Versão v11 gerada com sucesso"
+      },
+      "error": null,
+      "completed_at": "2026-05-05T03:25:27.396942"
+    },
+    {
+      "task_id": "8434b28c-d17f-4c37-83c1-be57b358411e",
+      "description": "Gerar variações de arquitetura interna",
+      "task_type": "version_generation",
+      "priority": 8,
+      "scheduled_at": "2026-05-05T03:25:27.394838",
+      "should_run_at": null,
+      "status": "completed",
+      "result": {
+        "success": true,
+        "version_id": "v12",
+        "message": "Versão v12 gerada com sucesso"
+      },
+      "error": null,
+      "completed_at": "2026-05-05T03:25:27.443706"
+    },
+    {
+      "task_id": "327f7d0f-b15a-42dd-abe2-f563766fd002",
+      "description": "Gerar variações de arquitetura interna",
+      "task_type": "version_generation",
+      "priority": 8,
+      "scheduled_at": "2026-05-05T03:25:27.441653",
+      "should_run_at": null,
+      "status": "completed",
+      "result": {
+        "success": true,
+        "version_id": "v13",
+        "message": "Versão v13 gerada com sucesso"
+      },
+      "error": null,
+      "completed_at": "2026-05-05T03:26:00.601966"
+    },
+    {
+      "task_id": "b55e086b-a201-442a-af72-dd262baf9d97",
+      "description": "Gerar variações de arquitetura interna",
+      "task_type": "version_generation",
+      "priority": 8,
+      "scheduled_at": "2026-05-05T03:26:00.599579",
+      "should_run_at": null,
+      "status": "completed",
+      "result": {
+        "success": true,
+        "version_id": "v14",
+        "message": "Versão v14 gerada com sucesso"
+      },
+      "error": null,
+      "completed_at": "2026-05-05T03:26:00.720062"
+    },
+    {
+      "task_id": "93abffd6-0fa7-4b8d-9101-a32c8bd8664b",
+      "description": "Gerar variações de arquitetura interna",
+      "task_type": "version_generation",
+      "priority": 8,
+      "scheduled_at": "2026-05-05T03:26:00.717468",
+      "should_run_at": null,
+      "status": "completed",
+      "result": {
+        "success": true,
+        "version_id": "v15",
+        "message": "Versão v15 gerada com sucesso"
+      },
+      "error": null,
+      "completed_at": "2026-05-05T03:26:18.890128"
+    },
+    {
+      "task_id": "3c644601-fc05-4c3d-98f5-5dde09580aba",
+      "description": "Gerar variações de arquitetura interna",
+      "task_type": "version_generation",
+      "priority": 8,
+      "scheduled_at": "2026-05-05T03:26:18.887425",
+      "should_run_at": null,
+      "status": "completed",
+      "result": {
+        "success": true,
+        "version_id": "v16",
+        "message": "Versão v16 gerada com sucesso"
+      },
+      "error": null,
+      "completed_at": "2026-05-05T03:26:18.986129"
+    },
+    {
+      "task_id": "34d7af87-cd30-49ea-bbc3-f51704ebd0c2",
+      "description": "Gerar variações de arquitetura interna",
+      "task_type": "version_generation",
+      "priority": 8,
+      "scheduled_at": "2026-05-05T03:26:18.983614",
+      "should_run_at": null,
+      "status": "completed",
+      "result": {
+        "success": true,
+        "version_id": "v17",
+        "message": "Versão v17 gerada com sucesso"
+      },
+      "error": null,
+      "completed_at": "2026-05-05T03:26:44.109471"
+    },
+    {
+      "task_id": "8a9c418b-5bfc-42d5-81c6-963438cf9653",
+      "description": "Gerar variações de arquitetura interna",
+      "task_type": "version_generation",
+      "priority": 8,
+      "scheduled_at": "2026-05-05T03:26:44.106701",
+      "should_run_at": null,
+      "status": "completed",
+      "result": {
+        "success": true,
+        "version_id": "v18",
+        "message": "Versão v18 gerada com sucesso"
+      },
+      "error": null,
+      "completed_at": "2026-05-05T03:26:44.138311"
+    },
+    {
+      "task_id": "ff3df959-dd88-4992-aaa6-1aa4c86ec4b1",
+      "description": "Gerar variações de arquitetura interna",
+      "task_type": "version_generation",
+      "priority": 8,
+      "scheduled_at": "2026-05-05T03:26:44.135650",
+      "should_run_at": null,
+      "status": "completed",
+      "result": {
+        "success": true,
+        "version_id": "v19",
+        "message": "Versão v19 gerada com sucesso"
+      },
+      "error": null,
+      "completed_at": "2026-05-05T08:20:07.619592"
+    },
+    {
+      "task_id": "8f11bf7e-d3ab-4cbd-9007-11b4db06df5c",
+      "description": "Gerar variações de arquitetura interna",
+      "task_type": "version_generation",
+      "priority": 8,
+      "scheduled_at": "2026-05-05T08:20:07.616580",
+      "should_run_at": null,
+      "status": "completed",
+      "result": {
+        "success": true,
+        "version_id": "v20",
+        "message": "Versão v20 gerada com sucesso"
+      },
+      "error": null,
+      "completed_at": "2026-05-05T08:20:07.791227"
+    },
+    {
+      "task_id": "bd1106c1-dda5-4345-95a1-a47e94b3a685",
+      "description": "Gerar variações de arquitetura interna",
+      "task_type": "version_generation",
+      "priority": 8,
+      "scheduled_at": "2026-05-05T08:20:07.788190",
+      "should_run_at": null,
+      "status": "completed",
+      "result": {
+        "success": true,
+        "version_id": "v21",
+        "message": "Versão v21 gerada com sucesso"
+      },
+      "error": null,
+      "completed_at": "2026-05-05T08:23:36.237083"
+    },
+    {
+      "task_id": "5945e882-2a1e-46ef-bd8a-7c4bb0fd9933",
+      "description": "Gerar variações de arquitetura interna",
+      "task_type": "version_generation",
+      "priority": 8,
+      "scheduled_at": "2026-05-05T08:23:36.233682",
+      "should_run_at": null,
+      "status": "completed",
+      "result": {
+        "success": true,
+        "version_id": "v22",
+        "message": "Versão v22 gerada com sucesso"
+      },
+      "error": null,
+      "completed_at": "2026-05-05T08:23:36.266321"
+    },
+    {
+      "task_id": "c0b9b040-91ad-46ca-a92f-5729cc959f5e",
+      "description": "Gerar variações de arquitetura interna",
+      "task_type": "version_generation",
+      "priority": 8,
+      "scheduled_at": "2026-05-05T08:23:36.263185",
+      "should_run_at": null,
+      "status": "completed",
+      "result": {
+        "success": true,
+        "version_id": "v23",
+        "message": "Versão v23 gerada com sucesso"
+      },
+      "error": null,
+      "completed_at": "2026-05-05T08:24:07.031124"
+    },
+    {
+      "task_id": "5fb34892-b32d-4bd7-979b-62731064b658",
+      "description": "Gerar variações de arquitetura interna",
+      "task_type": "version_generation",
+      "priority": 8,
+      "scheduled_at": "2026-05-05T08:24:07.026594",
+      "should_run_at": null,
+      "status": "completed",
+      "result": {
+        "success": true,
+        "version_id": "v24",
+        "message": "Versão v24 gerada com sucesso"
+      },
+      "error": null,
+      "completed_at": "2026-05-05T08:24:07.137293"
+    },
+    {
+      "task_id": "b502908f-b41a-4fa8-8f3d-4e2c9d7e972c",
+      "description": "Gerar variações de arquitetura interna",
+      "task_type": "version_generation",
+      "priority": 8,
+      "scheduled_at": "2026-05-05T08:24:07.134029",
+      "should_run_at": null,
+      "status": "completed",
+      "result": {
+        "success": true,
+        "version_id": "v25",
+        "message": "Versão v25 gerada com sucesso"
+      },
+      "error": null,
+      "completed_at": "2026-05-05T08:24:25.036942"
+    },
+    {
+      "task_id": "6a170465-4fc3-42c7-bfa8-3fdfc9c231b9",
+      "description": "Gerar variações de arquitetura interna",
+      "task_type": "version_generation",
+      "priority": 8,
+      "scheduled_at": "2026-05-05T08:24:25.033194",
+      "should_run_at": null,
+      "status": "completed",
+      "result": {
+        "success": true,
+        "version_id": "v26",
+        "message": "Versão v26 gerada com sucesso"
+      },
+      "error": null,
+      "completed_at": "2026-05-05T08:24:25.142343"
+    },
+    {
+      "task_id": "f4d10201-787d-4749-9136-0656a94fe53d",
+      "description": "Gerar variações de arquitetura interna",
+      "task_type": "version_generation",
+      "priority": 8,
+      "scheduled_at": "2026-05-05T08:24:25.138754",
+      "should_run_at": null,
+      "status": "completed",
+      "result": {
+        "success": true,
+        "version_id": "v27",
+        "message": "Versão v27 gerada com sucesso"
+      },
+      "error": null,
+      "completed_at": "2026-05-05T08:30:02.890931"
+    },
+    {
+      "task_id": "46a4b8de-b9ec-47bc-91bc-3802a5ba2bde",
+      "description": "Gerar variações de arquitetura interna",
+      "task_type": "version_generation",
+      "priority": 8,
+      "scheduled_at": "2026-05-05T08:30:02.887171",
+      "should_run_at": null,
+      "status": "completed",
+      "result": {
+        "success": true,
+        "version_id": "v28",
+        "message": "Versão v28 gerada com sucesso"
+      },
+      "error": null,
+      "completed_at": "2026-05-05T08:30:02.999715"
+    },
+    {
+      "task_id": "723aeb8e-5aff-4ceb-98af-8ef652f5f409",
+      "description": "Gerar variações de arquitetura interna",
+      "task_type": "version_generation",
+      "priority": 8,
+      "scheduled_at": "2026-05-05T08:30:02.995798",
+      "should_run_at": null,
+      "status": "completed",
+      "result": {
+        "success": true,
+        "version_id": "v29",
+        "message": "Versão v29 gerada com sucesso"
+      },
+      "error": null,
+      "completed_at": "2026-05-05T08:32:11.282883"
+    },
+    {
+      "task_id": "7e08c19a-eb71-4809-94f2-3ce89c653c47",
+      "description": "Gerar variações de arquitetura interna",
+      "task_type": "version_generation",
+      "priority": 8,
+      "scheduled_at": "2026-05-05T08:32:11.278468",
+      "should_run_at": null,
+      "status": "completed",
+      "result": {
+        "success": true,
+        "version_id": "v30",
+        "message": "Versão v30 gerada com sucesso"
+      },
+      "error": null,
+      "completed_at": "2026-05-05T08:32:11.396928"
+    },
+    {
+      "task_id": "c054e641-aad1-406f-b907-255c5b52bf92",
+      "description": "Gerar variações de arquitetura interna",
+      "task_type": "version_generation",
+      "priority": 8,
+      "scheduled_at": "2026-05-05T08:32:11.392888",
+      "should_run_at": null,
+      "status": "completed",
+      "result": {
+        "success": true,
+        "version_id": "v31",
+        "message": "Versão v31 gerada com sucesso"
+      },
+      "error": null,
+      "completed_at": "2026-05-05T08:40:56.291158"
+    }
+  ]
+}

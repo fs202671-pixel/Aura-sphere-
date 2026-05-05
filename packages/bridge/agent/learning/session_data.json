@@ -1,0 +1,24 @@
+{
+  "learning_mode": false,
+  "current_topic": null,
+  "current_session": {
+    "topic": "inglês",
+    "started_at": "2026-05-04T10:49:17.651360",
+    "status": "stopped",
+    "history": [
+      {
+        "timestamp": "2026-05-04T10:49:17.652533",
+        "entry": "Sessão iniciada para inglês"
+      },
+      {
+        "timestamp": "2026-05-04T10:49:17.653913",
+        "entry": "Avaliação realizada: errada"
+      },
+      {
+        "timestamp": "2026-05-04T10:49:17.654951",
+        "entry": "Sessão finalizada"
+      }
+    ],
+    "ended_at": "2026-05-04T10:49:17.654488"
+  }
+}

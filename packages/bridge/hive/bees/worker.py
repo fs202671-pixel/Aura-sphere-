@@ -18,9 +18,9 @@ from dataclasses import dataclass
 from enum import Enum
 import logging
 
-from ...memory.collective import CollectiveMemory
-from ...core.security import SecurityManager
-from ...core.sandbox import SandboxManager
+from memory.collective import CollectiveMemory
+from core.security import SecurityManager
+from core.sandbox import SandboxManager
 
 logger = logging.getLogger(__name__)
 

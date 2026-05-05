@@ -1,0 +1,146 @@
+[
+  {
+    "timestamp": "2026-05-05T03:25:28.164367",
+    "event_type": "data_submission",
+    "entity": "controlled_learning",
+    "action": "submit",
+    "user_id": null,
+    "details": {
+      "data_id": "6865ecdfe3bd",
+      "source": "user_approved",
+      "data_keys": [
+        "category",
+        "description"
+      ]
+    },
+    "event_id": "b2bae38dfe60"
+  },
+  {
+    "timestamp": "2026-05-05T03:26:00.839086",
+    "event_type": "data_submission",
+    "entity": "controlled_learning",
+    "action": "submit",
+    "user_id": null,
+    "details": {
+      "data_id": "6865ecdfe3bd",
+      "source": "user_approved",
+      "data_keys": [
+        "category",
+        "description"
+      ]
+    },
+    "event_id": "4e2345fb3be8"
+  },
+  {
+    "timestamp": "2026-05-05T03:26:19.051459",
+    "event_type": "data_submission",
+    "entity": "controlled_learning",
+    "action": "submit",
+    "user_id": null,
+    "details": {
+      "data_id": "6865ecdfe3bd",
+      "source": "user_approved",
+      "data_keys": [
+        "category",
+        "description"
+      ]
+    },
+    "event_id": "bc37ae672cfd"
+  },
+  {
+    "timestamp": "2026-05-05T03:26:44.257280",
+    "event_type": "data_submission",
+    "entity": "controlled_learning",
+    "action": "submit",
+    "user_id": null,
+    "details": {
+      "data_id": "6865ecdfe3bd",
+      "source": "user_approved",
+      "data_keys": [
+        "category",
+        "description"
+      ]
+    },
+    "event_id": "e670b540c313"
+  },
+  {
+    "timestamp": "2026-05-05T08:23:38.435238",
+    "event_type": "data_submission",
+    "entity": "controlled_learning",
+    "action": "submit",
+    "user_id": null,
+    "details": {
+      "data_id": "6865ecdfe3bd",
+      "source": "user_approved",
+      "data_keys": [
+        "category",
+        "description"
+      ]
+    },
+    "event_id": "f202be3c2210"
+  },
+  {
+    "timestamp": "2026-05-05T08:24:09.360566",
+    "event_type": "data_submission",
+    "entity": "controlled_learning",
+    "action": "submit",
+    "user_id": null,
+    "details": {
+      "data_id": "6865ecdfe3bd",
+      "source": "user_approved",
+      "data_keys": [
+        "category",
+        "description"
+      ]
+    },
+    "event_id": "dcb4efd7d279"
+  },
+  {
+    "timestamp": "2026-05-05T08:24:27.298900",
+    "event_type": "data_submission",
+    "entity": "controlled_learning",
+    "action": "submit",
+    "user_id": null,
+    "details": {
+      "data_id": "6865ecdfe3bd",
+      "source": "user_approved",
+      "data_keys": [
+        "category",
+        "description"
+      ]
+    },
+    "event_id": "c9b105b6fe1d"
+  },
+  {
+    "timestamp": "2026-05-05T08:30:05.614732",
+    "event_type": "data_submission",
+    "entity": "controlled_learning",
+    "action": "submit",
+    "user_id": null,
+    "details": {
+      "data_id": "6865ecdfe3bd",
+      "source": "user_approved",
+      "data_keys": [
+        "category",
+        "description"
+      ]
+    },
+    "event_id": "9a2d0c20f320"
+  },
+  {
+    "timestamp": "2026-05-05T08:32:13.566659",
+    "event_type": "data_submission",
+    "entity": "controlled_learning",
+    "action": "submit",
+    "user_id": null,
+    "details": {
+      "data_id": "6865ecdfe3bd",
+      "source": "user_approved",
+      "data_keys": [
+        "category",
+        "description"
+      ]
+    },
+    "event_id": "6eebcdb43b7a"
+  }
+]

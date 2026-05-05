@@ -205,6 +205,12 @@ class PermissionManager:
 
         return removed > 0
 
+    def get_user_level(self, user_id: str) -> PermissionLevel:
+        """Retorna o nível de permissão atual do usuário."""
+        if user_id not in self.sessions:
+            return PermissionLevel.LEVEL_0_READ_ONLY
+        return self.sessions[user_id].current_level
+
     def _cleanup_expired_permissions(self, user_id: str) -> None:
         """Remove permissões expiradas"""
         if user_id not in self.sessions:

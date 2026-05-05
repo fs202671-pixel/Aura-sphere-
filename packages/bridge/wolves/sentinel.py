@@ -18,8 +18,8 @@ from enum import Enum
 import logging
 import json
 
-from ...memory.collective import CollectiveMemory
-from ...core.security import SecurityManager
+from memory.collective import CollectiveMemory
+from core.security import SecurityManager
 
 logger = logging.getLogger(__name__)
 

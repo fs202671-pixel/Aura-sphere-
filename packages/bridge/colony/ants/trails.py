@@ -12,7 +12,7 @@ Características:
 
 import time
 import math
-from typing import Dict, List, Any, Tuple
+from typing import Dict, List, Any, Tuple, Optional
 from dataclasses import dataclass
 import logging
 

@@ -1,0 +1,100 @@
+{
+  "variants": [
+    {
+      "variant_id": "opt_b5aff693",
+      "original_module": "agent.service",
+      "variant_type": "optimization",
+      "description": "Melhoria de performance com cache e algoritmo otimizado",
+      "code_changes": {
+        "agent.service_optimized.py": "\n# Usar estruturas de dados mais eficientes\nfrom collections import defaultdict\n\n# mapear chaves -> lista de valores\ncache = defaultdict(list)\n\n# Usar binary search em vez de linear\nimport bisect\nsorted_list = sorted(data)\nidx = bisect.bisect_left(sorted_list, value)\n"
+      },
+      "metrics": {
+        "performance": 0.2,
+        "memory": 0.15,
+        "maintainability": -0.05
+      },
+      "created_at": "2026-05-04T16:05:04.307005",
+      "complexity_score": 4.0
+    },
+    {
+      "variant_id": "ref_652787b9",
+      "original_module": "agent.service",
+      "variant_type": "refactor",
+      "description": "Refatoração para separar responsabilidades e melhorar manutenção",
+      "code_changes": {
+        "agent.service_refactored.py": "\n# Separar responsabilidades\nclass DataProcessor:\n    def process(self, data):\n        validated = self._validate(data)\n        transformed = self._transform(validated)\n        return self._format(transformed)\n\n    def _validate(self, data):\n        # Validação\n        pass\n\n    def _transform(self, data):\n        # Transformação\n        pass\n\n    def _format(self, data):\n        # Formatação\n        pass\n"
+      },
+      "metrics": {
+        "readability": 0.3,
+        "maintainability": 0.25,
+        "test_coverage": 0.2
+      },
+      "created_at": "2026-05-04T16:05:04.307380",
+      "complexity_score": 5.5
+    },
+    {
+      "variant_id": "opt_08d0a6b9",
+      "original_module": "agent.service",
+      "variant_type": "optimization",
+      "description": "Teste de geração de variante",
+      "code_changes": {
+        "agent.service_optimized.py": "\n# Usar estruturas de dados mais eficientes\nfrom collections import defaultdict\n\n# mapear chaves -> lista de valores\ncache = defaultdict(list)\n\n# Usar binary search em vez de linear\nimport bisect\nsorted_list = sorted(data)\nidx = bisect.bisect_left(sorted_list, value)\n"
+      },
+      "metrics": {
+        "performance": 0.2,
+        "memory": 0.15,
+        "maintainability": -0.05
+      },
+      "created_at": "2026-05-05T08:30:05.201980",
+      "complexity_score": 4.0
+    },
+    {
+      "variant_id": "ref_34870a61",
+      "original_module": "agent.service",
+      "variant_type": "refactor",
+      "description": "Teste de comparação de variante",
+      "code_changes": {
+        "agent.service_refactored.py": "\n# Separar responsabilidades\nclass DataProcessor:\n    def process(self, data):\n        validated = self._validate(data)\n        transformed = self._transform(validated)\n        return self._format(transformed)\n\n    def _validate(self, data):\n        # Validação\n        pass\n\n    def _transform(self, data):\n        # Transformação\n        pass\n\n    def _format(self, data):\n        # Formatação\n        pass\n"
+      },
+      "metrics": {
+        "readability": 0.3,
+        "maintainability": 0.25,
+        "test_coverage": 0.2
+      },
+      "created_at": "2026-05-05T08:30:05.208195",
+      "complexity_score": 5.5
+    },
+    {
+      "variant_id": "opt_46dc782f",
+      "original_module": "agent.service",
+      "variant_type": "optimization",
+      "description": "Teste de geração de variante",
+      "code_changes": {
+        "agent.service_optimized.py": "\n# Usar estruturas de dados mais eficientes\nfrom collections import defaultdict\n\n# mapear chaves -> lista de valores\ncache = defaultdict(list)\n\n# Usar binary search em vez de linear\nimport bisect\nsorted_list = sorted(data)\nidx = bisect.bisect_left(sorted_list, value)\n"
+      },
+      "metrics": {
+        "performance": 0.2,
+        "memory": 0.15,
+        "maintainability": -0.05
+      },
+      "created_at": "2026-05-05T08:32:13.531999",
+      "complexity_score": 4.0
+    },
+    {
+      "variant_id": "ref_5310dbad",
+      "original_module": "agent.service",
+      "variant_type": "refactor",
+      "description": "Teste de comparação de variante",
+      "code_changes": {
+        "agent.service_refactored.py": "\n# Separar responsabilidades\nclass DataProcessor:\n    def process(self, data):\n        validated = self._validate(data)\n        transformed = self._transform(validated)\n        return self._format(transformed)\n\n    def _validate(self, data):\n        # Validação\n        pass\n\n    def _transform(self, data):\n        # Transformação\n        pass\n\n    def _format(self, data):\n        # Formatação\n        pass\n"
+      },
+      "metrics": {
+        "readability": 0.3,
+        "maintainability": 0.25,
+        "test_coverage": 0.2
+      },
+      "created_at": "2026-05-05T08:32:13.538069",
+      "complexity_score": 5.5
+    }
+  ]
+}

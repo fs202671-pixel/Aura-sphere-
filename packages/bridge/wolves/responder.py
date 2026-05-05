@@ -20,9 +20,9 @@ from enum import Enum
 import logging
 import subprocess
 
-from ...memory.collective import CollectiveMemory
-from ...core.security import SecurityManager
-from ...core.sandbox import SandboxManager
+from memory.collective import CollectiveMemory
+from core.security import SecurityManager
+from core.sandbox import SandboxManager
 
 logger = logging.getLogger(__name__)
 
@@ -124,6 +124,7 @@ class WolfResponder:
 
                 # Iniciar contenção
                 await self._initiate_containment(alert)
+                await self.memory.update_alert_status(alert['alert_id'], handled=True)
 
                 self.incidents_handled += 1
 
@@ -395,13 +396,34 @@ class WolfResponder:
 
     async def _quarantine_file(self, params: Dict[str, Any]) -> str:
         """Quarentena arquivo"""
-        # TODO: Implementar quarentena de arquivo
-        return "File quarantine not implemented"
+        path = params.get('path') or params.get('file_path')
+        if not path or not os.path.exists(path):
+            return "No valid file path to quarantine"
+
+        quarantine_dir = os.path.join('/tmp', 'aura_sphere_quarantine')
+        os.makedirs(quarantine_dir, exist_ok=True)
+
+        try:
+            basename = os.path.basename(path)
+            dest = os.path.join(quarantine_dir, f"{basename}_{int(time.time())}")
+            os.rename(path, dest)
+            return f"Quarantined file to {dest}"
+        except Exception as e:
+            logger.error(f"Failed to quarantine file {path}: {e}")
+            return f"Failed to quarantine file: {e}"
 
     async def _restrict_access(self, params: Dict[str, Any]) -> str:
         """Restringe acesso"""
-        # TODO: Implementar restrição de acesso
-        return "Access restriction not implemented"
+        path = params.get('path') or params.get('resource')
+        if not path or not os.path.exists(path):
+            return "No valid path to restrict"
+
+        try:
+            os.chmod(path, 0o000)
+            return f"Restricted access to {path}"
+        except Exception as e:
+            logger.error(f"Failed to restrict access on {path}: {e}")
+            return f"Failed to restrict access: {e}"
 
     async def _alert_human(self, alert_id: str, params: Dict[str, Any]) -> str:
         """Alerta humano"""

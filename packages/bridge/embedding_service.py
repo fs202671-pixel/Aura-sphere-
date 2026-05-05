@@ -31,10 +31,12 @@ class EmbeddingService:
         )
         
         if SentenceTransformer is None:
-            raise ImportError(
-                "sentence-transformers não está instalado. "
-                "Install com: pip install sentence-transformers"
+            self.model = None
+            print(
+                "Aviso: sentence-transformers não está instalado. "
+                "Buscas semânticas serão desabilitadas e retornos serão baseados em fallback local."
             )
+            return
         
         try:
             self.model = SentenceTransformer(self.model_name)
@@ -54,6 +56,10 @@ class EmbeddingService:
         if not text or not text.strip():
             # Retornar embedding vazio se texto está vazio
             return [0.0] * 384  # Dimensão padrão do MiniLM
+
+        if self.model is None:
+            # Sem modelo de embeddings disponível
+            return [0.0] * 384
         
         try:
             embedding = self.model.encode(text.strip(), convert_to_tensor=False)
@@ -75,6 +81,9 @@ class EmbeddingService:
         """
         if not texts:
             return []
+
+        if self.model is None:
+            return [[0.0] * 384 for _ in texts]
         
         try:
             embeddings = self.model.encode(texts, batch_size=batch_size, convert_to_tensor=False)

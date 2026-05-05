@@ -16,12 +16,16 @@
     "cap:sync": "npm run build && npx cap sync",
     "android:open": "npx cap open android",
     "android:sync": "npm run build && npx cap sync android",
-    "android:build": "npm run android:sync && npx cap open android"
+    "android:build": "npm run android:sync && npx cap open android",
+    "ios:open": "npx cap open ios",
+    "ios:sync": "npm run build && npx cap sync ios",
+    "ios:build": "npm run ios:sync && npx cap open ios"
   },
   "dependencies": {
     "@capacitor/android": "^8.3.1",
     "@capacitor/cli": "^8.3.1",
     "@capacitor/core": "^8.3.1",
+    "@capacitor/ios": "^8.3.1",
     "@hookform/resolvers": "^3.10.0",
     "@lovable.dev/cloud-auth-js": "^1.1.2",
     "@radix-ui/react-accordion": "^1.2.11",

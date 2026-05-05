@@ -17,12 +17,27 @@ const Index = () => {
   const [profileLoading, setProfileLoading] = useState(false);
   const [editing, setEditing] = useState(false);
 
+  // Modo demonstração - bypass autenticação
+  const isDemoMode = import.meta.env.VITE_DEMO_MODE === 'true' || window.location.search.includes('demo=true');
+
   useEffect(() => {
-    if (!user) {
+    if (!user && !isDemoMode) {
       setProfile(null);
       return;
     }
     setProfileLoading(true);
+    
+    if (isDemoMode) {
+      // Modo demo: perfil fixo
+      setProfile({
+        ai_name: "Caos",
+        voice_id: "pt-female",
+        onboarded: true
+      });
+      setProfileLoading(false);
+      return;
+    }
+
     supabase
       .from("profiles")
       .select("ai_name, voice_id, onboarded")
@@ -33,7 +48,7 @@ const Index = () => {
           // Criar perfil padrão automaticamente
           const defaultProfile = {
             id: user.id,
-            ai_name: "Aurora",
+            ai_name: "Caos",
             voice_id: "pt-female",
             onboarded: true
           };
@@ -44,13 +59,26 @@ const Index = () => {
         }
         setProfileLoading(false);
       });
-  }, [user]);
+  }, [user, isDemoMode]);
 
   if (loading || (user && profileLoading)) {
     return (
       <div className="min-h-[100dvh] flex items-center justify-center text-muted-foreground text-sm">
         Carregando…
       </div>
+    );
+  }
+
+  // Modo demo: vai direto para AIOnShell
+  if (isDemoMode) {
+    return (
+      <AIOnShell
+        userId="demo-user"
+        aiName="Caos"
+        voiceId="pt-female"
+        onEditProfile={() => {}}
+        onSignOut={() => window.location.href = '/'}
+      />
     );
   }
 
@@ -76,7 +104,7 @@ const Index = () => {
   return (
     <AIOnShell
       userId={user.id}
-      aiName={profile.ai_name || "Aurora"}
+      aiName={profile.ai_name || "Caos"}
       voiceId={profile.voice_id || "pt-female"}
       onEditProfile={() => setEditing(true)}
       onSignOut={async () => {

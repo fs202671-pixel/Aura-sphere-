@@ -13,14 +13,15 @@ Características:
 import asyncio
 import time
 import hashlib
+import json
 import re
 from typing import Dict, List, Any, Optional, Set
 from dataclasses import dataclass
 from enum import Enum
 import logging
 
-from ...memory.collective import CollectiveMemory
-from ...core.security import SecurityManager
+from memory.collective import CollectiveMemory
+from core.security import SecurityManager
 
 logger = logging.getLogger(__name__)
 
@@ -198,8 +199,8 @@ class BeeGuard:
 
     async def _cleanup_old_events(self):
         """Limpa eventos de segurança antigos"""
-        # TODO: Implementar limpeza real
-        pass
+        if hasattr(self.memory, 'cleanup_security_events'):
+            await self.memory.cleanup_security_events()
 
     async def _analyze_task_security(self, task: Dict[str, Any]) -> Optional[SecurityEvent]:
         """
@@ -336,6 +337,9 @@ class BeeGuard:
             await self._execute_medium_action(event)
         else:
             await self._execute_low_action(event)
+
+        # Marcar evento como tratado quando apropriado
+        await self.memory.update_security_event(event.event_id, {'handled': True})
 
     async def _execute_critical_action(self, event: SecurityEvent):
         """Executa ação para ameaça crítica"""

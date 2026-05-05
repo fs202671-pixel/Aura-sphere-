@@ -17,6 +17,8 @@ anthropic==0.28.0
 # Embeddings & Vector Store
 sentence-transformers==3.0.1
 numpy==1.24.3
+psutil==7.2.2
+Pillow==10.0.0
 # Database & Caching
 psycopg-binary==3.1.13
 # MCP (Model Context Protocol)

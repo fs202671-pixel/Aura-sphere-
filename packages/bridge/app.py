@@ -2,7 +2,7 @@ import asyncio
 import json
 import os
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 from datetime import datetime
 
 from dotenv import load_dotenv
@@ -25,6 +25,8 @@ from schemas import (
     MemoryItem, 
     SearchResponse, 
     SearchResult,
+    MemoryEntryResponse,
+    MemoryListResponse,
     ConversationCreate,
     ConversationResponse,
     ConversationListResponse
@@ -35,12 +37,15 @@ from mempalace.memory import MemoryEngine
 from llm_service import get_llm_service
 from embedding_service import get_embedding_service
 from agent import get_agent_service
+from agent.planning_service import planning_service
+from agent.action_queue_service import ActionQueueService
 from mcp_server import server as mcp_server
 from orchestrator import get_central_orchestrator
 
 # MCP SSE Transport
 from mcp.server.sse import SseServerTransport
-from mcp.server.models import InitializationOptions, NotificationOptions
+from mcp.server import NotificationOptions
+from mcp.server.models import InitializationOptions
 
 ENV = os.getenv("ENV", "development")
 SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret-key-change-in-production")
@@ -62,6 +67,7 @@ app.add_middleware(
 init_db()
 memory_engine = MemoryEngine()
 agent_service = get_agent_service()
+action_queue_service = ActionQueueService()
 
 # Initialize MCP SSE Transport
 mcp_transport = SseServerTransport("/api/v1/mcp/messages")
@@ -260,6 +266,77 @@ def get_agent_modification(proposal_id: str, current_user: dict[str, Any] = Depe
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Proposal not found")
 
 
+@app.get("/api/v1/actions/pending")
+def list_pending_actions(
+    status: str = "pending",
+    current_user: dict[str, Any] = Depends(get_current_user)
+):
+    """Lista ações pendentes que requerem aprovação do usuário."""
+    actions = action_queue_service.get_pending_actions(
+        user_id=current_user.get("sub", "dev-user"),
+        status=status
+    )
+    return {"actions": actions}
+
+
+@app.post("/api/v1/actions/propose")
+def propose_action(
+    payload: dict,
+    current_user: dict[str, Any] = Depends(get_current_user)
+):
+    """Submete uma nova ação para aprovação."""
+    action_type = payload.get("action_type")
+    description = payload.get("description")
+    parameters = payload.get("parameters", {})
+    expires_at = payload.get("expires_at")
+
+    if not action_type or not description:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="action_type and description are required")
+
+    result = action_queue_service.submit_action_proposal(
+        user_id=current_user.get("sub", "dev-user"),
+        action_type=action_type,
+        description=description,
+        parameters=parameters,
+        expires_at=datetime.fromisoformat(expires_at) if expires_at else None,
+    )
+    return {"action": result}
+
+
+@app.post("/api/v1/actions/{action_id}/approve")
+def approve_action(
+    action_id: int,
+    payload: dict,
+    current_user: dict[str, Any] = Depends(get_current_user)
+):
+    """Aprova uma ação pendente."""
+    result = action_queue_service.approve_action(
+        action_id=action_id,
+        approved_by=current_user.get("sub", "dev-user")
+    )
+    if not result:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Action not found or cannot be approved")
+    return {"action": result}
+
+
+@app.post("/api/v1/actions/{action_id}/reject")
+def reject_action(
+    action_id: int,
+    payload: dict,
+    current_user: dict[str, Any] = Depends(get_current_user)
+):
+    """Rejeita uma ação pendente."""
+    reason = payload.get("reason")
+    result = action_queue_service.reject_action(
+        action_id=action_id,
+        rejected_by=current_user.get("sub", "dev-user"),
+        reason=reason
+    )
+    if not result:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Action not found or cannot be rejected")
+    return {"action": result}
+
+
 @app.get("/api/v1/agent/offline_mode")
 def get_agent_offline_mode(current_user: dict[str, Any] = Depends(get_current_user)):
     """Retorna o modo offline do agente."""
@@ -418,9 +495,9 @@ def validate_learning_data(
 @app.get("/api/v1/agent/learning_data/pending")
 def get_pending_learning_data(current_user: dict[str, Any] = Depends(get_current_user)):
     """Retorna dados aguardando validação."""
-    # Este método precisa ser implementado no ControlledLearner
-    # Por enquanto retorna lista vazia
-    return {"pending_data": []}
+    return {
+        "pending_data": agent_service.controlled_learner.get_pending_validations()
+    }
 
 
 @app.post("/api/v1/agent/robustness_test")
@@ -520,6 +597,158 @@ def get_audit_trail(
 def get_learning_report(current_user: dict[str, Any] = Depends(get_current_user)):
     """Retorna relatório de aprendizado controlado."""
     return agent_service.get_learning_report()
+
+
+# === OFFLINE EVOLUTION & ADAPTIVE LEARNING API ===
+
+@app.get("/api/v1/agent/evolution/status")
+def get_offline_evolution_status(current_user: dict[str, Any] = Depends(get_current_user)):
+    """Retorna o status do agendador de evolução offline."""
+    return agent_service.get_offline_evolution_status()
+
+
+@app.post("/api/v1/agent/evolution/schedule")
+def schedule_offline_evolution_task(
+    payload: dict,
+    current_user: dict[str, Any] = Depends(get_current_user)
+):
+    """Agenda uma tarefa de evolução offline."""
+    description = payload.get("description")
+    task_type = payload.get("task_type")
+    priority = payload.get("priority", 5)
+    should_run_at = payload.get("should_run_at")
+
+    if not description or not task_type:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="description and task_type are required")
+
+    scheduled_task = agent_service.schedule_offline_evolution(
+        description=description,
+        task_type=task_type,
+        priority=priority,
+        should_run_at=datetime.fromisoformat(should_run_at) if should_run_at else None
+    )
+    return {"scheduled_task": scheduled_task}
+
+
+@app.post("/api/v1/agent/evolution/mode")
+def set_offline_evolution_mode(
+    payload: dict,
+    current_user: dict[str, Any] = Depends(get_current_user)
+):
+    """Ativa ou desativa o modo de evolução offline."""
+    enabled = payload.get("enabled")
+    if enabled is None or not isinstance(enabled, bool):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="enabled must be a boolean")
+    agent_service.set_offline_evolution_mode(enabled)
+    return {"offline_evolution_mode": enabled}
+
+
+@app.post("/api/v1/agent/code_variants")
+def generate_code_variant(
+    payload: dict,
+    current_user: dict[str, Any] = Depends(get_current_user)
+):
+    """Gera um variante de código alternativo."""
+    module_name = payload.get("module_name")
+    variant_type = payload.get("variant_type")
+    description = payload.get("description")
+    algorithm_name = payload.get("algorithm_name")
+
+    if not module_name or not variant_type or not description:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="module_name, variant_type and description are required")
+
+    result = agent_service.generate_alternative_code_variant(
+        module_name=module_name,
+        variant_type=variant_type,
+        description=description,
+        algorithm_name=algorithm_name
+    )
+    return {"variant": result}
+
+
+@app.get("/api/v1/agent/code_variants")
+def list_code_variants(
+    module_name: str | None = None,
+    variant_type: str | None = None,
+    current_user: dict[str, Any] = Depends(get_current_user)
+):
+    """Lista variantes de código geradas."""
+    return {"variants": agent_service.list_code_variants(module_name=module_name, variant_type=variant_type)}
+
+
+@app.get("/api/v1/agent/code_variants/compare")
+def compare_code_variants(
+    variant_a_id: str,
+    variant_b_id: str,
+    current_user: dict[str, Any] = Depends(get_current_user)
+):
+    """Compara duas variantes de código."""
+    comparison = agent_service.compare_code_variants(variant_a_id, variant_b_id)
+    if comparison is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Variant not found")
+    return {"comparison": comparison}
+
+
+@app.post("/api/v1/agent/learning/start")
+def start_adaptive_learning(
+    payload: dict,
+    current_user: dict[str, Any] = Depends(get_current_user)
+):
+    """Inicia modo de aprendizado adaptativo."""
+    topic = payload.get("topic")
+    if not topic:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="topic is required")
+    return agent_service.start_adaptive_learning(topic, user_id=current_user.get("sub", "dev-user"))
+
+
+@app.post("/api/v1/agent/learning/teach")
+def teach_adaptive_learning(
+    payload: dict,
+    current_user: dict[str, Any] = Depends(get_current_user)
+):
+    """Solicita a próxima lição do modo de aprendizado."""
+    topic = payload.get("topic")
+    if not topic:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="topic is required")
+    return agent_service.teach_topic(topic, user_id=current_user.get("sub", "dev-user"))
+
+
+@app.post("/api/v1/agent/learning/evaluate")
+def evaluate_adaptive_learning(
+    payload: dict,
+    current_user: dict[str, Any] = Depends(get_current_user)
+):
+    """Avalia resposta do usuário no modo de aprendizado."""
+    topic = payload.get("topic")
+    user_response = payload.get("user_response")
+    if not topic or user_response is None:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="topic and user_response are required")
+    return agent_service.evaluate_learning_response(topic, user_response, user_id=current_user.get("sub", "dev-user"))
+
+
+@app.get("/api/v1/agent/learning/progress")
+def get_adaptive_learning_progress(
+    topic: str,
+    current_user: dict[str, Any] = Depends(get_current_user)
+):
+    """Retorna o progresso de aprendizado para um tópico."""
+    return agent_service.get_learning_progress(topic, user_id=current_user.get("sub", "dev-user"))
+
+
+@app.post("/api/v1/agent/learning/stop")
+def stop_adaptive_learning(
+    current_user: dict[str, Any] = Depends(get_current_user)
+):
+    """Finaliza o modo de aprendizado adaptativo."""
+    return agent_service.stop_adaptive_learning(user_id=current_user.get("sub", "dev-user"))
+
+
+@app.get("/api/v1/agent/learning/status")
+def get_adaptive_learning_status(
+    current_user: dict[str, Any] = Depends(get_current_user)
+):
+    """Retorna status do sistema de aprendizado adaptativo."""
+    return agent_service.get_learning_status()
 
 
 @app.get("/api/v1/agent/robustness/report")
@@ -683,6 +912,37 @@ def create_memory(item: MemoryItem, current_user: dict[str, Any] = Depends(get_c
 
     memory_engine.add_memory(item.user_id, item.content, category=item.category or "chat")
     return {"status": "saved"}
+
+
+@app.get("/api/v1/memory", response_model=MemoryListResponse)
+def list_memory(
+    user_id: str,
+    category: Optional[str] = None,
+    current_user: dict[str, Any] = Depends(get_current_user)
+):
+    """Lista memórias salvas de um usuário com filtros opcionais."""
+    if ENV == "production" and current_user.get("sub") != user_id:
+        raise HTTPException(status_code=403, detail="Forbidden")
+
+    with SessionLocal() as session:
+        query = session.query(MemoryEntry).filter(MemoryEntry.user_id == user_id)
+        if category:
+            query = query.filter(MemoryEntry.category == category)
+
+        entries = query.order_by(MemoryEntry.created_at.desc()).limit(100).all()
+
+    return {
+        "memories": [
+            {
+                "id": str(entry.id),
+                "role": entry.role,
+                "content": entry.content,
+                "category": entry.category,
+                "created_at": entry.created_at.isoformat() if entry.created_at else None,
+            }
+            for entry in entries
+        ]
+    }
 
 
 def build_system_prompt(ai_name: str, prompt_type: str = None) -> str:
@@ -922,3 +1182,76 @@ async def get_orchestrator_task_status(
     if not task:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Task not found")
     return {"task": task}
+
+
+# === PLANNING API ===
+
+@app.post("/api/v1/planning/plans")
+def create_plan(
+    data: dict,
+    current_user: dict[str, Any] = Depends(get_current_user)
+):
+    """Criar novo plano de estudo/projeto"""
+    user_id = current_user.get("sub", "dev-user")
+    result = planning_service.create_plan(
+        user_id=user_id,
+        title=data.get("title"),
+        description=data.get("description", "")
+    )
+    if isinstance(result, dict) and result.get("error"):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=result["error"])
+    return result
+
+
+@app.get("/api/v1/planning/plans/{user_id}")
+def get_plans(
+    user_id: str,
+    current_user: dict[str, Any] = Depends(get_current_user)
+):
+    """Listar planos do usuário"""
+    if ENV == "production" and current_user.get("sub") != user_id:
+        raise HTTPException(status_code=403, detail="Forbidden")
+    
+    return {"plans": planning_service.get_user_plans(user_id)}
+
+
+@app.post("/api/v1/planning/tasks")
+def add_task(
+    data: dict,
+    current_user: dict[str, Any] = Depends(get_current_user)
+):
+    """Adicionar tarefa a um plano"""
+    plan_id = data.get("plan_id")
+    title = data.get("title")
+    priority = data.get("priority", 5)
+    
+    result = planning_service.add_task(plan_id, title, priority)
+    if isinstance(result, dict) and result.get("error"):
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=result["error"])
+    return result
+
+
+@app.patch("/api/v1/planning/tasks/{task_id}")
+def update_task(
+    task_id: int,
+    data: dict,
+    current_user: dict[str, Any] = Depends(get_current_user)
+):
+    """Atualizar progresso de tarefa"""
+    progress = data.get("progress", 0)
+    result = planning_service.update_task_progress(task_id, progress)
+    if isinstance(result, dict) and result.get("error"):
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=result["error"])
+    return result
+
+
+@app.get("/api/v1/planning/dashboard/{user_id}")
+def get_dashboard(
+    user_id: str,
+    current_user: dict[str, Any] = Depends(get_current_user)
+):
+    """Dashboard completo de planejamento"""
+    if ENV == "production" and current_user.get("sub") != user_id:
+        raise HTTPException(status_code=403, detail="Forbidden")
+    
+    return planning_service.get_plan_dashboard(user_id)

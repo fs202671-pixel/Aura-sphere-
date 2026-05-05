@@ -59,19 +59,29 @@ class CoreValidator:
     """Validador de integridade do núcleo"""
 
     CORE_FILES = [
-        "core/__init__.py",
-        "core/immutable.py",
-        "core/permissions.py",
-        "core/validator.py"
+        "__init__.py",
+        "immutable.py",
+        "permissions.py",
+        "sandbox.py",
+        "security.py",
+        "user_obedience.py",
+        "validator.py"
     ]
+
+    @staticmethod
+    def _core_file_path(filename: str) -> str:
+        """Retorna o caminho absoluto de um arquivo do core."""
+        base_dir = os.path.dirname(__file__)
+        return os.path.join(base_dir, filename)
 
     @staticmethod
     def calculate_core_hash() -> str:
         """Calcula hash SHA256 de todos os arquivos do core"""
         hasher = hashlib.sha256()
         for file_path in CoreValidator.CORE_FILES:
-            if os.path.exists(file_path):
-                with open(file_path, 'rb') as f:
+            abs_path = CoreValidator._core_file_path(file_path)
+            if os.path.exists(abs_path):
+                with open(abs_path, 'rb') as f:
                     hasher.update(f.read())
         return hasher.hexdigest()
 
@@ -80,7 +90,7 @@ class CoreValidator:
         """Valida se o core não foi modificado"""
         # Em produção, comparar com hash conhecido
         # Por enquanto, apenas verifica se os arquivos existem
-        return all(os.path.exists(f) for f in CoreValidator.CORE_FILES)
+        return all(os.path.exists(CoreValidator._core_file_path(f)) for f in CoreValidator.CORE_FILES)
 
 class SecurityEnforcer:
     """Aplicador de regras de segurança"""

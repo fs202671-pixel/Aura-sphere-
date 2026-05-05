@@ -1,0 +1,72 @@
+[
+  {
+    "id": "rule_001",
+    "name": "User Commands Non-Negotiable",
+    "description": "Comandos do usuário NUNCA podem ser negados ou adiados",
+    "enforcement": "mandatory",
+    "policy": "user_supremacy"
+  },
+  {
+    "id": "rule_002",
+    "name": "All Operations Logged",
+    "description": "TODAS as operações devem ser registradas em audit trail",
+    "enforcement": "mandatory",
+    "policy": "transparency"
+  },
+  {
+    "id": "rule_003",
+    "name": "Patches Require Validation",
+    "description": "Patches devem passar por validação antes de aplicação",
+    "enforcement": "mandatory",
+    "policy": "security_layer"
+  },
+  {
+    "id": "rule_004",
+    "name": "Backups Before Deployment",
+    "description": "Backup obrigatório antes de qualquer deployment",
+    "enforcement": "mandatory",
+    "policy": "recoverability"
+  },
+  {
+    "id": "rule_005",
+    "name": "Core Files Immutable",
+    "description": "Arquivos core nunca podem ser modificados sem aprovação explícita",
+    "enforcement": "mandatory",
+    "policy": "core_immutable"
+  },
+  {
+    "id": "rule_006",
+    "name": "Learning from Validated Data",
+    "description": "Sistema aprende APENAS de dados explicitamente validados",
+    "enforcement": "mandatory",
+    "policy": "controlled_evolution"
+  },
+  {
+    "id": "rule_007",
+    "name": "Continuous Monitoring",
+    "description": "Sistema monitora continuamente segurança e performance",
+    "enforcement": "mandatory",
+    "policy": "defense_in_depth"
+  },
+  {
+    "id": "rule_008",
+    "name": "Offline Operations",
+    "description": "Sistema opera offline por padrão, sem dependências externas",
+    "enforcement": "mandatory",
+    "policy": "offline_first"
+  },
+  {
+    "id": "rule_009",
+    "name": "Always Recoverable",
+    "description": "Sistema mantém snapshots para recuperação total",
+    "enforcement": "mandatory",
+    "policy": "recoverability"
+  },
+  {
+    "id": "rule_010",
+    "name": "Destructive Actions Limited",
+    "description": "Ações destrutivas têm limitações de rate, confirmação dupla e janela de rollback",
+    "enforcement": "mandatory",
+    "policy": "defense_in_depth"
+  }
+]

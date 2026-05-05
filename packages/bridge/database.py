@@ -65,6 +65,50 @@ class Conversation(Base):
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
 
+class Plan(Base):
+    """Plano de estudo/projeto com milestones"""
+    __tablename__ = "plans"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(String, nullable=False, index=True)
+    title = Column(String(255), nullable=False)
+    description = Column(Text, nullable=True)
+    status = Column(String(32), default="active")  # active, completed, archived
+    progress = Column(Float, default=0.0)  # 0-100
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+
+
+class Task(Base):
+    """Tarefa dentro de um plano"""
+    __tablename__ = "tasks"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    plan_id = Column(Integer, nullable=False, index=True)
+    title = Column(String(255), nullable=False)
+    description = Column(Text, nullable=True)
+    status = Column(String(32), default="pending")  # pending, in_progress, completed
+    progress = Column(Float, default=0.0)  # 0-100
+    priority = Column(Integer, default=5)  # 1-10
+    due_date = Column(DateTime(timezone=True), nullable=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+
+class ActionProposal(Base):
+    """Ações que requerem aprovação do usuário"""
+    __tablename__ = "action_proposals"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(String, nullable=False, index=True)
+    action_type = Column(String(64), nullable=False)  # publish, schedule, execute, etc
+    description = Column(Text, nullable=False)
+    parameters = Column(Text, nullable=True)  # JSON string
+    status = Column(String(32), default="pending")  # pending, approved, rejected, executed
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    expires_at = Column(DateTime(timezone=True), nullable=True)
+    executed_at = Column(DateTime(timezone=True), nullable=True)
+
+
 def init_db() -> None:
     Base.metadata.create_all(bind=engine)
 

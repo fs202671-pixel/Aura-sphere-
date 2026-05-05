@@ -19,7 +19,7 @@ import logging
 from .explorer import AntExplorer
 from .communication import AntCommunication
 from .trails import TrailSystem
-from ...core.security import SecurityManager
+from core.security import SecurityManager
 
 logger = logging.getLogger(__name__)
 

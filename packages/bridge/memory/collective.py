@@ -61,8 +61,12 @@ class CollectiveMemory:
         # Carregar memória persistida
         self._load_memory()
 
-        # Iniciar limpeza automática
-        asyncio.create_task(self._periodic_cleanup())
+        # Iniciar limpeza automática, se houver loop de evento em execução
+        try:
+            loop = asyncio.get_running_loop()
+            loop.create_task(self._periodic_cleanup())
+        except RuntimeError:
+            logger.info("Nenhum loop de evento em execução; a limpeza periódica da memória será iniciada posteriormente")
 
         logger.info(f"CollectiveMemory initialized with {len(self.memory)} entries")
 
@@ -318,6 +322,167 @@ class CollectiveMemory:
             'reports': reports,
             'max_entries': self.max_entries
         }
+
+    async def get_recent_tasks(self, limit: int = 10) -> List[Dict[str, Any]]:
+        """Retorna tarefas recentes"""
+        tasks = []
+
+        with self.lock:
+            for entry in self.memory.values():
+                if entry.is_expired():
+                    continue
+                if entry.key.startswith('task_'):
+                    tasks.append(entry.data)
+                    entry.access()
+
+        tasks.sort(key=lambda t: t.get('timestamp', 0), reverse=True)
+        return tasks[:limit]
+
+    async def get_recent_data(self, limit: int = 50) -> List[Dict[str, Any]]:
+        """Retorna dados recentes que não são apenas tarefas ou relatórios"""
+        payloads = []
+
+        with self.lock:
+            for entry in self.memory.values():
+                if entry.is_expired():
+                    continue
+                if not entry.key.startswith(('task_', 'report_', 'trail_', 'alert_', 'incident_', 'containment_', 'human_alert_', 'security_event_')):
+                    payloads.append(entry.data)
+                    entry.access()
+
+        payloads.sort(key=lambda d: d.get('timestamp', 0), reverse=True)
+        return payloads[:limit]
+
+    async def store_security_event(self, event_data: Dict[str, Any]):
+        """Armazena evento de segurança"""
+        key = f"security_event_{event_data['event_id']}"
+        entry = MemoryEntry(
+            key=key,
+            data={**event_data, 'type': 'security_event'},
+            timestamp=time.time(),
+            expires_at=time.time() + 86400
+        )
+
+        with self.lock:
+            self.memory[key] = entry
+
+        logger.debug(f"Stored security event: {key}")
+
+    async def update_security_event(self, event_id: str, updates: Dict[str, Any]):
+        """Atualiza um evento de segurança existente"""
+        key = f"security_event_{event_id}"
+        with self.lock:
+            if key in self.memory:
+                entry = self.memory[key]
+                entry.data.update(updates)
+                entry.access()
+                logger.debug(f"Updated security event: {key}")
+
+    async def store_alert(self, alert_data: Dict[str, Any]):
+        """Armazena alerta escalado"""
+        alert_id = alert_data.get('alert_id') or f"alert_{int(time.time() * 1000)}"
+        key = f"alert_{alert_id}"
+        alert_record = {
+            **alert_data,
+            'type': 'alert',
+            'escalated': alert_data.get('severity', 0) >= 3,
+            'handled': alert_data.get('handled', False)
+        }
+
+        entry = MemoryEntry(
+            key=key,
+            data=alert_record,
+            timestamp=time.time(),
+            expires_at=time.time() + 86400
+        )
+
+        with self.lock:
+            self.memory[key] = entry
+
+        logger.debug(f"Stored alert: {key}")
+
+    async def get_escalated_alerts(self, min_risk_level: int = 3) -> List[Dict[str, Any]]:
+        """Retorna alertas escalados que ainda não foram tratados"""
+        alerts = []
+
+        with self.lock:
+            for entry in self.memory.values():
+                if entry.is_expired():
+                    continue
+                if entry.data.get('type') == 'alert':
+                    if not entry.data.get('handled', False) and entry.data.get('severity', 0) >= min_risk_level:
+                        alerts.append(entry.data)
+                        entry.access()
+
+        return alerts
+
+    async def store_incident(self, incident_data: Dict[str, Any]):
+        """Armazena incidente"""
+        key = f"incident_{incident_data.get('incident_id', int(time.time() * 1000))}"
+        entry = MemoryEntry(
+            key=key,
+            data={**incident_data, 'type': 'incident'},
+            timestamp=time.time(),
+            expires_at=time.time() + 86400
+        )
+
+        with self.lock:
+            self.memory[key] = entry
+
+        logger.debug(f"Stored incident: {key}")
+
+    async def store_containment_result(self, result_data: Dict[str, Any]):
+        """Armazena resultado de contenção"""
+        key = f"containment_{result_data.get('action_id', int(time.time() * 1000))}"
+        entry = MemoryEntry(
+            key=key,
+            data={**result_data, 'type': 'containment_result'},
+            timestamp=time.time(),
+            expires_at=time.time() + 86400
+        )
+
+        with self.lock:
+            self.memory[key] = entry
+
+        logger.debug(f"Stored containment result: {key}")
+
+    async def store_human_alert(self, alert_data: Dict[str, Any]):
+        """Armazena alerta humano"""
+        key = f"human_alert_{alert_data.get('alert_id', int(time.time() * 1000))}"
+        entry = MemoryEntry(
+            key=key,
+            data={**alert_data, 'type': 'human_alert'},
+            timestamp=time.time(),
+            expires_at=time.time() + 86400
+        )
+
+        with self.lock:
+            self.memory[key] = entry
+
+        logger.debug(f"Stored human alert: {key}")
+
+    async def update_alert_status(self, alert_id: str, handled: bool = True):
+        """Atualiza o status de um alerta escalado"""
+        key = f"alert_{alert_id}"
+        with self.lock:
+            if key in self.memory:
+                entry = self.memory[key]
+                entry.data['handled'] = handled
+                entry.access()
+                logger.debug(f"Updated alert status: {key}")
+
+    async def cleanup_security_events(self, max_age: float = 86400):
+        """Remove eventos de segurança antigos"""
+        cutoff = time.time() - max_age
+        with self.lock:
+            for key in list(self.memory.keys()):
+                if key.startswith('security_event_'):
+                    entry = self.memory[key]
+                    if entry.timestamp < cutoff:
+                        del self.memory[key]
+                        logger.debug(f"Cleaned up security event: {key}")
+
+        self._save_memory()
 
     async def clear_memory(self):
         """Limpa toda a memória (usar com cuidado)"""

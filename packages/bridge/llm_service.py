@@ -33,7 +33,10 @@ class LLMService:
                 self.client = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
                 self.model = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
             except ImportError:
-                raise ImportError("OpenAI client not installed. Install with: pip install openai")
+                self.provider = "local"
+                self.client = None
+                self.model = "local"
+                print("Aviso: openai package não instalado, usando fallback local")
                 
         elif self.provider == "anthropic":
             try:
@@ -41,7 +44,10 @@ class LLMService:
                 self.client = AsyncAnthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
                 self.model = os.getenv("ANTHROPIC_MODEL", "claude-3-5-sonnet-20241022")
             except ImportError:
-                raise ImportError("Anthropic client not installed. Install with: pip install anthropic")
+                self.provider = "local"
+                self.client = None
+                self.model = "local"
+                print("Aviso: anthropic package não instalado, usando fallback local")
                 
         elif self.provider == "lovable":
             # Lovable has its own API structure

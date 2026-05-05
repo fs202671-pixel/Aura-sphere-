@@ -5,7 +5,7 @@ Integra capacidades do OpenJarvis com o sistema atual
 
 import sys
 import os
-from typing import Dict, Any, List, Optional
+from typing import TYPE_CHECKING, Dict, Any, List, Optional
 from pathlib import Path
 
 # Adicionar caminho do OpenJarvis
@@ -22,12 +22,13 @@ except ImportError:
     OPENJARVIS_AVAILABLE = False
     print("⚠️ OpenJarvis não disponível - usando stubs")
 
-from .service import AgentService
+if TYPE_CHECKING:
+    from .service import AgentService
 
 class OpenJarvisAdapter:
     """Adaptador para integrar OpenJarvis com Aura-sphere"""
 
-    def __init__(self, agent_service: AgentService):
+    def __init__(self, agent_service: "AgentService"):
         self.agent_service = agent_service
         self.jarvis_agent = None
         self.skill_manager = None

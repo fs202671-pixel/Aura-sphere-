@@ -17,9 +17,9 @@ from typing import Dict, List, Any, Optional
 from dataclasses import dataclass
 import logging
 
-from ...core.security import SecurityManager
-from ...runtime.sandbox import SandboxManager
-from ..communication import AntCommunication
+from core.security import SecurityManager
+from runtime.sandbox import SandboxManager
+from colony.ants.communication import AntCommunication
 
 logger = logging.getLogger(__name__)
 

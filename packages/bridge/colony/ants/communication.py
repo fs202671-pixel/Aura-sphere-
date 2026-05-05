@@ -17,7 +17,7 @@ from typing import Dict, List, Any, Optional
 from dataclasses import dataclass
 import logging
 
-from ...memory.collective import CollectiveMemory
+from memory.collective import CollectiveMemory
 
 logger = logging.getLogger(__name__)
 

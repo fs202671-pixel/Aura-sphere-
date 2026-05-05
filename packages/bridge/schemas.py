@@ -39,6 +39,18 @@ class SearchResponse(BaseModel):
     results: List[SearchResult]
 
 
+class MemoryEntryResponse(BaseModel):
+    id: str
+    role: str
+    content: str
+    category: str
+    created_at: datetime
+
+
+class MemoryListResponse(BaseModel):
+    memories: List[MemoryEntryResponse]
+
+
 class ConversationCreate(BaseModel):
     title: Optional[str] = None
     system_prompt: Optional[str] = None

@@ -1,0 +1,28 @@
+{
+  "learning_mode": false,
+  "current_topic": null,
+  "current_session": {
+    "topic": "inglês",
+    "started_at": "2026-05-05T08:32:13.545033",
+    "status": "stopped",
+    "history": [
+      {
+        "timestamp": "2026-05-05T08:32:13.545511",
+        "entry": "Sessão iniciada para inglês"
+      },
+      {
+        "timestamp": "2026-05-05T08:32:13.549149",
+        "entry": "Ensino aplicado: vocabulário básico"
+      },
+      {
+        "timestamp": "2026-05-05T08:32:13.552888",
+        "entry": "Avaliação realizada: errada"
+      },
+      {
+        "timestamp": "2026-05-05T08:32:13.561277",
+        "entry": "Sessão finalizada"
+      }
+    ],
+    "ended_at": "2026-05-05T08:32:13.561002"
+  }
+}

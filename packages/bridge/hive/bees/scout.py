@@ -16,8 +16,8 @@ from typing import Dict, List, Any, Optional
 from dataclasses import dataclass
 import logging
 
-from ...memory.collective import CollectiveMemory
-from ...core.security import SecurityManager
+from memory.collective import CollectiveMemory
+from core.security import SecurityManager
 
 logger = logging.getLogger(__name__)
 

@@ -40,5 +40,447 @@
       "Arquivo cr\u00edtico ausente: packages/bridge/agent/database.py",
       "Arquivo cr\u00edtico ausente: packages/bridge/agent/schemas.py"
     ]
+  },
+  {
+    "timestamp": "2026-05-04T06:10:32.758842",
+    "core_hash": "2add61e1bfdf433fe2536823fffc503f08758b8e607f00b77a550dd1511c7c2c",
+    "critical_files_hashes": {
+      "/workspaces/Aura-sphere-/SYSTEM_EVOLUTION_TASKS.md": "aa5f37dd9227f0a5bfc1dc914f3e9f0c689e21bfe35deb0559839fa4e2eaf07f"
+    },
+    "integrity_status": false,
+    "violations": [
+      "Arquivo cr\u00edtico ausente: packages/bridge/agent/core/",
+      "Arquivo cr\u00edtico ausente: packages/bridge/agent/app.py",
+      "Arquivo cr\u00edtico ausente: packages/bridge/agent/database.py",
+      "Arquivo cr\u00edtico ausente: packages/bridge/agent/schemas.py",
+      "Hash do core modificado sem autoriza\u00e7\u00e3o",
+      "Arquivo cr\u00edtico modificado: /workspaces/Aura-sphere-/SYSTEM_EVOLUTION_TASKS.md"
+    ]
+  },
+  {
+    "timestamp": "2026-05-04T06:12:14.070766",
+    "core_hash": "2add61e1bfdf433fe2536823fffc503f08758b8e607f00b77a550dd1511c7c2c",
+    "critical_files_hashes": {
+      "/workspaces/Aura-sphere-/SYSTEM_EVOLUTION_TASKS.md": "aa5f37dd9227f0a5bfc1dc914f3e9f0c689e21bfe35deb0559839fa4e2eaf07f"
+    },
+    "integrity_status": false,
+    "violations": [
+      "Arquivo cr\u00edtico ausente: packages/bridge/agent/core/",
+      "Arquivo cr\u00edtico ausente: packages/bridge/agent/app.py",
+      "Arquivo cr\u00edtico ausente: packages/bridge/agent/database.py",
+      "Arquivo cr\u00edtico ausente: packages/bridge/agent/schemas.py"
+    ]
+  },
+  {
+    "timestamp": "2026-05-04T06:13:07.121792",
+    "core_hash": "2add61e1bfdf433fe2536823fffc503f08758b8e607f00b77a550dd1511c7c2c",
+    "critical_files_hashes": {
+      "/workspaces/Aura-sphere-/SYSTEM_EVOLUTION_TASKS.md": "aa5f37dd9227f0a5bfc1dc914f3e9f0c689e21bfe35deb0559839fa4e2eaf07f"
+    },
+    "integrity_status": false,
+    "violations": [
+      "Arquivo cr\u00edtico ausente: packages/bridge/agent/core/",
+      "Arquivo cr\u00edtico ausente: packages/bridge/agent/app.py",
+      "Arquivo cr\u00edtico ausente: packages/bridge/agent/database.py",
+      "Arquivo cr\u00edtico ausente: packages/bridge/agent/schemas.py"
+    ]
+  },
+  {
+    "timestamp": "2026-05-04T06:13:08.703572",
+    "core_hash": "2add61e1bfdf433fe2536823fffc503f08758b8e607f00b77a550dd1511c7c2c",
+    "critical_files_hashes": {
+      "/workspaces/Aura-sphere-/SYSTEM_EVOLUTION_TASKS.md": "aa5f37dd9227f0a5bfc1dc914f3e9f0c689e21bfe35deb0559839fa4e2eaf07f"
+    },
+    "integrity_status": false,
+    "violations": [
+      "Arquivo cr\u00edtico ausente: packages/bridge/agent/core/",
+      "Arquivo cr\u00edtico ausente: packages/bridge/agent/app.py",
+      "Arquivo cr\u00edtico ausente: packages/bridge/agent/database.py",
+      "Arquivo cr\u00edtico ausente: packages/bridge/agent/schemas.py"
+    ]
+  },
+  {
+    "timestamp": "2026-05-04T06:13:47.857266",
+    "core_hash": "2add61e1bfdf433fe2536823fffc503f08758b8e607f00b77a550dd1511c7c2c",
+    "critical_files_hashes": {
+      "/workspaces/Aura-sphere-/SYSTEM_EVOLUTION_TASKS.md": "aa5f37dd9227f0a5bfc1dc914f3e9f0c689e21bfe35deb0559839fa4e2eaf07f"
+    },
+    "integrity_status": false,
+    "violations": [
+      "Arquivo cr\u00edtico ausente: packages/bridge/agent/core/",
+      "Arquivo cr\u00edtico ausente: packages/bridge/agent/app.py",
+      "Arquivo cr\u00edtico ausente: packages/bridge/agent/database.py",
+      "Arquivo cr\u00edtico ausente: packages/bridge/agent/schemas.py"
+    ]
+  },
+  {
+    "timestamp": "2026-05-04T06:13:49.140338",
+    "core_hash": "2add61e1bfdf433fe2536823fffc503f08758b8e607f00b77a550dd1511c7c2c",
+    "critical_files_hashes": {
+      "/workspaces/Aura-sphere-/SYSTEM_EVOLUTION_TASKS.md": "aa5f37dd9227f0a5bfc1dc914f3e9f0c689e21bfe35deb0559839fa4e2eaf07f"
+    },
+    "integrity_status": false,
+    "violations": [
+      "Arquivo cr\u00edtico ausente: packages/bridge/agent/core/",
+      "Arquivo cr\u00edtico ausente: packages/bridge/agent/app.py",
+      "Arquivo cr\u00edtico ausente: packages/bridge/agent/database.py",
+      "Arquivo cr\u00edtico ausente: packages/bridge/agent/schemas.py"
+    ]
+  },
+  {
+    "timestamp": "2026-05-04T06:34:14.598260",
+    "core_hash": "0bb8bec3dd962a60f538859acbe0a2814074c7fec3e4aecd9926099a8478524b",
+    "critical_files_hashes": {
+      "/workspaces/Aura-sphere-/packages/bridge/agent/core": "d19161d0f3b557e691b3baa790fc73af4c3b9ab6a2b8c6122899cdac5ef9f4c5",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/app.py": "d908f00fa886d6eca1c1b85e32d574774d3bcb629da582783b4c040d6e757ba6",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/database.py": "b0cfb9cf84062a5b3cff8a9347b3021311e9c3de15aeeb126234273347ba6cf4",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/schemas.py": "99b7447f46f4f8bedffff355bd79aa2e6e5ea74f3f3a37d116a36be3a70389a7",
+      "/workspaces/Aura-sphere-/SYSTEM_EVOLUTION_TASKS.md": "aa5f37dd9227f0a5bfc1dc914f3e9f0c689e21bfe35deb0559839fa4e2eaf07f"
+    },
+    "integrity_status": false,
+    "violations": [
+      "Hash do core modificado sem autoriza\u00e7\u00e3o"
+    ]
+  },
+  {
+    "timestamp": "2026-05-04T06:34:15.854895",
+    "core_hash": "0bb8bec3dd962a60f538859acbe0a2814074c7fec3e4aecd9926099a8478524b",
+    "critical_files_hashes": {
+      "/workspaces/Aura-sphere-/packages/bridge/agent/core": "d19161d0f3b557e691b3baa790fc73af4c3b9ab6a2b8c6122899cdac5ef9f4c5",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/app.py": "d908f00fa886d6eca1c1b85e32d574774d3bcb629da582783b4c040d6e757ba6",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/database.py": "b0cfb9cf84062a5b3cff8a9347b3021311e9c3de15aeeb126234273347ba6cf4",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/schemas.py": "99b7447f46f4f8bedffff355bd79aa2e6e5ea74f3f3a37d116a36be3a70389a7",
+      "/workspaces/Aura-sphere-/SYSTEM_EVOLUTION_TASKS.md": "aa5f37dd9227f0a5bfc1dc914f3e9f0c689e21bfe35deb0559839fa4e2eaf07f"
+    },
+    "integrity_status": true,
+    "violations": []
+  },
+  {
+    "timestamp": "2026-05-04T06:35:08.752305",
+    "core_hash": "0bb8bec3dd962a60f538859acbe0a2814074c7fec3e4aecd9926099a8478524b",
+    "critical_files_hashes": {
+      "/workspaces/Aura-sphere-/packages/bridge/agent/core": "d19161d0f3b557e691b3baa790fc73af4c3b9ab6a2b8c6122899cdac5ef9f4c5",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/app.py": "d908f00fa886d6eca1c1b85e32d574774d3bcb629da582783b4c040d6e757ba6",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/database.py": "b0cfb9cf84062a5b3cff8a9347b3021311e9c3de15aeeb126234273347ba6cf4",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/schemas.py": "99b7447f46f4f8bedffff355bd79aa2e6e5ea74f3f3a37d116a36be3a70389a7",
+      "/workspaces/Aura-sphere-/SYSTEM_EVOLUTION_TASKS.md": "aa5f37dd9227f0a5bfc1dc914f3e9f0c689e21bfe35deb0559839fa4e2eaf07f"
+    },
+    "integrity_status": true,
+    "violations": []
+  },
+  {
+    "timestamp": "2026-05-04T06:35:09.982215",
+    "core_hash": "0bb8bec3dd962a60f538859acbe0a2814074c7fec3e4aecd9926099a8478524b",
+    "critical_files_hashes": {
+      "/workspaces/Aura-sphere-/packages/bridge/agent/core": "d19161d0f3b557e691b3baa790fc73af4c3b9ab6a2b8c6122899cdac5ef9f4c5",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/app.py": "d908f00fa886d6eca1c1b85e32d574774d3bcb629da582783b4c040d6e757ba6",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/database.py": "b0cfb9cf84062a5b3cff8a9347b3021311e9c3de15aeeb126234273347ba6cf4",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/schemas.py": "99b7447f46f4f8bedffff355bd79aa2e6e5ea74f3f3a37d116a36be3a70389a7",
+      "/workspaces/Aura-sphere-/SYSTEM_EVOLUTION_TASKS.md": "aa5f37dd9227f0a5bfc1dc914f3e9f0c689e21bfe35deb0559839fa4e2eaf07f"
+    },
+    "integrity_status": true,
+    "violations": []
+  },
+  {
+    "timestamp": "2026-05-05T03:23:45.931038",
+    "core_hash": "b2c58ee450144361c35668a5ac6ac16b9e8bd8faa31381c51bbe02003b035674",
+    "critical_files_hashes": {
+      "/workspaces/Aura-sphere-/packages/bridge/agent/core": "d19161d0f3b557e691b3baa790fc73af4c3b9ab6a2b8c6122899cdac5ef9f4c5",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/app.py": "d908f00fa886d6eca1c1b85e32d574774d3bcb629da582783b4c040d6e757ba6",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/database.py": "b0cfb9cf84062a5b3cff8a9347b3021311e9c3de15aeeb126234273347ba6cf4",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/schemas.py": "99b7447f46f4f8bedffff355bd79aa2e6e5ea74f3f3a37d116a36be3a70389a7",
+      "/workspaces/Aura-sphere-/SYSTEM_EVOLUTION_TASKS.md": "20fe70b46876ce1ce00bf617cf0ec5d530a6e1f4b6e6e07f2a9f1dacb4f05e41"
+    },
+    "integrity_status": false,
+    "violations": [
+      "Hash do core modificado sem autoriza\u00e7\u00e3o",
+      "Arquivo cr\u00edtico modificado: /workspaces/Aura-sphere-/SYSTEM_EVOLUTION_TASKS.md"
+    ]
+  },
+  {
+    "timestamp": "2026-05-05T03:24:21.254715",
+    "core_hash": "b2c58ee450144361c35668a5ac6ac16b9e8bd8faa31381c51bbe02003b035674",
+    "critical_files_hashes": {
+      "/workspaces/Aura-sphere-/packages/bridge/agent/core": "d19161d0f3b557e691b3baa790fc73af4c3b9ab6a2b8c6122899cdac5ef9f4c5",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/app.py": "d908f00fa886d6eca1c1b85e32d574774d3bcb629da582783b4c040d6e757ba6",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/database.py": "b0cfb9cf84062a5b3cff8a9347b3021311e9c3de15aeeb126234273347ba6cf4",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/schemas.py": "99b7447f46f4f8bedffff355bd79aa2e6e5ea74f3f3a37d116a36be3a70389a7",
+      "/workspaces/Aura-sphere-/SYSTEM_EVOLUTION_TASKS.md": "20fe70b46876ce1ce00bf617cf0ec5d530a6e1f4b6e6e07f2a9f1dacb4f05e41"
+    },
+    "integrity_status": true,
+    "violations": []
+  },
+  {
+    "timestamp": "2026-05-05T03:25:27.397323",
+    "core_hash": "b2c58ee450144361c35668a5ac6ac16b9e8bd8faa31381c51bbe02003b035674",
+    "critical_files_hashes": {
+      "/workspaces/Aura-sphere-/packages/bridge/agent/core": "d19161d0f3b557e691b3baa790fc73af4c3b9ab6a2b8c6122899cdac5ef9f4c5",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/app.py": "d908f00fa886d6eca1c1b85e32d574774d3bcb629da582783b4c040d6e757ba6",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/database.py": "b0cfb9cf84062a5b3cff8a9347b3021311e9c3de15aeeb126234273347ba6cf4",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/schemas.py": "99b7447f46f4f8bedffff355bd79aa2e6e5ea74f3f3a37d116a36be3a70389a7",
+      "/workspaces/Aura-sphere-/SYSTEM_EVOLUTION_TASKS.md": "20fe70b46876ce1ce00bf617cf0ec5d530a6e1f4b6e6e07f2a9f1dacb4f05e41"
+    },
+    "integrity_status": true,
+    "violations": []
+  },
+  {
+    "timestamp": "2026-05-05T03:25:27.444308",
+    "core_hash": "b2c58ee450144361c35668a5ac6ac16b9e8bd8faa31381c51bbe02003b035674",
+    "critical_files_hashes": {
+      "/workspaces/Aura-sphere-/packages/bridge/agent/core": "d19161d0f3b557e691b3baa790fc73af4c3b9ab6a2b8c6122899cdac5ef9f4c5",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/app.py": "d908f00fa886d6eca1c1b85e32d574774d3bcb629da582783b4c040d6e757ba6",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/database.py": "b0cfb9cf84062a5b3cff8a9347b3021311e9c3de15aeeb126234273347ba6cf4",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/schemas.py": "99b7447f46f4f8bedffff355bd79aa2e6e5ea74f3f3a37d116a36be3a70389a7",
+      "/workspaces/Aura-sphere-/SYSTEM_EVOLUTION_TASKS.md": "20fe70b46876ce1ce00bf617cf0ec5d530a6e1f4b6e6e07f2a9f1dacb4f05e41"
+    },
+    "integrity_status": true,
+    "violations": []
+  },
+  {
+    "timestamp": "2026-05-05T03:26:00.602429",
+    "core_hash": "b2c58ee450144361c35668a5ac6ac16b9e8bd8faa31381c51bbe02003b035674",
+    "critical_files_hashes": {
+      "/workspaces/Aura-sphere-/packages/bridge/agent/core": "d19161d0f3b557e691b3baa790fc73af4c3b9ab6a2b8c6122899cdac5ef9f4c5",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/app.py": "d908f00fa886d6eca1c1b85e32d574774d3bcb629da582783b4c040d6e757ba6",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/database.py": "b0cfb9cf84062a5b3cff8a9347b3021311e9c3de15aeeb126234273347ba6cf4",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/schemas.py": "99b7447f46f4f8bedffff355bd79aa2e6e5ea74f3f3a37d116a36be3a70389a7",
+      "/workspaces/Aura-sphere-/SYSTEM_EVOLUTION_TASKS.md": "20fe70b46876ce1ce00bf617cf0ec5d530a6e1f4b6e6e07f2a9f1dacb4f05e41"
+    },
+    "integrity_status": true,
+    "violations": []
+  },
+  {
+    "timestamp": "2026-05-05T03:26:00.720006",
+    "core_hash": "b2c58ee450144361c35668a5ac6ac16b9e8bd8faa31381c51bbe02003b035674",
+    "critical_files_hashes": {
+      "/workspaces/Aura-sphere-/packages/bridge/agent/core": "d19161d0f3b557e691b3baa790fc73af4c3b9ab6a2b8c6122899cdac5ef9f4c5",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/app.py": "d908f00fa886d6eca1c1b85e32d574774d3bcb629da582783b4c040d6e757ba6",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/database.py": "b0cfb9cf84062a5b3cff8a9347b3021311e9c3de15aeeb126234273347ba6cf4",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/schemas.py": "99b7447f46f4f8bedffff355bd79aa2e6e5ea74f3f3a37d116a36be3a70389a7",
+      "/workspaces/Aura-sphere-/SYSTEM_EVOLUTION_TASKS.md": "20fe70b46876ce1ce00bf617cf0ec5d530a6e1f4b6e6e07f2a9f1dacb4f05e41"
+    },
+    "integrity_status": true,
+    "violations": []
+  },
+  {
+    "timestamp": "2026-05-05T03:26:18.890073",
+    "core_hash": "b2c58ee450144361c35668a5ac6ac16b9e8bd8faa31381c51bbe02003b035674",
+    "critical_files_hashes": {
+      "/workspaces/Aura-sphere-/packages/bridge/agent/core": "d19161d0f3b557e691b3baa790fc73af4c3b9ab6a2b8c6122899cdac5ef9f4c5",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/app.py": "d908f00fa886d6eca1c1b85e32d574774d3bcb629da582783b4c040d6e757ba6",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/database.py": "b0cfb9cf84062a5b3cff8a9347b3021311e9c3de15aeeb126234273347ba6cf4",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/schemas.py": "99b7447f46f4f8bedffff355bd79aa2e6e5ea74f3f3a37d116a36be3a70389a7",
+      "/workspaces/Aura-sphere-/SYSTEM_EVOLUTION_TASKS.md": "20fe70b46876ce1ce00bf617cf0ec5d530a6e1f4b6e6e07f2a9f1dacb4f05e41"
+    },
+    "integrity_status": true,
+    "violations": []
+  },
+  {
+    "timestamp": "2026-05-05T03:26:18.986672",
+    "core_hash": "b2c58ee450144361c35668a5ac6ac16b9e8bd8faa31381c51bbe02003b035674",
+    "critical_files_hashes": {
+      "/workspaces/Aura-sphere-/packages/bridge/agent/core": "d19161d0f3b557e691b3baa790fc73af4c3b9ab6a2b8c6122899cdac5ef9f4c5",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/app.py": "d908f00fa886d6eca1c1b85e32d574774d3bcb629da582783b4c040d6e757ba6",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/database.py": "b0cfb9cf84062a5b3cff8a9347b3021311e9c3de15aeeb126234273347ba6cf4",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/schemas.py": "99b7447f46f4f8bedffff355bd79aa2e6e5ea74f3f3a37d116a36be3a70389a7",
+      "/workspaces/Aura-sphere-/SYSTEM_EVOLUTION_TASKS.md": "20fe70b46876ce1ce00bf617cf0ec5d530a6e1f4b6e6e07f2a9f1dacb4f05e41"
+    },
+    "integrity_status": true,
+    "violations": []
+  },
+  {
+    "timestamp": "2026-05-05T03:26:44.110015",
+    "core_hash": "b2c58ee450144361c35668a5ac6ac16b9e8bd8faa31381c51bbe02003b035674",
+    "critical_files_hashes": {
+      "/workspaces/Aura-sphere-/packages/bridge/agent/core": "d19161d0f3b557e691b3baa790fc73af4c3b9ab6a2b8c6122899cdac5ef9f4c5",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/app.py": "d908f00fa886d6eca1c1b85e32d574774d3bcb629da582783b4c040d6e757ba6",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/database.py": "b0cfb9cf84062a5b3cff8a9347b3021311e9c3de15aeeb126234273347ba6cf4",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/schemas.py": "99b7447f46f4f8bedffff355bd79aa2e6e5ea74f3f3a37d116a36be3a70389a7",
+      "/workspaces/Aura-sphere-/SYSTEM_EVOLUTION_TASKS.md": "20fe70b46876ce1ce00bf617cf0ec5d530a6e1f4b6e6e07f2a9f1dacb4f05e41"
+    },
+    "integrity_status": true,
+    "violations": []
+  },
+  {
+    "timestamp": "2026-05-05T03:26:44.139006",
+    "core_hash": "b2c58ee450144361c35668a5ac6ac16b9e8bd8faa31381c51bbe02003b035674",
+    "critical_files_hashes": {
+      "/workspaces/Aura-sphere-/packages/bridge/agent/core": "d19161d0f3b557e691b3baa790fc73af4c3b9ab6a2b8c6122899cdac5ef9f4c5",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/app.py": "d908f00fa886d6eca1c1b85e32d574774d3bcb629da582783b4c040d6e757ba6",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/database.py": "b0cfb9cf84062a5b3cff8a9347b3021311e9c3de15aeeb126234273347ba6cf4",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/schemas.py": "99b7447f46f4f8bedffff355bd79aa2e6e5ea74f3f3a37d116a36be3a70389a7",
+      "/workspaces/Aura-sphere-/SYSTEM_EVOLUTION_TASKS.md": "20fe70b46876ce1ce00bf617cf0ec5d530a6e1f4b6e6e07f2a9f1dacb4f05e41"
+    },
+    "integrity_status": true,
+    "violations": []
+  },
+  {
+    "timestamp": "2026-05-05T08:20:07.621619",
+    "core_hash": "b2c58ee450144361c35668a5ac6ac16b9e8bd8faa31381c51bbe02003b035674",
+    "critical_files_hashes": {
+      "/workspaces/Aura-sphere-/packages/bridge/agent/core": "d19161d0f3b557e691b3baa790fc73af4c3b9ab6a2b8c6122899cdac5ef9f4c5",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/app.py": "d908f00fa886d6eca1c1b85e32d574774d3bcb629da582783b4c040d6e757ba6",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/database.py": "b0cfb9cf84062a5b3cff8a9347b3021311e9c3de15aeeb126234273347ba6cf4",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/schemas.py": "99b7447f46f4f8bedffff355bd79aa2e6e5ea74f3f3a37d116a36be3a70389a7",
+      "/workspaces/Aura-sphere-/SYSTEM_EVOLUTION_TASKS.md": "20fe70b46876ce1ce00bf617cf0ec5d530a6e1f4b6e6e07f2a9f1dacb4f05e41"
+    },
+    "integrity_status": true,
+    "violations": []
+  },
+  {
+    "timestamp": "2026-05-05T08:20:07.791869",
+    "core_hash": "b2c58ee450144361c35668a5ac6ac16b9e8bd8faa31381c51bbe02003b035674",
+    "critical_files_hashes": {
+      "/workspaces/Aura-sphere-/packages/bridge/agent/core": "d19161d0f3b557e691b3baa790fc73af4c3b9ab6a2b8c6122899cdac5ef9f4c5",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/app.py": "d908f00fa886d6eca1c1b85e32d574774d3bcb629da582783b4c040d6e757ba6",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/database.py": "b0cfb9cf84062a5b3cff8a9347b3021311e9c3de15aeeb126234273347ba6cf4",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/schemas.py": "99b7447f46f4f8bedffff355bd79aa2e6e5ea74f3f3a37d116a36be3a70389a7",
+      "/workspaces/Aura-sphere-/SYSTEM_EVOLUTION_TASKS.md": "20fe70b46876ce1ce00bf617cf0ec5d530a6e1f4b6e6e07f2a9f1dacb4f05e41"
+    },
+    "integrity_status": true,
+    "violations": []
+  },
+  {
+    "timestamp": "2026-05-05T08:23:36.237032",
+    "core_hash": "b2c58ee450144361c35668a5ac6ac16b9e8bd8faa31381c51bbe02003b035674",
+    "critical_files_hashes": {
+      "/workspaces/Aura-sphere-/packages/bridge/agent/core": "d19161d0f3b557e691b3baa790fc73af4c3b9ab6a2b8c6122899cdac5ef9f4c5",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/app.py": "d908f00fa886d6eca1c1b85e32d574774d3bcb629da582783b4c040d6e757ba6",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/database.py": "b0cfb9cf84062a5b3cff8a9347b3021311e9c3de15aeeb126234273347ba6cf4",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/schemas.py": "99b7447f46f4f8bedffff355bd79aa2e6e5ea74f3f3a37d116a36be3a70389a7",
+      "/workspaces/Aura-sphere-/SYSTEM_EVOLUTION_TASKS.md": "20fe70b46876ce1ce00bf617cf0ec5d530a6e1f4b6e6e07f2a9f1dacb4f05e41"
+    },
+    "integrity_status": true,
+    "violations": []
+  },
+  {
+    "timestamp": "2026-05-05T08:23:36.267268",
+    "core_hash": "b2c58ee450144361c35668a5ac6ac16b9e8bd8faa31381c51bbe02003b035674",
+    "critical_files_hashes": {
+      "/workspaces/Aura-sphere-/packages/bridge/agent/core": "d19161d0f3b557e691b3baa790fc73af4c3b9ab6a2b8c6122899cdac5ef9f4c5",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/app.py": "d908f00fa886d6eca1c1b85e32d574774d3bcb629da582783b4c040d6e757ba6",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/database.py": "b0cfb9cf84062a5b3cff8a9347b3021311e9c3de15aeeb126234273347ba6cf4",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/schemas.py": "99b7447f46f4f8bedffff355bd79aa2e6e5ea74f3f3a37d116a36be3a70389a7",
+      "/workspaces/Aura-sphere-/SYSTEM_EVOLUTION_TASKS.md": "20fe70b46876ce1ce00bf617cf0ec5d530a6e1f4b6e6e07f2a9f1dacb4f05e41"
+    },
+    "integrity_status": true,
+    "violations": []
+  },
+  {
+    "timestamp": "2026-05-05T08:24:07.031948",
+    "core_hash": "b2c58ee450144361c35668a5ac6ac16b9e8bd8faa31381c51bbe02003b035674",
+    "critical_files_hashes": {
+      "/workspaces/Aura-sphere-/packages/bridge/agent/core": "d19161d0f3b557e691b3baa790fc73af4c3b9ab6a2b8c6122899cdac5ef9f4c5",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/app.py": "d908f00fa886d6eca1c1b85e32d574774d3bcb629da582783b4c040d6e757ba6",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/database.py": "b0cfb9cf84062a5b3cff8a9347b3021311e9c3de15aeeb126234273347ba6cf4",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/schemas.py": "99b7447f46f4f8bedffff355bd79aa2e6e5ea74f3f3a37d116a36be3a70389a7",
+      "/workspaces/Aura-sphere-/SYSTEM_EVOLUTION_TASKS.md": "20fe70b46876ce1ce00bf617cf0ec5d530a6e1f4b6e6e07f2a9f1dacb4f05e41"
+    },
+    "integrity_status": true,
+    "violations": []
+  },
+  {
+    "timestamp": "2026-05-05T08:24:07.138082",
+    "core_hash": "b2c58ee450144361c35668a5ac6ac16b9e8bd8faa31381c51bbe02003b035674",
+    "critical_files_hashes": {
+      "/workspaces/Aura-sphere-/packages/bridge/agent/core": "d19161d0f3b557e691b3baa790fc73af4c3b9ab6a2b8c6122899cdac5ef9f4c5",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/app.py": "d908f00fa886d6eca1c1b85e32d574774d3bcb629da582783b4c040d6e757ba6",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/database.py": "b0cfb9cf84062a5b3cff8a9347b3021311e9c3de15aeeb126234273347ba6cf4",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/schemas.py": "99b7447f46f4f8bedffff355bd79aa2e6e5ea74f3f3a37d116a36be3a70389a7",
+      "/workspaces/Aura-sphere-/SYSTEM_EVOLUTION_TASKS.md": "20fe70b46876ce1ce00bf617cf0ec5d530a6e1f4b6e6e07f2a9f1dacb4f05e41"
+    },
+    "integrity_status": true,
+    "violations": []
+  },
+  {
+    "timestamp": "2026-05-05T08:24:25.036893",
+    "core_hash": "b2c58ee450144361c35668a5ac6ac16b9e8bd8faa31381c51bbe02003b035674",
+    "critical_files_hashes": {
+      "/workspaces/Aura-sphere-/packages/bridge/agent/core": "d19161d0f3b557e691b3baa790fc73af4c3b9ab6a2b8c6122899cdac5ef9f4c5",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/app.py": "d908f00fa886d6eca1c1b85e32d574774d3bcb629da582783b4c040d6e757ba6",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/database.py": "b0cfb9cf84062a5b3cff8a9347b3021311e9c3de15aeeb126234273347ba6cf4",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/schemas.py": "99b7447f46f4f8bedffff355bd79aa2e6e5ea74f3f3a37d116a36be3a70389a7",
+      "/workspaces/Aura-sphere-/SYSTEM_EVOLUTION_TASKS.md": "20fe70b46876ce1ce00bf617cf0ec5d530a6e1f4b6e6e07f2a9f1dacb4f05e41"
+    },
+    "integrity_status": true,
+    "violations": []
+  },
+  {
+    "timestamp": "2026-05-05T08:24:25.143151",
+    "core_hash": "b2c58ee450144361c35668a5ac6ac16b9e8bd8faa31381c51bbe02003b035674",
+    "critical_files_hashes": {
+      "/workspaces/Aura-sphere-/packages/bridge/agent/core": "d19161d0f3b557e691b3baa790fc73af4c3b9ab6a2b8c6122899cdac5ef9f4c5",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/app.py": "d908f00fa886d6eca1c1b85e32d574774d3bcb629da582783b4c040d6e757ba6",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/database.py": "b0cfb9cf84062a5b3cff8a9347b3021311e9c3de15aeeb126234273347ba6cf4",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/schemas.py": "99b7447f46f4f8bedffff355bd79aa2e6e5ea74f3f3a37d116a36be3a70389a7",
+      "/workspaces/Aura-sphere-/SYSTEM_EVOLUTION_TASKS.md": "20fe70b46876ce1ce00bf617cf0ec5d530a6e1f4b6e6e07f2a9f1dacb4f05e41"
+    },
+    "integrity_status": true,
+    "violations": []
+  },
+  {
+    "timestamp": "2026-05-05T08:30:02.891889",
+    "core_hash": "b2c58ee450144361c35668a5ac6ac16b9e8bd8faa31381c51bbe02003b035674",
+    "critical_files_hashes": {
+      "/workspaces/Aura-sphere-/packages/bridge/agent/core": "d19161d0f3b557e691b3baa790fc73af4c3b9ab6a2b8c6122899cdac5ef9f4c5",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/app.py": "d908f00fa886d6eca1c1b85e32d574774d3bcb629da582783b4c040d6e757ba6",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/database.py": "b0cfb9cf84062a5b3cff8a9347b3021311e9c3de15aeeb126234273347ba6cf4",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/schemas.py": "99b7447f46f4f8bedffff355bd79aa2e6e5ea74f3f3a37d116a36be3a70389a7",
+      "/workspaces/Aura-sphere-/SYSTEM_EVOLUTION_TASKS.md": "20fe70b46876ce1ce00bf617cf0ec5d530a6e1f4b6e6e07f2a9f1dacb4f05e41"
+    },
+    "integrity_status": true,
+    "violations": []
+  },
+  {
+    "timestamp": "2026-05-05T08:30:02.999666",
+    "core_hash": "b2c58ee450144361c35668a5ac6ac16b9e8bd8faa31381c51bbe02003b035674",
+    "critical_files_hashes": {
+      "/workspaces/Aura-sphere-/packages/bridge/agent/core": "d19161d0f3b557e691b3baa790fc73af4c3b9ab6a2b8c6122899cdac5ef9f4c5",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/app.py": "d908f00fa886d6eca1c1b85e32d574774d3bcb629da582783b4c040d6e757ba6",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/database.py": "b0cfb9cf84062a5b3cff8a9347b3021311e9c3de15aeeb126234273347ba6cf4",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/schemas.py": "99b7447f46f4f8bedffff355bd79aa2e6e5ea74f3f3a37d116a36be3a70389a7",
+      "/workspaces/Aura-sphere-/SYSTEM_EVOLUTION_TASKS.md": "20fe70b46876ce1ce00bf617cf0ec5d530a6e1f4b6e6e07f2a9f1dacb4f05e41"
+    },
+    "integrity_status": true,
+    "violations": []
+  },
+  {
+    "timestamp": "2026-05-05T08:32:11.282645",
+    "core_hash": "b2c58ee450144361c35668a5ac6ac16b9e8bd8faa31381c51bbe02003b035674",
+    "critical_files_hashes": {
+      "/workspaces/Aura-sphere-/packages/bridge/agent/core": "d19161d0f3b557e691b3baa790fc73af4c3b9ab6a2b8c6122899cdac5ef9f4c5",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/app.py": "d908f00fa886d6eca1c1b85e32d574774d3bcb629da582783b4c040d6e757ba6",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/database.py": "b0cfb9cf84062a5b3cff8a9347b3021311e9c3de15aeeb126234273347ba6cf4",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/schemas.py": "99b7447f46f4f8bedffff355bd79aa2e6e5ea74f3f3a37d116a36be3a70389a7",
+      "/workspaces/Aura-sphere-/SYSTEM_EVOLUTION_TASKS.md": "20fe70b46876ce1ce00bf617cf0ec5d530a6e1f4b6e6e07f2a9f1dacb4f05e41"
+    },
+    "integrity_status": true,
+    "violations": []
+  },
+  {
+    "timestamp": "2026-05-05T08:32:11.397907",
+    "core_hash": "b2c58ee450144361c35668a5ac6ac16b9e8bd8faa31381c51bbe02003b035674",
+    "critical_files_hashes": {
+      "/workspaces/Aura-sphere-/packages/bridge/agent/core": "d19161d0f3b557e691b3baa790fc73af4c3b9ab6a2b8c6122899cdac5ef9f4c5",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/app.py": "d908f00fa886d6eca1c1b85e32d574774d3bcb629da582783b4c040d6e757ba6",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/database.py": "b0cfb9cf84062a5b3cff8a9347b3021311e9c3de15aeeb126234273347ba6cf4",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/schemas.py": "99b7447f46f4f8bedffff355bd79aa2e6e5ea74f3f3a37d116a36be3a70389a7",
+      "/workspaces/Aura-sphere-/SYSTEM_EVOLUTION_TASKS.md": "20fe70b46876ce1ce00bf617cf0ec5d530a6e1f4b6e6e07f2a9f1dacb4f05e41"
+    },
+    "integrity_status": true,
+    "violations": []
+  },
+  {
+    "timestamp": "2026-05-05T08:40:56.289857",
+    "core_hash": "b2c58ee450144361c35668a5ac6ac16b9e8bd8faa31381c51bbe02003b035674",
+    "critical_files_hashes": {
+      "/workspaces/Aura-sphere-/packages/bridge/agent/core": "d19161d0f3b557e691b3baa790fc73af4c3b9ab6a2b8c6122899cdac5ef9f4c5",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/app.py": "d908f00fa886d6eca1c1b85e32d574774d3bcb629da582783b4c040d6e757ba6",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/database.py": "b0cfb9cf84062a5b3cff8a9347b3021311e9c3de15aeeb126234273347ba6cf4",
+      "/workspaces/Aura-sphere-/packages/bridge/agent/schemas.py": "99b7447f46f4f8bedffff355bd79aa2e6e5ea74f3f3a37d116a36be3a70389a7",
+      "/workspaces/Aura-sphere-/SYSTEM_EVOLUTION_TASKS.md": "20fe70b46876ce1ce00bf617cf0ec5d530a6e1f4b6e6e07f2a9f1dacb4f05e41"
+    },
+    "integrity_status": true,
+    "violations": []
   }
 ]
