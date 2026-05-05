@@ -8,88 +8,106 @@ Formato: `[Status] Task ID | Task | Dependências | Prioridade | Sprint`
 
 ### Database & Models
 
-- [x] DB-001 | Criar tabela `plans` com campos (id, user_id, title, description, status, progress, created_at, updated_at) | - | P0 | S1 ✅ concluído
-  - Arquivo: `packages/bridge/database.py`
-  - Adicionar ORM model e migration
+- [x] DB-001 | Criar tabela `plans` com campos (id, user_id, title, description, status, progress, created_at, updated_at) | - | P0 | S1 ✅ REAL
+  - Arquivo: `packages/bridge/database.py:59-67`
+  - Status: ORM model implementado e testado
   
-- [x] DB-002 | Criar tabela `tasks` (id, plan_id, title, description, status, progress, priority, due_date, subtasks_json) | DB-001 | P0 | S1 ✅ concluído
+- [x] DB-002 | Criar tabela `tasks` (id, plan_id, title, description, status, progress, priority, due_date, subtasks_json) | DB-001 | P0 | S1 ✅ REAL
+  - Status: ORM model implementado (linha 80)
   
-- [x] DB-003 | Criar tabela `projects` (id, user_id, title, status, progress, linked_tasks, description, archived) | DB-001 | P0 | S1 ✅ concluído
+- [x] DB-003 | Criar tabela `projects` (id, user_id, title, status, progress, linked_tasks, description, archived) | DB-001 | P0 | S1 ✅ REAL
+  - Status: ORM model implementado (linha 75)
   
-- [x] DB-004 | Criar tabela `accounts` (id, user_id, account_type, account_name, status, value_usd, description, metadata_json) | DB-001 | P0 | S1 ✅ concluído
+- [x] DB-004 | Criar tabela `accounts` (id, user_id, account_type, account_name, status, value_usd, description, metadata_json) | DB-001 | P0 | S1 ✅ REAL
+  - Status: ORM model implementado e testado (linha 98)
   
-- [x] DB-005 | Criar tabela `action_proposals` (id, user_id, action_type, description, parameters_json, status, created_at, expires_at) | - | P0 | S1 ✅ concluído
+- [x] DB-005 | Criar tabela `action_proposals` (id, user_id, action_type, description, parameters_json, status, created_at, expires_at) | - | P0 | S1 ✅ REAL
+  - Status: ORM model implementado (linha 112)
 
 ### Backend - Planning Service
 
-- [x] API-001 | Implementar `POST /api/v1/planning/plans` | DB-001 | P0 | S1 ✅ concluído
-  - Request: { title, description, start_date?, duration_weeks?, tasks: [] }
-  - Response: { plan_id, status }
+- [x] API-001 | Implementar `POST /api/v1/planning/plans` | DB-001 | P0 | S1 ✅ REAL
+  - Endpoint: POST /api/v1/planning/plans (app.py:1189)
+  - Implementado em planning_service.create_plan()
   
-- [x] API-002 | Implementar `GET /api/v1/planning/plans/{user_id}` | DB-001 | P0 | S1 ✅ concluído
+- [x] API-002 | Implementar `GET /api/v1/planning/plans/{user_id}` | DB-001 | P0 | S1 ✅ REAL
+  - Endpoint: GET /api/v1/planning/plans/{user_id} (app.py:1205)
   - Response: List de planos com progresso calculado
   
-- [x] API-003 | Implementar `POST /api/v1/planning/tasks` | DB-002 | P0 | S1 ✅ concluído
-  - Request: { plan_id, title, description?, priority, due_date? }
+- [x] API-003 | Implementar `POST /api/v1/planning/tasks` | DB-002 | P0 | S1 ✅ REAL
+  - Endpoint: POST /api/v1/planning/tasks (app.py:1218)
+  - Implementado em planning_service.add_task()
   
-- [x] API-004 | Implementar `PATCH /api/v1/planning/tasks/{task_id}` | API-003 | P0 | S1 ✅ concluído
-  - Updates: status (pending/in_progress/completed), progress (0-100)
-  - Trigger: Recalcular progresso do plano
+- [x] API-004 | Implementar `PATCH /api/v1/planning/tasks/{task_id}` | API-003 | P0 | S1 ✅ REAL
+  - Endpoint: PATCH /api/v1/planning/tasks/{task_id} (app.py:1233)
+  - Atualiza status e progresso, recalcula plano
   
-- [x] API-005 | Implementar `GET /api/v1/planning/dashboard` | API-002 | P0 | S1 ✅ concluído
-  - Agregar: planos ativos, tarefas urgentes, progresso geral, accounts summary
+- [x] API-005 | Implementar `GET /api/v1/planning/dashboard` | API-002 | P0 | S1 ✅ REAL
+  - Endpoint: GET /api/v1/planning/dashboard/{user_id} (app.py:1249)
+  - Agregação: planos, tarefas, progresso geral
   
-- [x] API-006 | Implementar `POST /api/v1/planning/projects` | DB-003 | P0 | S1 ✅ concluído
+- [x] API-006 | Implementar `POST /api/v1/planning/projects` | DB-003 | P0 | S1 ✅ REAL
+  - Endpoints: POST/GET /api/v1/planning/projects (app.py:1266-1283)
+  - Implementado em planning_service.create_project() e get_user_projects()
   
-- [x] API-007 | Implementar `POST /api/v1/planning/accounts` | DB-004 | P0 | S1 ✅ concluído
-  - Request: { type: 'bank'|'business'|'learning', name, initial_value?, description }
+- [x] API-007 | Implementar `POST /api/v1/planning/accounts` | DB-004 | P0 | S1 ✅ REAL
+  - Endpoints: POST/GET /api/v1/planning/accounts (app.py:1286-1319)
+  - Implementado em planning_service.create_account() e get_user_accounts()
 
 ### Backend - Action Queue & Approval
 
-- [x] APPROVAL-001 | Implementar `ActionQueueService` (manager de ações pendentes) | DB-005 | P0 | S1 ✅ concluído
-  - Métodos: propose_action(), get_pending_actions(), approve_action(), reject_action()
-  - Persistência em DB
+- [x] APPROVAL-001 | Implementar `ActionQueueService` (manager de ações pendentes) | DB-005 | P0 | S1 ✅ REAL
+  - Arquivo: packages/bridge/agent/action_queue_service.py
+  - Métodos: submit_action_proposal(), get_pending_actions(), approve_action(), reject_action()
+  - Status: Testado e funcionando
   
-- [x] API-008 | Implementar `GET /api/v1/actions/pending` | APPROVAL-001 | P0 | S1 ✅ concluído
-  - Response: List de ações pendentes com descrição e parâmetros
+- [x] API-008 | Implementar `GET /api/v1/actions/pending` | APPROVAL-001 | P0 | S1 ✅ REAL
+  - Endpoint: GET /api/v1/actions/pending (app.py:269)
+  - Response: Lista de ações com status 'pending'
   
-- [x] API-009 | Implementar `POST /api/v1/actions/{action_id}/approve` | APPROVAL-001 | P0 | S1 ✅ concluído
-  - Trigger: Executar ação e logar em audit
+- [x] API-009 | Implementar `POST /api/v1/actions/{action_id}/approve` | APPROVAL-001 | P0 | S1 ✅ REAL
+  - Endpoint: POST /api/v1/actions/{action_id}/approve (app.py:306)
+  - Marca ação como 'approved' e registra timestamp
   
-- [x] API-010 | Implementar `POST /api/v1/actions/{action_id}/reject` | APPROVAL-001 | P0 | S1 ✅ concluído
-  - Remover da fila
+- [x] API-010 | Implementar `POST /api/v1/actions/{action_id}/reject` | APPROVAL-001 | P0 | S1 ✅ REAL
+  - Endpoint: POST /api/v1/actions/{action_id}/reject (app.py:322)
+  - Marca ação como 'rejected' com reason
 
 ### Frontend - Dashboard Layout
 
-- [x] UI-001 | Redesenhar layout principal com abas (Dashboard, Planning, Actions, Abilities, Tools, Resources, Device) | - | P0 | S1 ✅ concluído
+- [ ] UI-001 | Redesenhar layout principal com abas (Dashboard, Planning, Actions, Abilities, Tools, Resources, Device) | - | P0 | S1
   - Arquivo: `src/App.tsx`
   - Usar Zustand para state management
   
-- [x] UI-002 | Criar componente `PlanningTab` com overview de planos e progresso | UI-001 | P0 | S1 ✅ concluído
+- [ ] UI-002 | Criar componente `PlanningTab` com overview de planos e progresso | UI-001 | P0 | S1
   - Cards de planos com barras de progresso
   - Botão "+ Novo Plano"
   
-- [x] UI-003 | Criar componente `TaskCard` (título, status, progresso%, prioridade) | UI-002 | P0 | S1 ✅ concluído
+- [ ] UI-003 | Criar componente `TaskCard` (título, status, progresso%, prioridade) | UI-002 | P0 | S1
   - Inline editing para status e progresso
   
-- [x] UI-004 | Criar componente `ActionQueue` listando ações pendentes com approve/reject | UI-001 | P1 | S1 ✅ concluído
+- [ ] UI-004 | Criar componente `ActionQueue` listando ações pendentes com approve/reject | UI-001 | P1 | S1
   - Preview de ação
   - Botões de aprovação com confirmação
   
-- [x] UI-005 | Criar componente `Dashboard` com widgets de summary | UI-001 | P0 | S1 ✅ concluído
+- [ ] UI-005 | Criar componente `Dashboard` com widgets de summary | UI-001 | P0 | S1
   - Atividades recentes
   - Tarefas urgentes
   - Summary de negócios/contas
 
 ### Tests - Core
 
-- [x] TEST-001 | Testes unitários para Planning API | API-002 | P0 | S2 ✅ concluído
-  - Test create/read/update plans
+- [x] TEST-001 | Testes unitários para Planning API | API-002 | P0 | S2 ✅ REAL
+  - Validado: create_plan, get_user_plans, add_task, update_task_progress
+  - Status: Todos os endpoints funcionando
   
-- [x] TEST-002 | Testes de integração para fluxo de tarefa completo | API-004 | P0 | S2 ✅ concluído
-  - Create plano → add tarefas → update progresso → verify dashboard
+- [x] TEST-002 | Testes de integração para fluxo de tarefa completo | API-004 | P0 | S2 ✅ REAL
+  - Fluxo: criar plano → adicionar tarefa → atualizar progresso → verificar dashboard
+  - Status: Fluxo completo validado
   
-- [x] TEST-003 | Testes para Action Approval workflow | APPROVAL-001 | P0 | S2 ✅ concluído
+- [x] TEST-003 | Testes para Action Approval workflow | APPROVAL-001 | P0 | S2 ✅ REAL
+  - Validado: submit_action_proposal, get_pending_actions, approve_action, reject_action
+  - Status: Fluxo de aprovação funcionando
 
 ---
 
@@ -97,57 +115,57 @@ Formato: `[Status] Task ID | Task | Dependências | Prioridade | Sprint`
 
 ### Backend - Ability Discovery
 
-- [x] AB-001 | Criar `AbilityDiscoveryEngine` com GitHub search (free API) | - | P1 | S3 ✅ concluído
+- [ ] AB-001 | Criar `AbilityDiscoveryEngine` com GitHub search (free API) | - | P1 | S3
   - Buscar repos com keyword
   - Extrair funcionalidades com AST
   
-- [x] AB-002 | Implementar AST parser para Python (extrair função, signatures, docstrings) | AB-001 | P1 | S3 ✅ concluído
+- [ ] AB-002 | Implementar AST parser para Python (extrair função, signatures, docstrings) | AB-001 | P1 | S3
   - Use: `ast` module, `inspect` module
   
-- [x] AB-003 | Criar `AbilityWrapper` generator (auto-gen Python wrapper com safety checks) | AB-002 | P1 | S3 ✅ concluído
+- [ ] AB-003 | Criar `AbilityWrapper` generator (auto-gen Python wrapper com safety checks) | AB-002 | P1 | S3
   
-- [x] AB-004 | Tabela DB `abilities` com campos (name, description, source_repo, functions_json, version) | - | P1 | S3 ✅ concluído
+- [ ] AB-004 | Tabela DB `abilities` com campos (name, description, source_repo, functions_json, version) | - | P1 | S3
   
-- [x] AB-005 | Tabela DB `skills` subset de abilities com parameters e examples | AB-004 | P1 | S3 ✅ concluído
+- [ ] AB-005 | Tabela DB `skills` subset de abilities com parameters e examples | AB-004 | P1 | S3
 
 ### Backend - Ability APIs
 
-- [x] API-011 | `POST /api/v1/abilities/search` - buscar habilidade em GitHub | AB-001 | P1 | S3 ✅ concluído
+- [ ] API-011 | `POST /api/v1/abilities/search` - buscar habilidade em GitHub | AB-001 | P1 | S3
   - Query: { keyword, language: 'python', stars_min?: 10 }
   - Response: { results: [ { repo_name, url, description, languages } ] }
   
-- [x] API-012 | `POST /api/v1/abilities/add` - adicionar habilidade ao usuário | AB-005 | P1 | S3 ✅ concluído
+- [ ] API-012 | `POST /api/v1/abilities/add` - adicionar habilidade ao usuário | AB-005 | P1 | S3
   - Request: { repo_url, ability_name, selected_functions: [] }
   - Response: { ability_id, status }
   
-- [x] API-013 | `GET /api/v1/abilities/list` - listar habilidades do usuário | AB-005 | P1 | S3 ✅ concluído
+- [ ] API-013 | `GET /api/v1/abilities/list` - listar habilidades do usuário | AB-005 | P1 | S3
   
-- [x] API-014 | `GET /api/v1/abilities/{ability_id}/details` | AB-005 | P1 | S3 ✅ concluído
+- [ ] API-014 | `GET /api/v1/abilities/{ability_id}/details` | AB-005 | P1 | S3
   - Com examples e documentação
 
 ### Frontend - Ability Gallery
 
-- [x] UI-006 | Criar componente `AbilitiesTab` com galeria de cards | - | P1 | S4 ✅ concluído
+- [ ] UI-006 | Criar componente `AbilitiesTab` com galeria de cards | - | P1 | S4
   - Cards: ícone, nome, origem, tags
   
-- [x] UI-007 | Criar modal `AddAbilityFlow` (search → select functions → confirm) | UI-006 | P1 | S4 ✅ concluído
+- [ ] UI-007 | Criar modal `AddAbilityFlow` (search → select functions → confirm) | UI-006 | P1 | S4
   - Step 1: Buscar no GitHub
   - Step 2: Preview de functions encontradas
   - Step 3: Selecionar quais adicionar
   
-- [x] UI-008 | Criar `AbilityCard` component reutilizável | UI-006 | P1 | S4 ✅ concluído
+- [ ] UI-008 | Criar `AbilityCard` component reutilizável | UI-006 | P1 | S4
   - Click abre detalhes
   - Context menu para executar/remover
   
-- [x] UI-009 | Integrar search + filtros na galeria | UI-006 | P1 | S4 ✅ concluído
+- [ ] UI-009 | Integrar search + filtros na galeria | UI-006 | P1 | S4
 
 ### Tests - Abilities
 
-- [x] TEST-004 | Testes para GitHub API integration | AB-001 | P1 | S4 ✅ concluído
+- [ ] TEST-004 | Testes para GitHub API integration | AB-001 | P1 | S4
   
-- [x] TEST-005 | Testes para AST parser | AB-002 | P1 | S4 ✅ concluído
+- [ ] TEST-005 | Testes para AST parser | AB-002 | P1 | S4
   
-- [x] TEST-006 | Testes e2e para fluxo de discover + add habilidade | UI-007 | P1 | S4 ✅ concluído
+- [ ] TEST-006 | Testes e2e para fluxo de discover + add habilidade | UI-007 | P1 | S4
 
 ---
 
@@ -155,69 +173,69 @@ Formato: `[Status] Task ID | Task | Dependências | Prioridade | Sprint`
 
 ### Backend - Instagram Auth & Data Collection
 
-- [x] IG-001 | Setup `instagrapi` library (pip install instagrapi) | - | P1 | S5 ✅ concluído
+- [ ] IG-001 | Setup `instagrapi` library (pip install instagrapi) | - | P1 | S5
   - Verificar versão compatível com Python 3.11+
   
-- [x] IG-002 | Criar `InstagramSession` wrapper com encrypted credential storage | IG-001 | P1 | S5 ✅ concluído
+- [ ] IG-002 | Criar `InstagramSession` wrapper com encrypted credential storage | IG-001 | P1 | S5
   - Usar: cryptography library para encrypt/decrypt
   
-- [x] IG-003 | Tabela DB `social_accounts` (id, user_id, platform, username, auth_token_encrypted, created_at, synced_at) | - | P1 | S5 ✅ concluído
+- [ ] IG-003 | Tabela DB `social_accounts` (id, user_id, platform, username, auth_token_encrypted, created_at, synced_at) | - | P1 | S5
   
-- [x] IG-004 | Tabela DB `saved_content` (id, account_id, ig_post_id, content_type, title, url, metadata_json, saved_at, category) | IG-003 | P1 | S5 ✅ concluído
+- [ ] IG-004 | Tabela DB `saved_content` (id, account_id, ig_post_id, content_type, title, url, metadata_json, saved_at, category) | IG-003 | P1 | S5
   
-- [x] IG-005 | Tabela DB `content_collections` (id, user_id, collection_name, filters_json, created_at) | IG-004 | P1 | S5 ✅ concluído
+- [ ] IG-005 | Tabela DB `content_collections` (id, user_id, collection_name, filters_json, created_at) | IG-004 | P1 | S5
 
 ### Backend - Instagram APIs
 
-- [x] API-015 | `POST /api/v1/social/instagram/login` - login seguro | IG-002 | P1 | S5 ✅ concluído
+- [ ] API-015 | `POST /api/v1/social/instagram/login` - login seguro | IG-002 | P1 | S5
   - Request: { username, password }
   - Response: { account_id, status, warning_if_2fa_needed }
   - Armazenar token encriptado
   
-- [x] API-016 | `GET /api/v1/social/instagram/sync` - sincronizar saves | IG-004 | P1 | S5 ✅ concluído
+- [ ] API-016 | `GET /api/v1/social/instagram/sync` - sincronizar saves | IG-004 | P1 | S5
   - Buscar todos os saved posts
   - Categorizar automaticamente com IA
   - Retornar: { synced_count, categories_found }
   
-- [x] API-017 | `GET /api/v1/social/instagram/collections` - listar coleções do usuário | IG-005 | P1 | S5 ✅ concluído
+- [ ] API-017 | `GET /api/v1/social/instagram/collections` - listar coleções do usuário | IG-005 | P1 | S5
   
-- [x] API-018 | `POST /api/v1/social/instagram/collections` - criar coleção com filtros | IG-005 | P1 | S5 ✅ concluído
+- [ ] API-018 | `POST /api/v1/social/instagram/collections` - criar coleção com filtros | IG-005 | P1 | S5
   - Exemplo: { name: "Anime", filters: { query: "anime", tags: ["anime"] } }
   
-- [x] API-019 | `GET /api/v1/social/instagram/recommendations` - sugestões baseadas em saves | IG-004 | P1 | S5 ✅ concluído
+- [ ] API-019 | `GET /api/v1/social/instagram/recommendations` - sugestões baseadas em saves | IG-004 | P1 | S5
   - Usar: embeddings + semantic search
   - Args: { theme?: string, limit?: 5 }
 
 ### Backend - Social Management (Com Aprovação)
 
-- [x] API-020 | `POST /api/v1/social/{platform}/actions/propose` | APPROVAL-001 | P2 | S6 ✅ concluído
+- [ ] API-020 | `POST /api/v1/social/{platform}/actions/propose` | APPROVAL-001 | P2 | S6
   - Tipos: publish, schedule, like, follow, follow_back, message_template
   - Retornar: { action_id, preview_description }
   
-- [x] API-021 | `GET /api/v1/social/{platform}/analytics` - analytics livres | IG-003 | P2 | S6 ✅ concluído
+- [ ] API-021 | `GET /api/v1/social/{platform}/analytics` - analytics livres | IG-003 | P2 | S6
   - Followers count, engagement rate (basic)
 
 ### Frontend - Social Integration
 
-- [x] UI-010 | Criar componente `SocialTab` com list de contas conectadas | - | P2 | S5 ✅ concluído
+- [ ] UI-010 | Criar componente `SocialTab` com list de contas conectadas | - | P2 | S5
   
-- [x] UI-011 | Criar modal `LoginInstagram` com 2FA warning | UI-010 | P2 | S5 ✅ concluído
+- [ ] UI-011 | Criar modal `LoginInstagram` com 2FA warning | UI-010 | P2 | S5
   
-- [x] UI-012 | Criar `SavesOrganizer` mostrando saves em grid/galeria | UI-010 | P2 | S5 ✅ concluído
+- [ ] UI-012 | Criar `SavesOrganizer` mostrando saves em grid/galeria | UI-010 | P2 | S5
   - Filtros por categoria
   - Busca local
   
-- [x] UI-013 | Criar `CollectionViewer` com recommendations | UI-012 | P2 | S5 ✅ concluído
+- [ ] UI-013 | Criar `CollectionViewer` com recommendations | UI-012 | P2 | S5
   - Tipo: "quer assistir um anime? veja esses:" com opções de saves
   
-- [x] UI-014 | Integrar approval queue para ações sociais | APPROVAL-001 | P2 | S6 ✅ concluído
+- [ ] UI-014 | Integrar approval queue para ações sociais | APPROVAL-001 | P2 | S6
   - Preview antes de executar
 
 ### Tests - Social
 
-- [x] TEST-007 | Testes para Instagram session management (mock instagrapi) | IG-002 | P2 | S6 ✅ concluído
+- [ ] TEST-007 | Testes para Instagram session management (mock instagrapi) | IG-002 | P2 | S6
   
-- [x] TEST-008 | Testes e2e para login + sync + categorização | API-016 | P2 | S6 ✅ concluído
+- [ ] TEST-008 | Testes e2e para login + sync + categorização | API-016 | P2 | S6
 
 ---
 
@@ -225,40 +243,40 @@ Formato: `[Status] Task ID | Task | Dependências | Prioridade | Sprint`
 
 ### Backend - Device Profiler
 
-- [x] DEV-001 | Criar `DeviceProfiler` com detecção de OS, storage, RAM | - | P2 | S7 ✅ concluído
+- [ ] DEV-001 | Criar `DeviceProfiler` com detecção de OS, storage, RAM | - | P2 | S7
   - Usar: `psutil`, `platform`, `shutil` para info de système
   
-- [x] DEV-002 | Tabela DB `device_profiles` (user_id, device_type, os, storage_mb, ram_mb, capabilities, last_seen) | - | P2 | S7 ✅ concluído
+- [ ] DEV-002 | Tabela DB `device_profiles` (user_id, device_type, os, storage_mb, ram_mb, capabilities, last_seen) | - | P2 | S7
   
-- [x] DEV-003 | Criar `StorageOptimizer` com recomendações de limpeza e cache | DEV-001 | P2 | S7 ✅ concluído
+- [ ] DEV-003 | Criar `StorageOptimizer` com recomendações de limpeza e cache | DEV-001 | P2 | S7
   
-- [x] DEV-004 | Implementar `offline_first` sync strategy com local cache | - | P2 | S7 ✅ concluído
+- [ ] DEV-004 | Implementar `offline_first` sync strategy com local cache | - | P2 | S7
 
 ### APIs Device-Aware
 
-- [x] API-022 | `GET /api/v1/device/profile` - info do device atual | DEV-001 | P2 | S7 ✅ concluído
+- [ ] API-022 | `GET /api/v1/device/profile` - info do device atual | DEV-001 | P2 | S7
   - Response: { device_type, storage_mb, ram_mb, capabilities, health_score }
   
-- [x] API-023 | `POST /api/v1/device/optimize` - plano de otimização | DEV-003 | P2 | S7 ✅ concluído
+- [ ] API-023 | `POST /api/v1/device/optimize` - plano de otimização | DEV-003 | P2 | S7
   - Retornar: { recommendations: [], estimated_freed_mb, actions_proposed }
   
-- [x] API-024 | `GET /api/v1/device/sync/status` - status de offline sync | DEV-004 | P2 | S7 ✅ concluído
+- [ ] API-024 | `GET /api/v1/device/sync/status` - status de offline sync | DEV-004 | P2 | S7
 
 ### Frontend - Multi-Media Modes
 
-- [x] UI-015 | Criar `ModeSelector` (Text, Voice, TV, Developer) | - | P2 | S8 ✅ concluído
+- [ ] UI-015 | Criar `ModeSelector` (Text, Voice, TV, Developer) | - | P2 | S8
   - Persist seleção por device
   
-- [x] UI-016 | Implementar `TVMode` layout (larger buttons, minimal text, voice focus) | UI-015 | P2 | S8 ✅ concluído
+- [ ] UI-016 | Implementar `TVMode` layout (larger buttons, minimal text, voice focus) | UI-015 | P2 | S8
   
-- [x] UI-017 | Implementar `VoiceMode` com speech recognition + TTS fallback | UI-015 | P2 | S8 ✅ concluído
+- [ ] UI-017 | Implementar `VoiceMode` com speech recognition + TTS fallback | UI-015 | P2 | S8
   - Usar: Whisper.cpp (offline) ou Google Cloud Speech (com fallback)
   
-- [x] UI-018 | Implementar `DeveloperMode` com console logs, metrics, device info | UI-015 | P2 | S8 ✅ concluído
+- [ ] UI-018 | Implementar `DeveloperMode` com console logs, metrics, device info | UI-015 | P2 | S8
 
 ### Tests - Device
 
-- [x] TEST-009 | Testes para DeviceProfiler | DEV-001 | P2 | S8 ✅ concluído
+- [ ] TEST-009 | Testes para DeviceProfiler | DEV-001 | P2 | S8
 
 ---
 
@@ -266,71 +284,71 @@ Formato: `[Status] Task ID | Task | Dependências | Prioridade | Sprint`
 
 ### Security Audit Engine
 
-- [x] SEC-001 | Integrar `SecurityAuditor` com sistema de vulnerabilidades | - | P2 | S9 ✅ concluído
+- [ ] SEC-001 | Integrar `SecurityAuditor` com sistema de vulnerabilidades | - | P2 | S9
   - Verificações: sandbox escape, code injection, resource limits
   
-- [x] SEC-002 | Tabela DB `security_issues` (id, severity, description, component, resolution, reported_at, status) | - | P2 | S9 ✅ concluído
+- [ ] SEC-002 | Tabela DB `security_issues` (id, severity, description, component, resolution, reported_at, status) | - | P2 | S9
   
-- [x] SEC-003 | Criar `VulnerabilityReporter` que notifica usuário de problemas | SEC-002 | P2 | S9 ✅ concluído
+- [ ] SEC-003 | Criar `VulnerabilityReporter` que notifica usuário de problemas | SEC-002 | P2 | S9
 
 ### APIs Security
 
-- [x] API-025 | `GET /api/v1/security/issues` - listar problemas de segurança | SEC-002 | P2 | S9 ✅ concluído
+- [ ] API-025 | `GET /api/v1/security/issues` - listar problemas de segurança | SEC-002 | P2 | S9
   
-- [x] API-026 | `POST /api/v1/security/audit` - executar auditoria manual | SEC-001 | P2 | S9 ✅ concluído
+- [ ] API-026 | `POST /api/v1/security/audit` - executar auditoria manual | SEC-001 | P2 | S9
   
-- [x] API-027 | `PATCH /api/v1/security/issues/{id}/status` - user marca como resolvido | SEC-002 | P2 | S9 ✅ concluído
+- [ ] API-027 | `PATCH /api/v1/security/issues/{id}/status` - user marca como resolvido | SEC-002 | P2 | S9
 
 ### Cost Tracking
 
-- [x] COST-001 | Criar `ApiCostTracker` que logs/monitora uso de APIs pagas | - | P2 | S9 ✅ concluído
+- [ ] COST-001 | Criar `ApiCostTracker` que logs/monitora uso de APIs pagas | - | P2 | S9
   - Guardar: provider, endpoint, cost, timestamp
   
-- [x] COST-002 | Tabela DB `api_usage` (id, user_id, provider, endpoint, cost_usd, timestamp) | - | P2 | S9 ✅ concluído
+- [ ] COST-002 | Tabela DB `api_usage` (id, user_id, provider, endpoint, cost_usd, timestamp) | - | P2 | S9
   
-- [x] COST-003 | Implementar alertas de custo (email/notif quando > threshold) | COST-002 | P2 | S9 ✅ concluído
+- [ ] COST-003 | Implementar alertas de custo (email/notif quando > threshold) | COST-002 | P2 | S9
 
 ### APIs Cost
 
-- [x] API-028 | `GET /api/v1/costs/summary` - resumo de custos | COST-002 | P2 | S9 ✅ concluído
+- [ ] API-028 | `GET /api/v1/costs/summary` - resumo de custos | COST-002 | P2 | S9
   
-- [x] API-029 | `GET /api/v1/costs/free-alternatives` - sugestões de APIs gratuitas | COST-001 | P2 | S10 ✅ concluído
+- [ ] API-029 | `GET /api/v1/costs/free-alternatives` - sugestões de APIs gratuitas | COST-001 | P2 | S10
 
 ### Tests - Security
 
-- [x] TEST-010 | Testes para detecção de vulnerabilidades | SEC-001 | P2 | S10 ✅ concluído
+- [ ] TEST-010 | Testes para detecção de vulnerabilidades | SEC-001 | P2 | S10
   
-- [x] TEST-011 | Testes para cost tracking | COST-001 | P2 | S10 ✅ concluído
+- [ ] TEST-011 | Testes para cost tracking | COST-001 | P2 | S10
 
 ---
 
 ## 🎨 SPRINT 11: Visual Customization (Baixa Prioridade)
 
-- [x] UI-019 | Criar `ThemeBuilder` com seleção de cores e layouts | - | P3 | S11 ✅ concluído
+- [ ] UI-019 | Criar `ThemeBuilder` com seleção de cores e layouts | - | P3 | S11
   
-- [x] UI-020 | Integrar busca de referências (Unsplash, Pexels free APIs) | UI-019 | P3 | S11 ✅ concluído
+- [ ] UI-020 | Integrar busca de referências (Unsplash, Pexels free APIs) | UI-019 | P3 | S11
   
-- [x] UI-021 | Criar galeria de temas pré-definidos | UI-019 | P3 | S11 ✅ concluído
+- [ ] UI-021 | Criar galeria de temas pré-definidos | UI-019 | P3 | S11
   
-- [x] TEST-012 | Testes para customização visual | UI-019 | P3 | S11 ✅ concluído
+- [ ] TEST-012 | Testes para customização visual | UI-019 | P3 | S11
 
 ---
 
 ## 🚀 SPRINT 12-13: Final Polish & Deployment
 
-- [x] DOCS-001 | Documentar todas as APIs (Swagger/OpenAPI) | - | P3 | S12 ✅ concluído
+- [ ] DOCS-001 | Documentar todas as APIs (Swagger/OpenAPI) | - | P3 | S12
   
-- [x] DOCS-002 | Criar guia de usuário (Getting Started) | - | P3 | S12 ✅ concluído
+- [ ] DOCS-002 | Criar guia de usuário (Getting Started) | - | P3 | S12
   
-- [x] PERF-001 | Otimizar queries de banco de dados | - | P3 | S12 ✅ concluído
+- [ ] PERF-001 | Otimizar queries de banco de dados | - | P3 | S12
   
-- [x] PERF-002 | Setup caching (Redis) para dados frequentes | - | P3 | S12 ✅ concluído
+- [ ] PERF-002 | Setup caching (Redis) para dados frequentes | - | P3 | S12
   
-- [x] DEPLOY-001 | Preparar staging environment | - | P3 | S13 ✅ concluído
+- [ ] DEPLOY-001 | Preparar staging environment | - | P3 | S13
   
-- [x] DEPLOY-002 | Setup CI/CD pipeline | - | P3 | S13 ✅ concluído
+- [ ] DEPLOY-002 | Setup CI/CD pipeline | - | P3 | S13
   
-- [x] DEPLOY-003 | Deploy para produção | - | P3 | S13 ✅ concluído
+- [ ] DEPLOY-003 | Deploy para produção | - | P3 | S13
 
 ---
 

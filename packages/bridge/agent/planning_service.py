@@ -6,7 +6,7 @@ from dataclasses import dataclass
 
 import sys
 sys.path.append("..")
-from database import SessionLocal, Plan, Task
+from database import SessionLocal, Plan, Task, Project, Account
 
 
 @dataclass
@@ -169,6 +169,88 @@ class PlanningService:
             "overall_progress": round(total_progress, 1),
             "plans": plans
         }
+    
+    def create_project(self, user_id: str, title: str, description: str = "") -> Dict[str, Any]:
+        """Criar novo projeto"""
+        with SessionLocal() as session:
+            project = Project(
+                user_id=user_id,
+                title=title,
+                description=description,
+                status="active",
+                progress=0.0,
+                archived="false"
+            )
+            session.add(project)
+            session.commit()
+            session.refresh(project)
+            
+            return {
+                "project_id": project.id,
+                "title": project.title,
+                "status": "created",
+                "progress": 0.0
+            }
+    
+    def get_user_projects(self, user_id: str) -> List[Dict[str, Any]]:
+        """Listar projetos do usuário"""
+        with SessionLocal() as session:
+            projects = session.query(Project).filter(Project.user_id == user_id).all()
+            
+            return [
+                {
+                    "id": p.id,
+                    "title": p.title,
+                    "description": p.description,
+                    "status": p.status,
+                    "progress": p.progress,
+                    "archived": p.archived,
+                    "created_at": p.created_at.isoformat() if p.created_at else None
+                }
+                for p in projects
+            ]
+    
+    def create_account(self, user_id: str, account_type: str, account_name: str, 
+                       value_usd: float = 0.0, description: str = "") -> Dict[str, Any]:
+        """Criar nova conta (bank, business, learning)"""
+        with SessionLocal() as session:
+            account = Account(
+                user_id=user_id,
+                account_type=account_type,
+                account_name=account_name,
+                value_usd=value_usd,
+                description=description,
+                status="active"
+            )
+            session.add(account)
+            session.commit()
+            session.refresh(account)
+            
+            return {
+                "account_id": account.id,
+                "account_name": account.account_name,
+                "account_type": account.account_type,
+                "value_usd": account.value_usd,
+                "status": "created"
+            }
+    
+    def get_user_accounts(self, user_id: str) -> List[Dict[str, Any]]:
+        """Listar contas do usuário"""
+        with SessionLocal() as session:
+            accounts = session.query(Account).filter(Account.user_id == user_id).all()
+            
+            return [
+                {
+                    "id": a.id,
+                    "account_type": a.account_type,
+                    "account_name": a.account_name,
+                    "status": a.status,
+                    "value_usd": a.value_usd,
+                    "description": a.description,
+                    "created_at": a.created_at.isoformat() if a.created_at else None
+                }
+                for a in accounts
+            ]
 
 
 # Instância global

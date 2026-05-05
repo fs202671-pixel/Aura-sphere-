@@ -544,5 +544,185 @@
       "generated_at": "2026-05-05T08:40:56.288573",
       "generation_mode": "offline_evolution"
     }
+  },
+  {
+    "version_id": "v32",
+    "description": "Gerar variações de arquitetura interna",
+    "created_at": "2026-05-05T14:05:27.226583",
+    "metrics": {
+      "quality_score": 7.5,
+      "stability": 0.85,
+      "security": 0.9,
+      "performance": 0.8,
+      "compatibility": 0.95,
+      "errors": 1
+    },
+    "metadata": {
+      "task_id": "7956c09c-4d5a-437e-be72-c7cbdc52a896",
+      "generated_at": "2026-05-05T14:05:27.226578",
+      "generation_mode": "offline_evolution"
+    }
+  },
+  {
+    "version_id": "v33",
+    "description": "Gerar variações de arquitetura interna",
+    "created_at": "2026-05-05T14:05:36.025314",
+    "metrics": {
+      "quality_score": 7.5,
+      "stability": 0.85,
+      "security": 0.9,
+      "performance": 0.8,
+      "compatibility": 0.95,
+      "errors": 1
+    },
+    "metadata": {
+      "task_id": "89c4e98e-dcac-4347-a153-4e7e27da77b6",
+      "generated_at": "2026-05-05T14:05:36.025308",
+      "generation_mode": "offline_evolution"
+    }
+  },
+  {
+    "version_id": "v34",
+    "description": "Gerar variações de arquitetura interna",
+    "created_at": "2026-05-05T14:05:55.208297",
+    "metrics": {
+      "quality_score": 7.5,
+      "stability": 0.85,
+      "security": 0.9,
+      "performance": 0.8,
+      "compatibility": 0.95,
+      "errors": 1
+    },
+    "metadata": {
+      "task_id": "c91b6bc0-a567-4119-b018-eb0ece9b636a",
+      "generated_at": "2026-05-05T14:05:55.208291",
+      "generation_mode": "offline_evolution"
+    }
+  },
+  {
+    "version_id": "v35",
+    "description": "Gerar variações de arquitetura interna",
+    "created_at": "2026-05-05T14:05:55.243166",
+    "metrics": {
+      "quality_score": 7.5,
+      "stability": 0.85,
+      "security": 0.9,
+      "performance": 0.8,
+      "compatibility": 0.95,
+      "errors": 1
+    },
+    "metadata": {
+      "task_id": "9e09bffa-9f8e-4523-a5b7-03017aa3891b",
+      "generated_at": "2026-05-05T14:05:55.243160",
+      "generation_mode": "offline_evolution"
+    }
+  },
+  {
+    "version_id": "v36",
+    "description": "Gerar variações de arquitetura interna",
+    "created_at": "2026-05-05T14:06:09.042700",
+    "metrics": {
+      "quality_score": 7.5,
+      "stability": 0.85,
+      "security": 0.9,
+      "performance": 0.8,
+      "compatibility": 0.95,
+      "errors": 1
+    },
+    "metadata": {
+      "task_id": "dbdbf1b4-7c7a-4174-955b-16fe46bb05e1",
+      "generated_at": "2026-05-05T14:06:09.042694",
+      "generation_mode": "offline_evolution"
+    }
+  },
+  {
+    "version_id": "v37",
+    "description": "Gerar variações de arquitetura interna",
+    "created_at": "2026-05-05T14:06:09.077028",
+    "metrics": {
+      "quality_score": 7.5,
+      "stability": 0.85,
+      "security": 0.9,
+      "performance": 0.8,
+      "compatibility": 0.95,
+      "errors": 1
+    },
+    "metadata": {
+      "task_id": "bbc9cc7d-66c5-4924-a144-4fe5948411e5",
+      "generated_at": "2026-05-05T14:06:09.077023",
+      "generation_mode": "offline_evolution"
+    }
+  },
+  {
+    "version_id": "v38",
+    "description": "Gerar variações de arquitetura interna",
+    "created_at": "2026-05-05T14:06:29.334724",
+    "metrics": {
+      "quality_score": 7.5,
+      "stability": 0.85,
+      "security": 0.9,
+      "performance": 0.8,
+      "compatibility": 0.95,
+      "errors": 1
+    },
+    "metadata": {
+      "task_id": "270541c2-6038-4bcf-adce-98307dcc1aa0",
+      "generated_at": "2026-05-05T14:06:29.334717",
+      "generation_mode": "offline_evolution"
+    }
+  },
+  {
+    "version_id": "v39",
+    "description": "Gerar variações de arquitetura interna",
+    "created_at": "2026-05-05T14:06:29.370207",
+    "metrics": {
+      "quality_score": 7.5,
+      "stability": 0.85,
+      "security": 0.9,
+      "performance": 0.8,
+      "compatibility": 0.95,
+      "errors": 1
+    },
+    "metadata": {
+      "task_id": "b9771ee8-6eb9-4838-aec3-9b74ed3500a3",
+      "generated_at": "2026-05-05T14:06:29.370202",
+      "generation_mode": "offline_evolution"
+    }
+  },
+  {
+    "version_id": "v40",
+    "description": "Gerar variações de arquitetura interna",
+    "created_at": "2026-05-05T14:06:36.503648",
+    "metrics": {
+      "quality_score": 7.5,
+      "stability": 0.85,
+      "security": 0.9,
+      "performance": 0.8,
+      "compatibility": 0.95,
+      "errors": 1
+    },
+    "metadata": {
+      "task_id": "6f1e5ad8-5e89-42e5-a12a-85be11ab275d",
+      "generated_at": "2026-05-05T14:06:36.503643",
+      "generation_mode": "offline_evolution"
+    }
+  },
+  {
+    "version_id": "v41",
+    "description": "Gerar variações de arquitetura interna",
+    "created_at": "2026-05-05T14:06:36.539318",
+    "metrics": {
+      "quality_score": 7.5,
+      "stability": 0.85,
+      "security": 0.9,
+      "performance": 0.8,
+      "compatibility": 0.95,
+      "errors": 1
+    },
+    "metadata": {
+      "task_id": "1ab901e2-f6c6-422d-8c4b-ffa4c11a3b55",
+      "generated_at": "2026-05-05T14:06:36.539312",
+      "generation_mode": "offline_evolution"
+    }
   }
 ]

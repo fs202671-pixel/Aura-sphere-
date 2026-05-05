@@ -1255,3 +1255,71 @@ def get_dashboard(
         raise HTTPException(status_code=403, detail="Forbidden")
     
     return planning_service.get_plan_dashboard(user_id)
+
+
+@app.post("/api/v1/planning/projects")
+def create_project(
+    data: dict,
+    current_user: dict[str, Any] = Depends(get_current_user)
+):
+    """Criar novo projeto"""
+    user_id = current_user.get("sub", "dev-user")
+    result = planning_service.create_project(
+        user_id=user_id,
+        title=data.get("title"),
+        description=data.get("description", "")
+    )
+    if isinstance(result, dict) and result.get("error"):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=result["error"])
+    return result
+
+
+@app.get("/api/v1/planning/projects/{user_id}")
+def get_projects(
+    user_id: str,
+    current_user: dict[str, Any] = Depends(get_current_user)
+):
+    """Listar projetos do usuário"""
+    if ENV == "production" and current_user.get("sub") != user_id:
+        raise HTTPException(status_code=403, detail="Forbidden")
+    
+    return {"projects": planning_service.get_user_projects(user_id)}
+
+
+@app.post("/api/v1/planning/accounts")
+def create_account(
+    data: dict,
+    current_user: dict[str, Any] = Depends(get_current_user)
+):
+    """Criar nova conta (bank, business, learning)"""
+    user_id = current_user.get("sub", "dev-user")
+    account_type = data.get("account_type", "business")
+    account_name = data.get("account_name") or data.get("name")
+    value_usd = data.get("value_usd", 0.0)
+    description = data.get("description", "")
+    
+    if not account_name:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="account_name is required")
+    
+    result = planning_service.create_account(
+        user_id=user_id,
+        account_type=account_type,
+        account_name=account_name,
+        value_usd=value_usd,
+        description=description
+    )
+    if isinstance(result, dict) and result.get("error"):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=result["error"])
+    return result
+
+
+@app.get("/api/v1/planning/accounts/{user_id}")
+def get_accounts(
+    user_id: str,
+    current_user: dict[str, Any] = Depends(get_current_user)
+):
+    """Listar contas do usuário"""
+    if ENV == "production" and current_user.get("sub") != user_id:
+        raise HTTPException(status_code=403, detail="Forbidden")
+    
+    return {"accounts": planning_service.get_user_accounts(user_id)}

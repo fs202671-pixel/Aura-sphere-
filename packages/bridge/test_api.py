@@ -8,29 +8,35 @@ import json
 import os
 from fastapi.testclient import TestClient
 from pathlib import Path
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
-# Forçar banco de dados de teste persistente durante os testes
-os.environ["DATABASE_URL"] = "sqlite:///./packages/bridge/test.db"
+# Forçar banco de dados de teste em memória ANTES de importar
+os.environ["DATABASE_URL"] = "sqlite:///:memory:"
 
 # Adicionar diretório do bridge ao path
 import sys
 sys.path.insert(0, str(Path(__file__).parent))
 
+# Importar DEPOIS de definir DATABASE_URL
 from app import app
-from database import init_db, SessionLocal, Base, engine
-from schemas import Message
+from database import init_db, SessionLocal, Base
+
+# Criar novo engine para testes
+TEST_DATABASE_URL = "sqlite:///:memory:"
+test_engine = create_engine(TEST_DATABASE_URL, connect_args={"check_same_thread": False})
+TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=test_engine)
 
 
 # Fixtures
 @pytest.fixture(scope="session", autouse=True)
 def setup_test_db():
-    """Setup database para testes"""
-    # Usar SQLite para testes
-    os.environ["DATABASE_URL"] = "sqlite:///:memory:"
-    Base.metadata.create_all(bind=engine)
-    init_db()
+    """Setup database para testes em memória"""
+    # Criar todas as tabelas
+    Base.metadata.create_all(bind=test_engine)
     yield
-    Base.metadata.drop_all(bind=engine)
+    # Cleanup após os testes
+    Base.metadata.drop_all(bind=test_engine)
 
 
 @pytest.fixture
@@ -358,6 +364,121 @@ class TestActionQueue:
         assert pending_response.status_code == 200
         pending_actions = pending_response.json()["actions"]
         assert all(a["id"] != action_data["id"] for a in pending_actions)
+
+
+class TestProjectsAndAccounts:
+    """Testes para Projetos e Contas (API-006 e API-007)"""
+
+    def test_projects_crud_flow(self, client, test_token):
+        """Teste completo de CRUD de projetos"""
+        headers = {"Authorization": f"Bearer {test_token}"}
+        user_id = "test-user@example.com"
+
+        # Criar projeto
+        create_response = client.post(
+            "/api/v1/planning/projects",
+            json={
+                "title": "Projeto Backend",
+                "description": "Desenvolvimento de APIs"
+            },
+            headers=headers
+        )
+        assert create_response.status_code == 200
+        project_data = create_response.json()
+        assert project_data["title"] == "Projeto Backend"
+        assert "project_id" in project_data
+        project_id = project_data["project_id"]
+
+        # Listar projetos
+        list_response = client.get(
+            f"/api/v1/planning/projects/{user_id}",
+            headers=headers
+        )
+        assert list_response.status_code == 200
+        projects = list_response.json()["projects"]
+        assert any(p["id"] == project_id for p in projects)
+        
+        # Verificar que o projeto foi criado com status correto
+        project = next(p for p in projects if p["id"] == project_id)
+        assert project["status"] == "active"
+        assert project["progress"] == 0.0
+
+    def test_accounts_crud_flow(self, client, test_token):
+        """Teste completo de CRUD de contas"""
+        headers = {"Authorization": f"Bearer {test_token}"}
+        user_id = "test-user@example.com"
+
+        # Criar conta bank
+        bank_response = client.post(
+            "/api/v1/planning/accounts",
+            json={
+                "account_type": "bank",
+                "account_name": "Banco Teste",
+                "value_usd": 5000.0,
+                "description": "Conta bancária para testes"
+            },
+            headers=headers
+        )
+        assert bank_response.status_code == 200
+        bank_data = bank_response.json()
+        assert bank_data["account_type"] == "bank"
+        assert bank_data["value_usd"] == 5000.0
+        bank_id = bank_data["account_id"]
+
+        # Criar conta business
+        business_response = client.post(
+            "/api/v1/planning/accounts",
+            json={
+                "account_type": "business",
+                "name": "Negócio Teste",
+                "value_usd": 15000.0
+            },
+            headers=headers
+        )
+        assert business_response.status_code == 200
+        business_data = business_response.json()
+        assert business_data["account_type"] == "business"
+
+        # Criar conta learning
+        learning_response = client.post(
+            "/api/v1/planning/accounts",
+            json={
+                "account_type": "learning",
+                "account_name": "Aprendizado",
+                "description": "Recursos para cursos"
+            },
+            headers=headers
+        )
+        assert learning_response.status_code == 200
+        learning_data = learning_response.json()
+        assert learning_data["account_type"] == "learning"
+
+        # Listar contas
+        list_response = client.get(
+            f"/api/v1/planning/accounts/{user_id}",
+            headers=headers
+        )
+        assert list_response.status_code == 200
+        accounts = list_response.json()["accounts"]
+        assert len(accounts) >= 3
+        assert any(a["id"] == bank_id for a in accounts)
+        assert any(a["account_type"] == "bank" for a in accounts)
+        assert any(a["account_type"] == "business" for a in accounts)
+        assert any(a["account_type"] == "learning" for a in accounts)
+
+    def test_account_validation(self, client, test_token):
+        """Teste de validação de campos obrigatórios"""
+        headers = {"Authorization": f"Bearer {test_token}"}
+
+        # Tentar criar conta sem nome
+        response = client.post(
+            "/api/v1/planning/accounts",
+            json={
+                "account_type": "bank"
+            },
+            headers=headers
+        )
+        assert response.status_code == 400
 
 
 class TestAgentEvolutionAndLearning:

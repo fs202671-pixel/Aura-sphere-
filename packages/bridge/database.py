@@ -79,6 +79,38 @@ class Plan(Base):
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
 
+class Project(Base):
+    """Projeto com tarefas associadas"""
+    __tablename__ = "projects"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(String, nullable=False, index=True)
+    title = Column(String(255), nullable=False)
+    status = Column(String(32), default="active")  # active, completed, archived
+    progress = Column(Float, default=0.0)  # 0-100
+    description = Column(Text, nullable=True)
+    linked_tasks = Column(String, nullable=True)  # JSON array of task IDs
+    archived = Column(String, default="false")  # "true" or "false"
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+
+
+class Account(Base):
+    """Contas de negócio ou recursos (bank, business, learning)"""
+    __tablename__ = "accounts"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(String, nullable=False, index=True)
+    account_type = Column(String(64), nullable=False)  # bank, business, learning
+    account_name = Column(String(255), nullable=False)
+    status = Column(String(32), default="active")  # active, inactive, deleted
+    value_usd = Column(Float, default=0.0)
+    description = Column(Text, nullable=True)
+    metadata_json = Column(Text, nullable=True)  # JSON string
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+
+
 class Task(Base):
     """Tarefa dentro de um plano"""
     __tablename__ = "tasks"
