@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BarChart3, CheckCircle2, Zap, Settings, Package, Layers, Smartphone, Shield, DollarSign } from 'lucide-react';
+import { BarChart3, CheckCircle2, Zap, Settings, Package, Layers, Smartphone, Shield, DollarSign, Palette } from 'lucide-react';
 import { Dashboard } from './Dashboard';
 import { PlanningTab } from './PlanningTab';
 import { ActionQueue } from './ActionQueue';
@@ -7,6 +7,8 @@ import { MemoryVisualizer } from './MemoryVisualizer';
 import { AbilitiesGallery } from './AbilitiesGallery';
 import { SecurityDashboard } from './SecurityDashboard';
 import { CostTracker } from './CostTracker';
+import { ThemeBuilder } from './ThemeBuilder';
+import { ThemeGallery } from './ThemeGallery';
 import { getApiBase, getAuthHeaders } from '@/lib/api';
 
 export function AIOnShellTabs() {
@@ -20,7 +22,7 @@ export function AIOnShellTabs() {
     { id: 'memory', label: 'Memória', icon: Layers, component: MemoryVisualizer },
     { id: 'security', label: 'Segurança', icon: Shield, component: SecurityDashboard },
     { id: 'costs', label: 'Custos', icon: DollarSign, component: CostTracker },
-    { id: 'tools', label: 'Ferramentas', icon: Settings, component: ToolsTab },
+    { id: 'themes', label: 'Temas', icon: Palette, component: ThemesTab },
     { id: 'device', label: 'Device', icon: Smartphone, component: DeviceTab }
   ];
 
@@ -74,6 +76,40 @@ function ActionQueueTab() {
     <div className="p-6 space-y-4">
       <h2 className="text-2xl font-bold text-white">Fila de Ações</h2>
       <ActionQueue />
+    </div>
+  );
+}
+
+function ThemesTab() {
+  const [activeTab, setActiveTab] = useState<'builder' | 'gallery'>('builder');
+
+  return (
+    <div className="w-full h-full flex flex-col">
+      <div className="flex gap-2 px-6 py-4 bg-slate-800/50 border-b border-slate-700">
+        <button
+          onClick={() => setActiveTab('builder')}
+          className={`px-4 py-2 rounded-lg font-semibold transition ${
+            activeTab === 'builder'
+              ? 'bg-purple-600 text-white'
+              : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+          }`}
+        >
+          Construtor de Temas
+        </button>
+        <button
+          onClick={() => setActiveTab('gallery')}
+          className={`px-4 py-2 rounded-lg font-semibold transition ${
+            activeTab === 'gallery'
+              ? 'bg-purple-600 text-white'
+              : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+          }`}
+        >
+          Galeria de Referências
+        </button>
+      </div>
+      <div className="flex-1 overflow-auto">
+        {activeTab === 'builder' ? <ThemeBuilder /> : <ThemeGallery />}
+      </div>
     </div>
   );
 }

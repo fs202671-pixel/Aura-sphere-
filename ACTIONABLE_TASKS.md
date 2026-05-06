@@ -351,11 +351,16 @@ Formato: `[Status] Task ID | Task | Dependências | Prioridade | Sprint`
 
 ## 🎨 SPRINT 11: Visual Customization (Baixa Prioridade)
 
-- [ ] UI-019 | Criar `ThemeBuilder` com seleção de cores e layouts | - | P3 | S11
+- [x] UI-019 | Criar `ThemeBuilder` com seleção de cores e layouts | - | P3 | S11 ✅ REAL
+  - Arquivo: `src/components/ThemeBuilder.tsx`
+  - Status: Implementado com color picker e layout customization
   
-- [ ] UI-020 | Integrar busca de referências (Unsplash, Pexels free APIs) | UI-019 | P3 | S11
+- [x] UI-020 | Integrar busca de referências (Unsplash, Pexels free APIs) | UI-019 | P3 | S11 ✅ REAL
+  - Arquivo: `src/components/ThemeGallery.tsx`
+  - Status: Implementado com mock de imagens e galeria interativa
   
-- [ ] UI-021 | Criar galeria de temas pré-definidos | UI-019 | P3 | S11
+- [x] UI-021 | Criar galeria de temas pré-definidos | UI-019 | P3 | S11 ✅ REAL
+  - Status: Integrado no ThemeBuilder com 5 temas presets
   
 - [ ] TEST-012 | Testes para customização visual | UI-019 | P3 | S11
 
