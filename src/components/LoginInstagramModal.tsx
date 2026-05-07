@@ -1,10 +1,17 @@
 import React, { useState } from 'react';
 import { Instagram, AlertTriangle, Check, X, Loader } from 'lucide-react';
 
+interface AccountData {
+  id: string;
+  username: string;
+  email?: string;
+  [key: string]: unknown;
+}
+
 interface LoginInstagramModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onLoginSuccess: (accountData: any) => void;
+  onLoginSuccess: (accountData: AccountData) => void;
 }
 
 export function LoginInstagramModal({ isOpen, onClose, onLoginSuccess }: LoginInstagramModalProps) {

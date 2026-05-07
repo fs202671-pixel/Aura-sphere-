@@ -56,10 +56,10 @@ class SecurityAuditor:
     def _check_code_injection(self, code: str, language: str, component: str):
         """Detecta possíveis injeções de código"""
         patterns = [
-            (r'eval\s*\(\s*[\"\']?.*?[\"\']?\s*\)', "eval() detected - Code Injection Risk"),
-            (r'exec\s*\(\s*[\"\']?.*?[\"\']?\s*\)', "exec() detected - Code Injection Risk"),
-            (r'__import__\s*\(\s*[\"\']?.*?[\"\']?\s*\)', "__import__() detected - Import Risk"),
-            (r'os\.system\s*\(\s*f[\"\'].*?[\"\']', "f-string with os.system - Command Injection Risk"),
+            (r'\beval\s*\(', "eval() detected - Code Injection Risk"),
+            (r'\bexec\s*\(', "exec() detected - Code Injection Risk"),
+            (r'\b__import__\s*\(', "__import__() detected - Import Risk"),
+            (r'os\.system\s*\(\s*f[\"\'].*[\"\']', "f-string with os.system - Command Injection Risk"),
             (r'subprocess\..*\(\s*cmd.*shell\s*=\s*True', "subprocess with shell=True - Command Injection Risk"),
         ]
         
@@ -83,9 +83,9 @@ class SecurityAuditor:
     def _check_sql_injection(self, code: str, language: str, component: str):
         """Detecta possíveis vulnerabilidades de SQL Injection"""
         patterns = [
-            (r'SELECT\s.*f["\'].*\{.*\}', "SQL with f-string - SQL Injection Risk"),
-            (r'query.*[\+\*]\s*user.*input', "Query concatenation with user input - SQL Injection Risk"),
-            (r'\.format\s*\(.*user.*\).*query', "SQL query with .format() - SQL Injection Risk"),
+            (r'f["\'].*SELECT.*\{.*\}', "SQL with f-string - SQL Injection Risk"),
+            (r'query\s*=.*\+.*', "Query concatenation with user input - SQL Injection Risk"),
+            (r'\.format\s*\(.*\).*query', "SQL query with .format() - SQL Injection Risk"),
         ]
         
         for pattern, description in patterns:
@@ -108,10 +108,10 @@ class SecurityAuditor:
     def _check_hardcoded_secrets(self, code: str, language: str, component: str):
         """Detecta segredos hardcoded (chaves, senhas, tokens)"""
         patterns = [
-            (r'(password|passwd|pwd)\s*=\s*["\']([^"\']+)["\']', "Hardcoded password"),
-            (r'(api_key|apikey|api-key)\s*=\s*["\']([^"\']{20,})["\']', "Hardcoded API key"),
-            (r'(secret|token)\s*=\s*["\']([^"\']{20,})["\']', "Hardcoded secret token"),
-            (r'(private_key|privatekey)\s*=\s*["\']', "Hardcoded private key"),
+            (r'(password|passwd|pwd)\b.*?=\s*["\']([^"\']+)["\']', "Hardcoded password"),
+            (r'(api_key|apikey|api-key|api_token)\b.*?=\s*["\']([^"\']{20,})["\']', "Hardcoded API key"),
+            (r'(secret|token)\b.*?=\s*["\']([^"\']{20,})["\']', "Hardcoded secret token"),
+            (r'(private_key|privatekey)\b.*?=\s*["\']', "Hardcoded private key"),
         ]
         
         for pattern, description in patterns:
@@ -135,7 +135,7 @@ class SecurityAuditor:
         """Detecta desserialização insegura"""
         patterns = [
             (r'pickle\.loads\s*\(', "Unsafe pickle deserialization"),
-            (r'yaml\.load\s*\(.*loader', "Unsafe YAML deserialization"),
+            (r'yaml\.load\s*\(', "Unsafe YAML deserialization"),
             (r'json\.loads\s*\(.*untrusted', "JSON deserialization of untrusted data"),
         ]
         
@@ -159,9 +159,9 @@ class SecurityAuditor:
     def _check_resource_limits(self, code: str, language: str, component: str):
         """Detecta falta de limites de recursos"""
         patterns = [
-            (r'open\s*\(["\'].*["\'].*\)\s*as\s+f.*while.*f\.read', "Potential unbounded file read"),
-            (r'requests\.get\s*\(.*stream\s*=\s*True', "Unbounded HTTP response stream"),
-            (r'while\s+True.*recv', "Unbounded network recv loop"),
+            (r'open\s*\([^)]*\)\s*as\s+f.*?while\s+True.*?f\.read', "Potential unbounded file read"),
+            (r'requests\.get\s*\([^)]*stream\s*=\s*True', "Unbounded HTTP response stream"),
+            (r'while\s+True.*?\.recv', "Unbounded network recv loop"),
         ]
         
         for pattern, description in patterns:
@@ -208,9 +208,11 @@ class SecurityAuditor:
     def _check_xxe_vulnerabilities(self, code: str, language: str, component: str):
         """Detecta vulnerabilidades XXE (XML External Entity)"""
         patterns = [
-            (r'xml\.etree\.ElementTree\.parse\s*\(.*user', "XXE vulnerability in ElementTree"),
-            (r'ElementTree\.fromstring\s*\(.*user', "XXE vulnerability in fromstring"),
-            (r'lxml\.etree\.parse\s*\(.*user', "XXE vulnerability in lxml"),
+            (r'ET\.parse\s*\(', "XXE vulnerability in ElementTree"),
+            (r'ElementTree\.parse\s*\(', "XXE vulnerability in ElementTree"),
+            (r'ET\.fromstring\s*\(', "XXE vulnerability in fromstring"),
+            (r'ElementTree\.fromstring\s*\(', "XXE vulnerability in fromstring"),
+            (r'lxml\.etree\.parse\s*\(', "XXE vulnerability in lxml"),
         ]
         
         for pattern, description in patterns:

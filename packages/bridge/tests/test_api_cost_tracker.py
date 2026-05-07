@@ -72,7 +72,7 @@ class TestApiCostTracker:
         )
 
         # Claude-3-opus: $0.015/1K prompt, $0.075/1K completion
-        expected = (1000 * 0.015 / 1000) + (2000 * 0.075 / 1000)
+        expected = round((1000 * 0.015 / 1000) + (2000 * 0.075 / 1000), 6)
         assert cost == expected
 
     def test_calculate_cost_unknown_provider(self):

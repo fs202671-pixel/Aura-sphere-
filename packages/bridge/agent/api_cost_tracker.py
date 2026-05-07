@@ -6,6 +6,8 @@ from typing import Any, Optional
 from dataclasses import dataclass, asdict
 from datetime import datetime, timedelta
 import json
+import hashlib
+import uuid
 
 
 @dataclass
@@ -110,7 +112,8 @@ class ApiCostTracker:
         prompt_cost = (prompt_tokens * model_costs.get("prompt_tokens", 0)) if "prompt_tokens" in model_costs else 0
         completion_cost = (completion_tokens * model_costs.get("completion_tokens", 0)) if "completion_tokens" in model_costs else 0
         
-        return prompt_cost + completion_cost
+        total_cost = prompt_cost + completion_cost
+        return round(total_cost, 6)  # Round to 6 decimal places to avoid floating point issues
     
     def get_summary(self, user_id: str, days: int = 30) -> dict[str, Any]:
         """Retorna um resumo de custos"""
@@ -228,11 +231,21 @@ class ApiCostTracker:
         
         self.alerts.append(alert)
     
+    def _calculate_cost_for_period(self, user_id: str, days: int) -> float:
+        """Calcula custo total para um período"""
+        start_date = datetime.now() - timedelta(days=days)
+        
+        relevant_records = [
+            r for r in self.records
+            if r.user_id == user_id and r.timestamp >= start_date
+        ]
+        
+        return sum(r.cost_usd for r in relevant_records)
+    
     def _generate_id(self, user_id: str, provider: str, endpoint: str) -> str:
-        """Gera ID único para o registro"""
-        import hashlib
-        data = f"{user_id}:{provider}:{endpoint}:{datetime.now().isoformat()}"
-        return f"cost-{hashlib.sha256(data.encode()).hexdigest()[:12]}"
+        """Gera um ID único para o registro"""
+        timestamp = str(uuid.uuid4())[0:8]
+        return f"cost-{timestamp}-{user_id[:3]}"
     
     def export_records(self, user_id: str, days: int = 30) -> list[dict[str, Any]]:
         """Exporta registros em formato dict"""

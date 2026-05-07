@@ -10,7 +10,7 @@ interface SecurityIssue {
   resolution: string;
   reported_at: string;
   status: string;
-  details: Record<string, any>;
+  details: Record<string, unknown>;
 }
 
 interface SecuritySummary {

@@ -1,12 +1,24 @@
 import React, { useEffect, useState } from 'react';
 
+interface WindowWithSpeech extends Window {
+  SpeechRecognition?: typeof SpeechRecognition | typeof webkitSpeechRecognition;
+  webkitSpeechRecognition?: typeof SpeechRecognition;
+}
+
+declare global {
+  interface Window {
+    SpeechRecognition?: typeof SpeechRecognition;
+    webkitSpeechRecognition?: typeof SpeechRecognition;
+  }
+}
+
 export function VoiceMode() {
   const [listening, setListening] = useState(false);
   const [transcript, setTranscript] = useState('');
   const [support, setSupport] = useState(true);
 
   useEffect(() => {
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    const SpeechRecognition = (window as WindowWithSpeech).SpeechRecognition || (window as WindowWithSpeech).webkitSpeechRecognition;
     if (!SpeechRecognition) {
       setSupport(false);
       return;
