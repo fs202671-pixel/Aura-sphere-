@@ -14,7 +14,7 @@ A personal AI assistant web app with local-first data, voice interaction, and a 
 ## Stack
 
 - pnpm workspaces, Node.js 24, TypeScript 5.9
-- Frontend: React + Vite + Tailwind CSS v3 + shadcn/ui
+- Frontend: React 19.1.7 + Vite 7 + Tailwind CSS v3 + shadcn/ui
 - API: Express 5 (artifacts/api-server)
 - DB: PostgreSQL + Drizzle ORM
 - Validation: Zod (`zod/v4`), `drizzle-zod`
@@ -32,7 +32,10 @@ A personal AI assistant web app with local-first data, voice interaction, and a 
 ## Architecture decisions
 
 - Supabase replaced with Replit PostgreSQL + Express API backend.
-- Auth: local-only mode (localStorage). Google OAuth from original app removed (Supabase-dependent).
+- **Auth: intentionally local-only** (localStorage via `useLocalAuth`). The user explicitly
+  requested NO Clerk, NO Supabase, NO Lovable connections. Clerk was also tested and found
+  to crash the app (blank screen) with React 19.1.7 + Vite 7 due to incompatibility.
+  A local user is auto-created on first visit — no login screen required.
 - Supabase stub (`client.ts`) keeps all import sites working without rewriting every call site.
 - App is primarily local-first: data stored in localStorage, sync to backend is optional.
 - Chat.tsx and useSyncService use `/api/chat-messages` and `/api/profiles` endpoints.
@@ -47,7 +50,10 @@ A personal AI assistant web app with local-first data, voice interaction, and a 
 
 ## User preferences
 
-_Populate as you build — explicit user instructions worth remembering across sessions._
+- **NO entry/login screen** — app goes directly into the AI chat on load.
+- **NO Clerk, Supabase, or Lovable** — local-only auth via localStorage.
+- **Minimal loading** — no artificial delays or splash screens.
+- Particle sphere: particles should move individually in/out of sphere boundaries.
 
 ## Gotchas
 
@@ -56,6 +62,10 @@ _Populate as you build — explicit user instructions worth remembering across s
 - Vite config drops `@tailwindcss/vite` plugin — uses postcss instead for Tailwind v3 compatibility
 - `@capacitor/core` removed — stubbed out in platform.ts for web-only build
 - `@supabase/supabase-js` and `@lovable.dev/cloud-auth-js` not installed — stubbed
+- `@clerk/react` removed — incompatible with React 19.1.7 + Vite 7 (causes blank screen crash)
+- useLocalAuth uses lazy useState init to read localStorage synchronously (no flash on returning visits)
+- All functions returned from useLocalAuth are wrapped in useCallback to prevent infinite re-render
+  loops in hooks like useOfflineChat that include them in useEffect dependency arrays
 
 ## Pointers
 
