@@ -1,21 +1,21 @@
-import { Router, type IRouter } from "express";
+import { Router, type IRouter, type Request, type Response } from "express";
 import { db, profilesTable, chatMessagesTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 import { getAuth } from "@clerk/express";
 
 const router: IRouter = Router();
 
-function resolveUserId(req: any, res: any): string | null {
+function resolveUserId(req: Request): string | null {
   const auth = getAuth(req);
   if (auth?.userId) return auth.userId;
   const fromQuery = req.query?.user_id as string | undefined;
-  const fromBody = req.body?.id as string | undefined;
+  const fromBody = (req.body as Record<string, unknown>)?.id as string | undefined;
   const candidate = fromQuery || fromBody;
   if (candidate?.startsWith("local_") || candidate?.startsWith("demo_")) return candidate;
   return null;
 }
 
-function assertOwnership(req: any, res: any, requestedUserId: string): boolean {
+function assertOwnership(req: Request, res: Response, requestedUserId: string): boolean {
   const auth = getAuth(req);
   if (auth?.userId) {
     if (auth.userId !== requestedUserId) {
@@ -51,7 +51,14 @@ router.get("/profiles/:id", async (req, res) => {
 
 router.post("/profiles", async (req, res) => {
   try {
-    const { id, ai_name, voice_id, onboarded, display_name } = req.body;
+    const body = req.body as {
+      id?: string;
+      ai_name?: string;
+      voice_id?: string;
+      onboarded?: boolean;
+      display_name?: string;
+    };
+    const { id, ai_name, voice_id, onboarded, display_name } = body;
     if (!id) { res.status(400).json({ error: "id required" }); return; }
     if (!assertOwnership(req, res, id)) return;
     const [profile] = await db
@@ -102,7 +109,13 @@ router.get("/chat-messages", async (req, res) => {
 
 router.post("/chat-messages", async (req, res) => {
   try {
-    const { user_id, role, content, created_at } = req.body;
+    const body = req.body as {
+      user_id?: string;
+      role?: string;
+      content?: string;
+      created_at?: string;
+    };
+    const { user_id, role, content, created_at } = body;
     if (!user_id || !role || !content) {
       res.status(400).json({ error: "user_id, role, and content are required" });
       return;
@@ -138,6 +151,18 @@ router.delete("/chat-messages", async (req, res) => {
     req.log.error({ err }, "Error deleting chat messages");
     res.status(500).json({ error: "Internal error" });
   }
+});
+
+// Memories — stub endpoint aligned with frontend sync service
+router.post("/memories", (req, res) => {
+  const body = req.body as { userId?: string };
+  const userId = body?.userId;
+  if (!userId) {
+    res.status(400).json({ error: "userId required" });
+    return;
+  }
+  if (!assertOwnership(req, res, userId)) return;
+  res.status(201).json({ success: true, id: null });
 });
 
 export default router;
