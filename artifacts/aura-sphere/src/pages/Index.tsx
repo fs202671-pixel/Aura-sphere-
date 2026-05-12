@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
-import { useUser, useAuth } from "@clerk/react";
 import { useLocalAuth } from "@/hooks/useLocalAuth";
-import { AuthGateway } from "@/components/AuthGateway";
+import { CaosEntry } from "@/components/CaosEntry";
 import { SyncStatus } from "@/components/SyncStatus";
-import Onboarding from "./Onboarding";
 import AIOnShell from "@/components/AIOnShell";
 
 type Profile = {
@@ -13,26 +11,21 @@ type Profile = {
 };
 
 const Index = () => {
-  const { user: clerkUser, isLoaded: clerkLoaded } = useUser();
-  const { isSignedIn } = useAuth();
-  const { user: localUser } = useLocalAuth();
+  const { user: localUser, isAuthenticated, createLocalUser } = useLocalAuth();
   const [profile, setProfile] = useState<Profile | null>(null);
-  const [currentUser, setCurrentUser] = useState<{ id: string; name?: string; isLocal?: boolean } | null>(null);
+  const [currentUser, setCurrentUser] = useState<{
+    id: string;
+    name?: string;
+    isLocal?: boolean;
+  } | null>(null);
 
-  const isDemoMode = import.meta.env.VITE_DEMO_MODE === "true" || window.location.search.includes("demo=true");
+  const isDemoMode =
+    import.meta.env.VITE_DEMO_MODE === "true" ||
+    window.location.search.includes("demo=true");
 
   useEffect(() => {
-    if (!clerkLoaded) return;
-
     if (isDemoMode) {
       setCurrentUser({ id: "demo_user", name: "Caos" });
-      setProfile({ ai_name: "Caos", voice_id: "pt-female", onboarded: true });
-      return;
-    }
-
-    if (isSignedIn && clerkUser) {
-      const name = clerkUser.firstName || clerkUser.username || "Caos";
-      setCurrentUser({ id: clerkUser.id, name });
       setProfile({ ai_name: "Caos", voice_id: "pt-female", onboarded: true });
       return;
     }
@@ -49,34 +42,32 @@ const Index = () => {
 
     setCurrentUser(null);
     setProfile(null);
-  }, [clerkLoaded, isSignedIn, clerkUser, localUser, isDemoMode]);
+  }, [isAuthenticated, localUser, isDemoMode]);
 
-  if (!clerkLoaded) {
-    return (
-      <div className="min-h-[100dvh] flex items-center justify-center bg-background">
-        <div className="w-8 h-8 border-2 border-violet-500 border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
-  }
+  const handleEnter = () => {
+    const user = createLocalUser("Caos");
+    setCurrentUser(user);
+    setProfile({ ai_name: "Caos", voice_id: "pt-female", onboarded: true });
+  };
+
+  const handleLogout = () => {
+    setCurrentUser(null);
+    setProfile(null);
+  };
 
   if (!currentUser && !isDemoMode) {
-    return <AuthGateway onAuthenticated={setCurrentUser} />;
+    return <CaosEntry onEnter={handleEnter} />;
   }
 
   if (!profile) {
-    return (
-      <Onboarding
-        userId={currentUser!.id}
-        onComplete={(p) => setProfile(p)}
-      />
-    );
+    return <CaosEntry onEnter={handleEnter} />;
   }
 
   return (
     <div className="min-h-[100dvh] flex flex-col">
       {isDemoMode && (
         <div className="flex justify-between items-center p-4 border-b bg-black/80 backdrop-blur-sm">
-          <h1 className="text-lg font-semibold">Caos - Modo Demo</h1>
+          <h1 className="text-lg font-semibold">Caos — Modo Demo</h1>
           <SyncStatus />
         </div>
       )}
@@ -84,11 +75,11 @@ const Index = () => {
         <AIOnShell
           userId={currentUser!.id}
           aiName={profile.ai_name ?? "Caos"}
-          voiceId={(profile.voice_id as "pt-female" | "pt-male" | "en-female") ?? "pt-female"}
-          onLogout={() => {
-            setCurrentUser(null);
-            setProfile(null);
-          }}
+          voiceId={
+            (profile.voice_id as "pt-female" | "pt-male" | "en-female") ??
+            "pt-female"
+          }
+          onLogout={handleLogout}
         />
       </div>
     </div>

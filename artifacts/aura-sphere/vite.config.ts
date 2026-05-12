@@ -50,7 +50,6 @@ export default defineConfig({
       "react-dom",
       "react-dom/client",
     ],
-    exclude: ["@clerk/react"],
   },
   resolve: {
     alias: {

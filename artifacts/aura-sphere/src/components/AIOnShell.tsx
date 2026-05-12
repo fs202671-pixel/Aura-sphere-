@@ -38,15 +38,16 @@ export default function AIOnShell({
   userId,
   aiName,
   voiceId,
-  onSignOut,
-  onEditProfile,
+  onLogout,
+  onEditProfile = () => {},
 }: {
   userId: string;
   aiName: string;
   voiceId: VoiceId | string;
-  onSignOut: () => void;
-  onEditProfile: () => void;
+  onLogout: () => void;
+  onEditProfile?: () => void;
 }) {
+  const onSignOut = onLogout;
   const { isOnline } = useLocalAuth();
   const { theme, setTheme } = useTheme();
   const [activeMode, setActiveMode] = useState<AiMode>("Chat");
@@ -154,7 +155,7 @@ export default function AIOnShell({
             aiName={aiName}
             voiceId={voiceId}
             onEditProfile={onEditProfile}
-            onSignOut={onSignOut}
+            onSignOut={onLogout}
             onRequestMode={(mode) => setActiveMode(mode)}
             selectedMemory={selectedMemory}
             onMemoryUse={() => setSelectedMemory(null)}
