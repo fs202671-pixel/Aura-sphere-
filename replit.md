@@ -1,72 +1,118 @@
-# Aura Sphere
+# CAOS — Sistema Central de IA Criativa
 
-A personal AI assistant web app with local-first data, voice interaction, and a 3D particle sphere UI.
+Um ecossistema completo de IA criativa com identidade RPG, mobile-first, 100% em português.
+O sistema converte tudo que é criado (designs, temas, agentes de IA, habilidades, projetos) em itens colecionáveis com raridade (Comum / Raro / Épico / Lendário).
+
+## Subsistemas
+
+| Artifact | Nome no CAOS | Função |
+|---|---|---|
+| `artifacts/creator-hub-rpg` | **CAOS Studio** | Arsenal criativo principal — itens, fragmentos, entidades, protocolos, missões |
+| `artifacts/aura-sphere` | **CAOS Shell** | Interface de chat com IA, modo multi-mídia, memória, voice |
+| `artifacts/nexus-ai` | **CAOS Nexus** | Sistema de habilidades dinâmicas da IA |
+| `artifacts/api-server` | **CAOS API Gateway** | Backend unificado (Express 5) para todos os módulos |
+
+> ⚠️ **Nota para o próximo programador:** Os nomes `aura-sphere`, `nexus-ai` e `AIOn` são nomes antigos. Todo o sistema deve convergir para a identidade **CAOS**. Ver `CAOS_TAREFAS.md` para o plano completo de renomeação e tarefas pendentes.
 
 ## Run & Operate
 
-- `pnpm --filter @workspace/api-server run dev` — run the API server (port 8080)
-- `pnpm --filter @workspace/aura-sphere run dev` — run the frontend (port assigned by workflow)
-- `pnpm run typecheck` — full typecheck across all packages
-- `pnpm run build` — typecheck + build all packages
-- `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
-- Required env: `DATABASE_URL` — Postgres connection string
+```bash
+pnpm --filter @workspace/api-server run dev       # API Gateway (porta 8080)
+pnpm --filter @workspace/creator-hub-rpg run dev  # CAOS Studio (porta variável)
+pnpm --filter @workspace/aura-sphere run dev      # CAOS Shell (porta variável)
+pnpm --filter @workspace/nexus-ai run dev         # CAOS Nexus (porta variável)
+pnpm run typecheck                                 # typecheck completo
+pnpm --filter @workspace/db run push              # aplicar schema DB (dev only)
+```
+
+Variável obrigatória: `DATABASE_URL` — string de conexão PostgreSQL
 
 ## Stack
 
-- pnpm workspaces, Node.js 24, TypeScript 5.9
-- Frontend: React 19.1.7 + Vite 7 + Tailwind CSS v3 + shadcn/ui
-- API: Express 5 (artifacts/api-server)
-- DB: PostgreSQL + Drizzle ORM
-- Validation: Zod (`zod/v4`), `drizzle-zod`
-- Build: esbuild (server), Vite (frontend)
+- **Workspace:** pnpm workspaces, Node.js 24, TypeScript 5.9
+- **Frontend:** React 19.1.7 + Vite 7 + Tailwind CSS v3 + shadcn/ui + wouter
+- **API:** Express 5 (`artifacts/api-server`)
+- **DB:** PostgreSQL + Drizzle ORM
+- **Validação:** Zod (`zod/v4`), `drizzle-zod`
+- **Build:** esbuild (servidor), Vite (frontend)
 
-## Where things live
+## Arquitetura de Dados
 
-- `artifacts/aura-sphere/` — frontend React app
-- `artifacts/api-server/` — Express API backend
-- `lib/db/src/schema/aura-sphere.ts` — DB schema (profiles + chat_messages tables)
-- `artifacts/aura-sphere/src/integrations/supabase/client.ts` — Supabase stub (no-op)
-- `artifacts/aura-sphere/src/lib/api.ts` — API base URL helper (points to /api)
-- `artifacts/aura-sphere/src/index.css` — theme CSS variables (monochrome dark theme)
+```
+lib/db/src/schema/
+├── creator-hub.ts   → hub_items, hub_themes, hub_agents, hub_skills, hub_projects
+├── nexus.ts         → nexus_skills, nexus_conversations, nexus_messages, nexus_activity_log
+└── aura-sphere.ts   → profiles, chat_messages
+```
 
-## Architecture decisions
+## Rotas da API
 
-- Supabase replaced with Replit PostgreSQL + Express API backend.
-- **Auth: intentionally local-only** (localStorage via `useLocalAuth`). The user explicitly
-  requested NO Clerk, NO Supabase, NO Lovable connections. Clerk was also tested and found
-  to crash the app (blank screen) with React 19.1.7 + Vite 7 due to incompatibility.
-  A local user is auto-created on first visit — no login screen required.
-- Supabase stub (`client.ts`) keeps all import sites working without rewriting every call site.
-- App is primarily local-first: data stored in localStorage, sync to backend is optional.
-- Chat.tsx and useSyncService use `/api/chat-messages` and `/api/profiles` endpoints.
+```
+/api/items          → CAOS Studio · Artefatos
+/api/themes         → CAOS Studio · Fragmentos
+/api/agents         → CAOS Studio · Entidades
+/api/hub-skills     → CAOS Studio · Protocolos
+/api/projects       → CAOS Studio · Missões
+/api/chat           → CAOS Shell · Chat com IA (streaming SSE)
+/api/nexus/*        → CAOS Nexus · Habilidades, conversas
+/api/v1/*           → Stubs compatíveis (segurança, device, memory — ver stub-v1.ts)
+```
 
-## Product
+## Sistemas de Segurança (Tríade do CAOS)
 
-- Personal AI assistant with a 3D animated particle sphere
-- Multiple AI modes (Chat, Código, Projetos, Memória, Imagem, Voz, Automação, Dev Mode)
-- Voice input/output support (Web Speech API)
-- Local-first: works offline, syncs when online
-- Portuguese (Brazilian) UI
+| Sistema | Arquivo | Status |
+|---|---|---|
+| 🐺 Lobos (rate limiter) | `src/routes/chat.ts` | ✅ Básico implementado |
+| 🐜 Formigas (detecção de padrões) | `src/security/formigas.ts` | ❌ Não implementado |
+| 🐝 Abelhas (resposta a ameaças) | `src/security/abelhas.ts` | ❌ Não implementado |
 
-## User preferences
+Ver `CAOS_TAREFAS.md` · Bloco 3 para o plano completo de implementação.
 
-- **NO entry/login screen** — app goes directly into the AI chat on load.
-- **NO Clerk, Supabase, or Lovable** — local-only auth via localStorage.
-- **Minimal loading** — no artificial delays or splash screens.
-- Particle sphere: particles should move individually in/out of sphere boundaries.
+## Onde as coisas ficam
+
+```
+artifacts/
+├── creator-hub-rpg/src/
+│   ├── components/layout.tsx       → Layout mobile-first com nav inferior
+│   ├── components/ui-rpg.tsx       → RarityBadge, TypeBadge, ItemCard
+│   └── pages/                      → dashboard, library, agents, skills, themes, projects, item-detail
+├── aura-sphere/src/
+│   ├── components/AIOnShell.tsx    → Interface principal (renomear para CaosShell.tsx)
+│   ├── components/SecurityDashboard.tsx → Dashboard de segurança (UI pronta, stubs no backend)
+│   └── lib/localProfile.ts         → Perfil local (localStorage)
+└── api-server/src/routes/
+    ├── creator-hub/                → Rotas do CAOS Studio
+    ├── nexus-ai.ts                 → Rotas do CAOS Nexus
+    ├── chat.ts                     → Chat IA com rate limiter (Lobos básicos)
+    └── stub-v1.ts                  → Endpoints stub (substituir progressivamente)
+```
+
+## Decisões de Arquitetura
+
+- **Auth:** Local-only via localStorage (`useLocalAuth`). Sem Clerk, Supabase ou login obrigatório. Usuário local criado automaticamente na primeira visita.
+- **Mobile-first:** CAOS Studio tem nav inferior fixa, layout de 2 colunas em mobile, header compacto.
+- **Identidade:** Todo texto visível ao usuário deve estar em **português brasileiro**. Raridades: Comum/Raro/Épico/Lendário.
+- **RPG System:** Cada artefato criado tem raridade. Raridades mais altas têm bordas e brilhos diferentes (CSS: `rarity-Common`, `rarity-Rare`, `rarity-Epic`, `rarity-Legendary`).
+- **Offline:** Aura Sphere tem Service Worker e suporte PWA. Chat funciona offline com fila de sincronização.
+
+## Preferências do Usuário
+
+- **SEM tela de login** — app abre diretamente na interface.
+- **SEM Clerk, Supabase ou Lovable** — auth local apenas.
+- **Mobile first** — toda UI deve funcionar bem em tela de 390px.
+- **100% português** — nenhum texto em inglês na interface final.
+- **Identidade CAOS** — nenhum nome de sistema anterior deve aparecer na UI.
+
+## Próximas Tarefas
+
+Ver arquivo `CAOS_TAREFAS.md` na raiz do projeto para a lista completa e unificada de todas as tarefas pendentes, organizadas por prioridade e bloco de trabalho.
 
 ## Gotchas
 
-- Tailwind v3 (not v4) — uses `@tailwind base/components/utilities` in index.css and postcss.config.js
-- App uses react-router-dom (not wouter) for routing
-- Vite config drops `@tailwindcss/vite` plugin — uses postcss instead for Tailwind v3 compatibility
-- `@capacitor/core` removed — stubbed out in platform.ts for web-only build
-- `@supabase/supabase-js` and `@lovable.dev/cloud-auth-js` not installed — stubbed
-- `@clerk/react` removed — incompatible with React 19.1.7 + Vite 7 (causes blank screen crash)
-- useLocalAuth uses lazy useState init to read localStorage synchronously (no flash on returning visits)
-- All functions returned from useLocalAuth are wrapped in useCallback to prevent infinite re-render
-  loops in hooks like useOfflineChat that include them in useEffect dependency arrays
-
-## Pointers
-
-- See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and package details
+- Tailwind v3 (não v4) — usa `@tailwind base/components/utilities` e postcss
+- CAOS Studio usa `wouter` para roteamento; Aura Sphere usa `react-router-dom`
+- Vite config não usa `@tailwindcss/vite` — usa postcss
+- `@capacitor/core` removido — stub em `platform.ts` para build web
+- `@supabase/supabase-js` não instalado — stub mantém imports funcionando
+- `@clerk/react` incompatível com React 19.1.7 + Vite 7 — não instalar
+- OpenAI usa import lazy (`getOpenAI()`) para evitar crash no boot quando a integração não está configurada
