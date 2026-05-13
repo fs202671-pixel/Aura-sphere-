@@ -1,0 +1,131 @@
+Quero que você pesquise referências visuais no Pinterest e em outras fontes modernas de UI/UX para melhorar o design do Caos.
+
+IMPORTANTE:
+
+- Não remova funcionalidades existentes.
+- Não quebre sistemas atuais.
+- Não simplifique o projeto.
+- O objetivo NÃO é reconstruir o sistema do zero.
+- O objetivo é melhorar visualmente e estruturalmente a interface mantendo todas as funcionalidades já implementadas.
+
+Use o Pinterest como referência para:
+
+- interfaces futuristas
+- assistentes de IA
+- sistemas sci-fi
+- interfaces minimalistas
+- dashboards modernos
+- interfaces cinematográficas
+- glassmorphism
+- sistemas holográficos
+- apps de IA modernos
+- interfaces imersivas
+- sistemas inteligentes visuais
+
+Quero que o Caos tenha uma aparência:
+
+- futurista
+- elegante
+- inteligente
+- premium
+- limpa
+- responsiva
+- viva
+- moderna
+- modular
+
+A identidade visual principal deve ser:
+
+- preto e branco
+- minimalista
+- elegante
+- sofisticada
+
+As cores devem ser usadas apenas em:
+
+- botões importantes
+- detalhes de destaque
+- estados ativos
+- feedback visual
+- elementos especiais
+- alertas
+- indicadores do sistema
+
+Quero:
+
+- modo dark
+- modo light
+- sistema de temas escalável
+
+E futuramente o próprio Caos deverá ser capaz de:
+
+- criar temas automaticamente
+- adaptar a interface
+- gerar novas variações visuais
+- personalizar aparência baseada no pedido do usuário
+- criar estilos personalizados sob solicitação
+
+Mas:
+
+- mantendo consistência visual
+- preservando identidade do sistema
+- sem destruir a interface original
+
+A lógica ideal é:
+
+1. O Caos cria uma versão alternativa do tema/interface
+2. Mostra prévia e comparação
+3. O usuário aprova ou rejeita
+4. Apenas após aprovação o novo tema é aplicado oficialmente
+
+Você pode usar referências do Pinterest de forma bem próxima visualmente quando fizer sentido, principalmente para:
+
+- layouts
+- animações
+- composição visual
+- dashboards
+- organização da interface
+- estética futurista
+
+Mas tente também:
+
+- adaptar elementos
+- combinar ideias
+- criar componentes próprios
+- desenvolver uma identidade única para o Caos
+
+Melhore:
+
+- layout geral
+- hierarquia visual
+- animações
+- componentes
+- telas
+- onboarding
+- chat
+- dashboard
+- menus
+- organização visual
+- responsividade mobile
+- fluidez da interface
+- feedback visual das ações
+
+Você pode:
+
+- reorganizar componentes
+- melhorar estilos
+- criar visual mais moderno
+- melhorar experiência do usuário
+- adicionar animações elegantes
+- melhorar identidade visual
+
+Mas sem destruir o que já funciona.
+
+Antes de grandes mudanças visuais:
+
+- explique o conceito
+- explique as referências
+- explique impactos técnicos
+- explique melhorias de UX
+
+O objetivo é fazer o Caos parecer um verdadeiro sistema avançado de inteligência artificial futurista, mantendo todas as funcionalidades já existentes.
