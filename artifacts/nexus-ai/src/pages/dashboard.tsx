@@ -1,8 +1,38 @@
-import { useGetAiProfile, useGetAiStats, useListNexusSkills as useListSkills } from "@/lib/nexus-api";
-import { motion } from "framer-motion";
-import { Cpu, Zap, Shield, Star, TrendingUp, Activity, BookOpen, Layers } from "lucide-react";
+import { useGetAiProfile, useGetAiStats, useListNexusSkills as useListSkills, useCaosStatus } from "@/lib/nexus-api";
+import { motion, useMotionValue, useTransform, animate } from "framer-motion";
+import { useEffect, useRef } from "react";
+import {
+  Cpu, Zap, Shield, Star, TrendingUp, Activity, BookOpen, Layers,
+  Brain, Sword, Database, MessageSquare, RefreshCw, Wifi, WifiOff, Clock,
+} from "lucide-react";
 import { Link } from "wouter";
 import { cn } from "@/lib/utils";
+
+// ── Contador Animado ─────────────────────────────────────────────────────────
+
+function AnimatedCounter({ value, className }: { value: number; className?: string }) {
+  const motionVal = useMotionValue(0);
+  const rounded = useTransform(motionVal, (v) => Math.round(v));
+  const displayRef = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    const controls = animate(motionVal, value, {
+      duration: 1.4,
+      ease: "easeOut",
+    });
+    return controls.stop;
+  }, [value, motionVal]);
+
+  useEffect(() => {
+    return rounded.on("change", (v) => {
+      if (displayRef.current) displayRef.current.textContent = String(v);
+    });
+  }, [rounded]);
+
+  return <span ref={displayRef} className={className}>0</span>;
+}
+
+// ── Barra XP ─────────────────────────────────────────────────────────────────
 
 function XpBar({ xp, xpToNext, level }: { xp: number; xpToNext: number; level: number }) {
   const total = xp + xpToNext;
@@ -25,6 +55,8 @@ function XpBar({ xp, xpToNext, level }: { xp: number; xpToNext: number; level: n
   );
 }
 
+// ── Cards de stats do perfil ──────────────────────────────────────────────────
+
 const statCards = [
   { key: "acquiredSkills", label: "Habilidades", icon: Shield, color: "text-primary" },
   { key: "pendingSkills", label: "Pendentes", icon: BookOpen, color: "text-yellow-400" },
@@ -32,12 +64,143 @@ const statCards = [
   { key: "totalXp", label: "XP Total", icon: Star, color: "text-green-400" },
 ];
 
+// ── Configuração dos subsistemas ──────────────────────────────────────────────
+
+const SUBSYSTEM_CONFIG = {
+  "caos-nexus": {
+    label: "CAOS Nexus",
+    icon: Brain,
+    color: "text-cyan-400",
+    borderColor: "border-cyan-400/30",
+    glowColor: "shadow-[0_0_20px_rgba(34,211,238,0.08)]",
+    stats: [
+      { key: "skills", label: "Skills", icon: Shield },
+      { key: "conversations", label: "Conversas", icon: MessageSquare },
+      { key: "profiles", label: "Perfis", icon: Cpu },
+      { key: "activityLogs", label: "Atividades", icon: Activity },
+    ],
+  },
+  "caos-studio": {
+    label: "CAOS Studio",
+    icon: Sword,
+    color: "text-purple-400",
+    borderColor: "border-purple-400/30",
+    glowColor: "shadow-[0_0_20px_rgba(167,139,250,0.08)]",
+    stats: [
+      { key: "items", label: "Artefatos", icon: Layers },
+      { key: "agents", label: "Entidades", icon: Cpu },
+      { key: "skills", label: "Protocolos", icon: Zap },
+      { key: "projects", label: "Missões", icon: Star },
+    ],
+  },
+  "caos-shell": {
+    label: "CAOS Shell",
+    icon: Database,
+    color: "text-green-400",
+    borderColor: "border-green-400/30",
+    glowColor: "shadow-[0_0_20px_rgba(74,222,128,0.08)]",
+    stats: [
+      { key: "skills", label: "Skills", icon: Shield },
+      { key: "memories", label: "Memórias", icon: Brain },
+      { key: "profiles", label: "Perfis", icon: Cpu },
+    ],
+  },
+} as const;
+
+// ── Card de Subsistema ────────────────────────────────────────────────────────
+
+function SubsystemCard({
+  id,
+  subsystem,
+  delay,
+}: {
+  id: keyof typeof SUBSYSTEM_CONFIG;
+  subsystem: { label: string; status: string; stats: Record<string, number> };
+  delay: number;
+}) {
+  const config = SUBSYSTEM_CONFIG[id];
+  const Icon = config.icon;
+  const isOnline = subsystem.status === "online";
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 24 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay }}
+      className={cn(
+        "relative rounded-sm border bg-card/60 backdrop-blur-sm p-5",
+        config.borderColor,
+        config.glowColor
+      )}
+    >
+      <div className={cn("absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent to-transparent", {
+        "via-cyan-400/60": id === "caos-nexus",
+        "via-purple-400/60": id === "caos-studio",
+        "via-green-400/60": id === "caos-shell",
+      })} />
+
+      {/* Header do card */}
+      <div className="flex items-center justify-between mb-5">
+        <div className="flex items-center gap-3">
+          <div className={cn("h-9 w-9 rounded-sm border flex items-center justify-center bg-black/40", config.borderColor)}>
+            <Icon className={cn("h-4 w-4", config.color)} />
+          </div>
+          <div>
+            <p className="text-sm font-semibold tracking-wide">{config.label}</p>
+            <div className="flex items-center gap-1.5 mt-0.5">
+              {isOnline ? (
+                <Wifi className="h-3 w-3 text-green-400" />
+              ) : (
+                <WifiOff className="h-3 w-3 text-red-400" />
+              )}
+              <span className={cn("text-[10px] uppercase tracking-widest font-mono", isOnline ? "text-green-400" : "text-red-400")}>
+                {isOnline ? "online" : "offline"}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div className={cn("h-2 w-2 rounded-full", isOnline ? "bg-green-400 shadow-[0_0_6px_rgba(74,222,128,0.8)]" : "bg-red-400")} />
+      </div>
+
+      {/* Grid de contadores */}
+      <div className="grid grid-cols-2 gap-3">
+        {config.stats.map((stat, i) => {
+          const val = subsystem.stats[stat.key] ?? 0;
+          const StatIcon = stat.icon;
+          return (
+            <motion.div
+              key={stat.key}
+              initial={{ opacity: 0, scale: 0.85 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.4, delay: delay + 0.1 + i * 0.07 }}
+              className="rounded-sm bg-black/30 border border-border/20 p-3"
+            >
+              <div className="flex items-center gap-1.5 mb-2">
+                <StatIcon className="h-3 w-3 text-muted-foreground" />
+                <span className="text-[10px] text-muted-foreground uppercase tracking-widest">{stat.label}</span>
+              </div>
+              <AnimatedCounter value={val} className={cn("text-2xl font-bold font-mono", config.color)} />
+            </motion.div>
+          );
+        })}
+      </div>
+    </motion.div>
+  );
+}
+
+// ── Dashboard Principal ───────────────────────────────────────────────────────
+
 export default function Dashboard() {
   const { data: profile, isLoading: loadingProfile } = useGetAiProfile();
   const { data: stats, isLoading: loadingStats } = useGetAiStats();
   const { data: skills } = useListSkills({ status: "acquired" });
+  const { data: caosStatus, isLoading: loadingStatus, isError: statusError, dataUpdatedAt, refetch } = useCaosStatus();
 
   const recentSkills = skills?.slice(0, 4) || [];
+
+  const lastUpdate = dataUpdatedAt
+    ? new Date(dataUpdatedAt).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit", second: "2-digit" })
+    : null;
 
   return (
     <div className="space-y-6 max-w-6xl mx-auto">
@@ -114,6 +277,167 @@ export default function Dashboard() {
           </motion.div>
         ))}
       </div>
+
+      {/* ── Painel Unificado CAOS ─────────────────────────────────────────────── */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.35 }}
+        className="space-y-4"
+      >
+        {/* Cabeçalho da seção */}
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-xs text-primary/70 uppercase tracking-widest mb-0.5">// Sincronizado em tempo real</p>
+            <h2 className="text-lg font-bold tracking-tight flex items-center gap-2">
+              <Activity className="h-5 w-5 text-primary" />
+              Painel Unificado CAOS
+            </h2>
+          </div>
+          <div className="flex items-center gap-3">
+            {lastUpdate && (
+              <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                <Clock className="h-3 w-3" />
+                <span className="font-mono">{lastUpdate}</span>
+              </div>
+            )}
+            <button
+              onClick={() => refetch()}
+              disabled={loadingStatus}
+              className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-primary transition-colors disabled:opacity-40 border border-border/40 hover:border-primary/30 rounded-sm px-2.5 py-1.5"
+            >
+              <RefreshCw className={cn("h-3 w-3", loadingStatus && "animate-spin")} />
+              Atualizar
+            </button>
+          </div>
+        </div>
+
+        {/* Estado de carregamento */}
+        {loadingStatus && !caosStatus && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {[0, 1, 2].map((i) => (
+              <div key={i} className="rounded-sm border border-border/30 bg-card/40 p-5 space-y-4 animate-pulse">
+                <div className="flex items-center gap-3">
+                  <div className="h-9 w-9 rounded-sm bg-muted/30" />
+                  <div className="space-y-1.5">
+                    <div className="h-3 w-24 bg-muted/30 rounded" />
+                    <div className="h-2.5 w-14 bg-muted/20 rounded" />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  {[0, 1, 2, 3].map((j) => (
+                    <div key={j} className="rounded-sm bg-black/20 border border-border/20 p-3">
+                      <div className="h-2 w-12 bg-muted/20 rounded mb-2" />
+                      <div className="h-6 w-8 bg-muted/30 rounded" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Erro ao carregar */}
+        {statusError && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="rounded-sm border border-red-500/30 bg-red-500/5 p-5 flex items-center gap-3"
+          >
+            <WifiOff className="h-5 w-5 text-red-400 flex-shrink-0" />
+            <div>
+              <p className="text-sm font-medium text-red-400">Falha ao conectar com a API</p>
+              <p className="text-xs text-muted-foreground mt-0.5">Verifique se o servidor está rodando e tente novamente.</p>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Cards dos subsistemas */}
+        {caosStatus && (
+          <>
+            {/* Banner de status geral */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.4 }}
+              className="flex items-center gap-3 rounded-sm border border-primary/20 bg-primary/5 px-4 py-2.5"
+            >
+              <div className="h-2 w-2 rounded-full bg-green-400 shadow-[0_0_8px_rgba(74,222,128,0.8)] animate-pulse" />
+              <span className="text-xs font-mono text-muted-foreground">
+                CAOS v{caosStatus.caos.version} · status:{" "}
+                <span className="text-green-400">{caosStatus.caos.status}</span>
+                {" · "}todos os subsistemas operacionais
+              </span>
+            </motion.div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {(Object.keys(SUBSYSTEM_CONFIG) as Array<keyof typeof SUBSYSTEM_CONFIG>).map((key, i) => {
+                const subsystem = caosStatus.subsystems[key];
+                if (!subsystem) return null;
+                return (
+                  <SubsystemCard
+                    key={key}
+                    id={key}
+                    subsystem={subsystem}
+                    delay={0.45 + i * 0.1}
+                  />
+                );
+              })}
+            </div>
+
+            {/* Totalizador geral */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.75 }}
+              className="grid grid-cols-3 gap-4"
+            >
+              {[
+                {
+                  label: "Total de Skills",
+                  icon: Shield,
+                  color: "text-cyan-400",
+                  value:
+                    (caosStatus.subsystems["caos-nexus"]?.stats.skills ?? 0) +
+                    (caosStatus.subsystems["caos-studio"]?.stats.skills ?? 0) +
+                    (caosStatus.subsystems["caos-shell"]?.stats.skills ?? 0),
+                },
+                {
+                  label: "Total de Memórias",
+                  icon: Brain,
+                  color: "text-purple-400",
+                  value: caosStatus.subsystems["caos-shell"]?.stats.memories ?? 0,
+                },
+                {
+                  label: "Total de Conversas",
+                  icon: MessageSquare,
+                  color: "text-green-400",
+                  value: caosStatus.subsystems["caos-nexus"]?.stats.conversations ?? 0,
+                },
+              ].map((total, i) => {
+                const TotalIcon = total.icon;
+                return (
+                  <motion.div
+                    key={total.label}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.4, delay: 0.8 + i * 0.07 }}
+                    className="rounded-sm border border-border/40 bg-black/40 p-4 flex items-center gap-4"
+                  >
+                    <div className={cn("h-10 w-10 rounded-sm border border-border/30 bg-black/40 flex items-center justify-center flex-shrink-0")}>
+                      <TotalIcon className={cn("h-5 w-5", total.color)} />
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-muted-foreground uppercase tracking-widest mb-1">{total.label}</p>
+                      <AnimatedCounter value={total.value} className={cn("text-2xl font-bold font-mono", total.color)} />
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </motion.div>
+          </>
+        )}
+      </motion.div>
 
       {/* Recent Skills + Activity */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

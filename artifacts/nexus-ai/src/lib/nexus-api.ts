@@ -212,3 +212,39 @@ export function useGetConversationMessages(id: number, options?: { query?: UseQu
     ...options?.query,
   });
 }
+
+// ─── CAOS Status Unificado ────────────────────────────────────────────────────
+
+export interface CaosSubsystemStats {
+  [key: string]: number;
+}
+
+export interface CaosSubsystem {
+  label: string;
+  status: "online" | "offline" | "degraded";
+  stats: CaosSubsystemStats;
+}
+
+export interface CaosStatusResponse {
+  caos: {
+    version: string;
+    timestamp: string;
+    status: string;
+  };
+  subsystems: {
+    "caos-nexus": CaosSubsystem;
+    "caos-studio": CaosSubsystem;
+    "caos-shell": CaosSubsystem;
+  };
+}
+
+export const getCaosStatusQueryKey = () => ["/api/caos/status"] as const;
+
+export function useCaosStatus() {
+  return useQuery<CaosStatusResponse>({
+    queryKey: getCaosStatusQueryKey(),
+    queryFn: () => apiFetch<CaosStatusResponse>("/caos/status"),
+    refetchInterval: 30_000,
+    staleTime: 15_000,
+  });
+}
