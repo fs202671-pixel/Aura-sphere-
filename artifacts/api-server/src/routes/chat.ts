@@ -1,6 +1,18 @@
 import { Router, type IRouter, type Request, type Response } from "express";
-import { openai } from "@workspace/integrations-openai-ai-server";
 import { getAuth } from "@clerk/express";
+
+let _openai: any = null;
+async function getOpenAI() {
+  if (!_openai) {
+    try {
+      const mod = await import("@workspace/integrations-openai-ai-server");
+      _openai = mod.openai;
+    } catch {
+      throw new Error("OpenAI integration not provisioned");
+    }
+  }
+  return _openai;
+}
 
 const router: IRouter = Router();
 
@@ -63,6 +75,7 @@ router.post("/chat", async (req: Request, res: Response) => {
   res.setHeader("X-Accel-Buffering", "no");
 
   try {
+    const openai = await getOpenAI();
     const stream = await openai.chat.completions.create({
       model: "gpt-4o",
       max_completion_tokens: 8192,

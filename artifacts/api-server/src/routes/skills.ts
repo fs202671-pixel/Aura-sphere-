@@ -1,7 +1,14 @@
 import { Router, type IRouter, type Request, type Response } from "express";
 import { db, skillsTable } from "@workspace/db";
 import { eq, and } from "drizzle-orm";
-import { openai } from "@workspace/integrations-openai-ai-server";
+let _openai: any = null;
+async function getOpenAI() {
+  if (!_openai) {
+    try { const mod = await import("@workspace/integrations-openai-ai-server"); _openai = mod.openai; }
+    catch { throw new Error("OpenAI integration not provisioned"); }
+  }
+  return _openai;
+}
 
 const router: IRouter = Router();
 
@@ -91,6 +98,7 @@ Retorne um JSON com exatamente este formato:
 
     let fullContent = "";
 
+    const openai = await getOpenAI();
     const stream = await openai.chat.completions.create({
       model: "gpt-5-mini",
       max_completion_tokens: 8192,
@@ -254,6 +262,7 @@ Retorne um JSON:
 }`;
 
     let fullContent = "";
+    const openai = await getOpenAI();
     const stream = await openai.chat.completions.create({
       model: "gpt-5-mini",
       max_completion_tokens: 8192,

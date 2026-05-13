@@ -30,7 +30,7 @@ export const nexusSkills = pgTable("nexus_skills", {
   color: text("color").notNull().default("#6366f1"),
   principles: json("principles").$type<string[]>().notNull().default([]),
   parentSkillIds: json("parent_skill_ids").$type<number[] | null>().default(null),
-  studySource: text("study_source").default(null),
+  studySource: text("study_source"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

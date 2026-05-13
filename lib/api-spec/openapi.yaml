@@ -2,17 +2,25 @@ openapi: 3.1.0
 info:
   title: Api
   version: 0.1.0
-  description: NEXUS AI - RPG-style AI skill system API
+  description: Creator Hub RPG - Modular creative studio with RPG item system
+
 servers:
   - url: /api
     description: Base API path
+
 tags:
   - name: health
     description: Health operations
-  - name: ai
-    description: AI profile and chat operations
+  - name: items
+    description: RPG item library management
+  - name: themes
+    description: Theme engine and design system
+  - name: agents
+    description: AI agent (IA) builder
   - name: skills
-    description: Skill management operations
+    description: Pluggable skill modules
+  - name: projects
+    description: Project builder
 
 paths:
   /healthz:
@@ -20,7 +28,6 @@ paths:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -29,139 +36,397 @@ paths:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
 
-  /ai/profile:
+  # ─── ITEMS ───────────────────────────────────────────────────────
+  /items:
     get:
-      operationId: getAiProfile
-      tags: [ai]
-      summary: Get AI profile
-      description: Returns AI name, level, XP, class, and personality
-      responses:
-        "200":
-          description: AI profile
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AiProfile"
-    patch:
-      operationId: updateAiProfile
-      tags: [ai]
-      summary: Update AI profile
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/AiProfileUpdate"
-      responses:
-        "200":
-          description: Updated profile
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AiProfile"
-
-  /ai/stats:
-    get:
-      operationId: getAiStats
-      tags: [ai]
-      summary: Get AI stats summary
-      description: Returns skill counts, XP breakdown, and evolution data
-      responses:
-        "200":
-          description: AI stats
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AiStats"
-
-  /ai/conversations:
-    get:
-      operationId: listConversations
-      tags: [ai]
-      summary: List conversations
-      responses:
-        "200":
-          description: List of conversations
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Conversation"
-    post:
-      operationId: createConversation
-      tags: [ai]
-      summary: Create a new conversation
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/ConversationInput"
-      responses:
-        "201":
-          description: Created conversation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Conversation"
-
-  /ai/conversations/{id}/messages:
-    get:
-      operationId: getConversationMessages
-      tags: [ai]
-      summary: Get messages in a conversation
+      operationId: listItems
+      tags: [items]
+      summary: List all RPG items in the library
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-      responses:
-        "200":
-          description: List of messages
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Message"
-    post:
-      operationId: sendMessage
-      tags: [ai]
-      summary: Send a message (streams SSE)
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/MessageInput"
-      responses:
-        "200":
-          description: SSE stream
-          content:
-            text/event-stream:
-              schema:
-                type: string
-
-  /skills:
-    get:
-      operationId: listSkills
-      tags: [skills]
-      summary: List all acquired skills
-      parameters:
-        - name: category
+        - name: type
           in: query
           required: false
           schema:
             type: string
-        - name: status
+            enum: [design, theme, agent, skill, project, component]
+        - name: rarity
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [Common, Rare, Epic, Legendary]
+        - name: tags
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Item"
+    post:
+      operationId: createItem
+      tags: [items]
+      summary: Create a new RPG item
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ItemInput"
+      responses:
+        "201":
+          description: Created item
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Item"
+
+  /items/stats:
+    get:
+      operationId: getItemStats
+      tags: [items]
+      summary: Get inventory stats (counts by type, rarity, recent activity)
+      responses:
+        "200":
+          description: Inventory stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InventoryStats"
+
+  /items/recent:
+    get:
+      operationId: getRecentItems
+      tags: [items]
+      summary: Get recently created items
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Recent items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Item"
+
+  /items/{id}:
+    get:
+      operationId: getItem
+      tags: [items]
+      summary: Get item detail
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Item detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Item"
+        "404":
+          description: Not found
+    patch:
+      operationId: updateItem
+      tags: [items]
+      summary: Update an item
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ItemUpdate"
+      responses:
+        "200":
+          description: Updated item
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Item"
+    delete:
+      operationId: deleteItem
+      tags: [items]
+      summary: Delete an item
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /items/{id}/clone:
+    post:
+      operationId: cloneItem
+      tags: [items]
+      summary: Clone an existing item
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "201":
+          description: Cloned item
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Item"
+
+  # ─── THEMES ──────────────────────────────────────────────────────
+  /themes:
+    get:
+      operationId: listThemes
+      tags: [themes]
+      summary: List all theme items
+      responses:
+        "200":
+          description: List of themes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Theme"
+    post:
+      operationId: createTheme
+      tags: [themes]
+      summary: Create a new theme item (manually or from design extraction)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ThemeInput"
+      responses:
+        "201":
+          description: Created theme
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Theme"
+
+  /themes/{id}:
+    get:
+      operationId: getTheme
+      tags: [themes]
+      summary: Get theme detail
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Theme detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Theme"
+    delete:
+      operationId: deleteTheme
+      tags: [themes]
+      summary: Delete a theme
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /themes/{id}/apply:
+    post:
+      operationId: applyTheme
+      tags: [themes]
+      summary: Apply a theme to a project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ThemeApplyRequest"
+      responses:
+        "200":
+          description: Theme applied result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ThemeApplyResult"
+
+  /themes/extract:
+    post:
+      operationId: extractTheme
+      tags: [themes]
+      summary: Extract a theme from image analysis (Design Extractor)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ThemeExtractRequest"
+      responses:
+        "200":
+          description: Extracted theme
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Theme"
+
+  # ─── AI AGENTS ───────────────────────────────────────────────────
+  /agents:
+    get:
+      operationId: listAgents
+      tags: [agents]
+      summary: List all AI agents
+      responses:
+        "200":
+          description: List of agents
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Agent"
+    post:
+      operationId: createAgent
+      tags: [agents]
+      summary: Create a new AI agent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AgentInput"
+      responses:
+        "201":
+          description: Created agent
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Agent"
+
+  /agents/{id}:
+    get:
+      operationId: getAgent
+      tags: [agents]
+      summary: Get agent detail
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Agent detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Agent"
+    patch:
+      operationId: updateAgent
+      tags: [agents]
+      summary: Update an agent
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AgentUpdate"
+      responses:
+        "200":
+          description: Updated agent
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Agent"
+    delete:
+      operationId: deleteAgent
+      tags: [agents]
+      summary: Delete an agent
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /agents/{id}/run:
+    post:
+      operationId: runAgent
+      tags: [agents]
+      summary: Run an AI agent with a prompt
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AgentRunRequest"
+      responses:
+        "200":
+          description: Agent run result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgentRunResult"
+
+  # ─── SKILLS ──────────────────────────────────────────────────────
+  /skills:
+    get:
+      operationId: listSkills
+      tags: [skills]
+      summary: List all skill modules
+      parameters:
+        - name: category
           in: query
           required: false
           schema:
@@ -178,7 +443,7 @@ paths:
     post:
       operationId: createSkill
       tags: [skills]
-      summary: Manually create a skill
+      summary: Create a new skill module
       requestBody:
         required: true
         content:
@@ -211,8 +476,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Skill"
-        "404":
-          description: Not found
     patch:
       operationId: updateSkill
       tags: [skills]
@@ -250,30 +513,69 @@ paths:
         "204":
           description: Deleted
 
-  /skills/study:
+  /skills/{id}/plug:
     post:
-      operationId: studyTopic
+      operationId: plugSkill
       tags: [skills]
-      summary: Ask AI to study a topic or repository and propose skills
+      summary: Plug a skill into a project or agent
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/StudyRequest"
+              $ref: "#/components/schemas/SkillPlugRequest"
       responses:
         "200":
-          description: Proposed skills from study
+          description: Plug result
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/StudyResult"
+                $ref: "#/components/schemas/SkillPlugResult"
 
-  /skills/{id}/acquire:
+  # ─── PROJECTS ────────────────────────────────────────────────────
+  /projects:
+    get:
+      operationId: listProjects
+      tags: [projects]
+      summary: List all projects
+      responses:
+        "200":
+          description: List of projects
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Project"
     post:
-      operationId: acquireSkill
-      tags: [skills]
-      summary: User authorizes AI to acquire a proposed skill
+      operationId: createProject
+      tags: [projects]
+      summary: Create a new project
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProjectInput"
+      responses:
+        "201":
+          description: Created project
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+
+  /projects/{id}:
+    get:
+      operationId: getProject
+      tags: [projects]
+      summary: Get project detail
       parameters:
         - name: id
           in: path
@@ -282,45 +584,66 @@ paths:
             type: integer
       responses:
         "200":
-          description: Skill acquired
+          description: Project detail
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Skill"
-
-  /skills/fuse:
-    post:
-      operationId: fuseSkills
-      tags: [skills]
-      summary: Fuse two or more skills into a new combined skill
+                $ref: "#/components/schemas/Project"
+    patch:
+      operationId: updateProject
+      tags: [projects]
+      summary: Update a project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/FuseRequest"
+              $ref: "#/components/schemas/ProjectUpdate"
       responses:
         "200":
-          description: Fused skill result
+          description: Updated project
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/FuseResult"
+                $ref: "#/components/schemas/Project"
+    delete:
+      operationId: deleteProject
+      tags: [projects]
+      summary: Delete a project
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
 
-  /skills/categories:
-    get:
-      operationId: listSkillCategories
-      tags: [skills]
-      summary: List all skill categories with counts
+  /projects/{id}/build:
+    post:
+      operationId: buildProject
+      tags: [projects]
+      summary: Trigger project build (generates structure/scaffold)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
       responses:
         "200":
-          description: Categories with counts
+          description: Build result
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/SkillCategory"
+                $ref: "#/components/schemas/ProjectBuildResult"
 
 components:
   schemas:
@@ -332,107 +655,292 @@ components:
       required:
         - status
 
-    AiProfile:
+    # ─── ITEM ────────────────────────────────────────────────────
+    Item:
       type: object
-      required: [id, name, level, xp, xpToNext, aiClass, description, personality, createdAt]
+      required: [id, name, type, rarity, tags, previewUrl, createdAt]
       properties:
         id:
           type: integer
         name:
           type: string
-        level:
-          type: integer
-        xp:
-          type: integer
-        xpToNext:
-          type: integer
-        aiClass:
+        type:
           type: string
+          enum: [design, theme, agent, skill, project, component]
+        rarity:
+          type: string
+          enum: [Common, Rare, Epic, Legendary]
+        tags:
+          type: array
+          items:
+            type: string
+        previewUrl:
+          type: ["string", "null"]
         description:
-          type: string
-        personality:
-          type: string
+          type: ["string", "null"]
+        metadata:
+          type: ["object", "null"]
+          additionalProperties: true
         createdAt:
           type: string
           format: date-time
 
-    AiProfileUpdate:
+    ItemInput:
+      type: object
+      required: [name, type]
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+          enum: [design, theme, agent, skill, project, component]
+        rarity:
+          type: string
+          enum: [Common, Rare, Epic, Legendary]
+        tags:
+          type: array
+          items:
+            type: string
+        previewUrl:
+          type: string
+        description:
+          type: string
+        metadata:
+          type: object
+          additionalProperties: true
+
+    ItemUpdate:
       type: object
       properties:
         name:
           type: string
-        personality:
+        rarity:
           type: string
+          enum: [Common, Rare, Epic, Legendary]
+        tags:
+          type: array
+          items:
+            type: string
+        previewUrl:
+          type: string
+        description:
+          type: string
+        metadata:
+          type: object
+          additionalProperties: true
 
-    AiStats:
+    InventoryStats:
       type: object
-      required: [totalSkills, acquiredSkills, pendingSkills, fusedSkills, totalXp, level, recentActivity]
+      required: [total, byType, byRarity, legendaryCount, recentDrops]
       properties:
-        totalSkills:
+        total:
           type: integer
-        acquiredSkills:
+        byType:
+          type: object
+          additionalProperties:
+            type: integer
+        byRarity:
+          type: object
+          additionalProperties:
+            type: integer
+        legendaryCount:
           type: integer
-        pendingSkills:
+        recentDrops:
+          type: array
+          items:
+            $ref: "#/components/schemas/Item"
+
+    # ─── THEME ───────────────────────────────────────────────────
+    Theme:
+      type: object
+      required: [id, name, rarity, colors, fonts, layoutStyle, createdAt]
+      properties:
+        id:
           type: integer
-        fusedSkills:
-          type: integer
-        totalXp:
-          type: integer
-        level:
-          type: integer
-        recentActivity:
+        name:
+          type: string
+        rarity:
+          type: string
+          enum: [Common, Rare, Epic, Legendary]
+        colors:
+          type: array
+          items:
+            type: string
+        fonts:
+          type: array
+          items:
+            type: string
+        layoutStyle:
+          type: string
+        spacing:
+          type: ["string", "null"]
+        borderRadius:
+          type: ["string", "null"]
+        previewUrl:
+          type: ["string", "null"]
+        sourceImageUrl:
+          type: ["string", "null"]
+        tags:
+          type: array
+          items:
+            type: string
+        createdAt:
+          type: string
+          format: date-time
+
+    ThemeInput:
+      type: object
+      required: [name, colors, layoutStyle]
+      properties:
+        name:
+          type: string
+        rarity:
+          type: string
+          enum: [Common, Rare, Epic, Legendary]
+        colors:
+          type: array
+          items:
+            type: string
+        fonts:
+          type: array
+          items:
+            type: string
+        layoutStyle:
+          type: string
+        spacing:
+          type: string
+        borderRadius:
+          type: string
+        previewUrl:
+          type: string
+        sourceImageUrl:
+          type: string
+        tags:
           type: array
           items:
             type: string
 
-    Conversation:
+    ThemeApplyRequest:
       type: object
-      required: [id, title, createdAt, updatedAt]
+      required: [projectId]
+      properties:
+        projectId:
+          type: integer
+
+    ThemeApplyResult:
+      type: object
+      required: [success, message, projectId, themeId]
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        projectId:
+          type: integer
+        themeId:
+          type: integer
+
+    ThemeExtractRequest:
+      type: object
+      required: [imageUrl, name]
+      properties:
+        imageUrl:
+          type: string
+        name:
+          type: string
+        style:
+          type: string
+
+    # ─── AGENT ───────────────────────────────────────────────────
+    Agent:
+      type: object
+      required: [id, name, behavior, rarity, promptBase, createdAt]
       properties:
         id:
           type: integer
-        title:
+        name:
           type: string
-        createdAt:
+        behavior:
           type: string
-          format: date-time
-        updatedAt:
+        rarity:
           type: string
-          format: date-time
-
-    ConversationInput:
-      type: object
-      required: [title]
-      properties:
-        title:
+          enum: [Common, Rare, Epic, Legendary]
+        promptBase:
           type: string
-
-    Message:
-      type: object
-      required: [id, conversationId, role, content, createdAt]
-      properties:
-        id:
+        description:
+          type: ["string", "null"]
+        avatar:
+          type: ["string", "null"]
+        pluggedSkillIds:
+          type: array
+          items:
+            type: integer
+        runCount:
           type: integer
-        conversationId:
-          type: integer
-        role:
-          type: string
-        content:
-          type: string
         createdAt:
           type: string
           format: date-time
 
-    MessageInput:
+    AgentInput:
       type: object
-      required: [content]
+      required: [name, behavior, promptBase]
       properties:
-        content:
+        name:
+          type: string
+        behavior:
+          type: string
+        promptBase:
+          type: string
+        rarity:
+          type: string
+          enum: [Common, Rare, Epic, Legendary]
+        description:
+          type: string
+        avatar:
           type: string
 
+    AgentUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        behavior:
+          type: string
+        promptBase:
+          type: string
+        rarity:
+          type: string
+          enum: [Common, Rare, Epic, Legendary]
+        description:
+          type: string
+        avatar:
+          type: string
+
+    AgentRunRequest:
+      type: object
+      required: [prompt]
+      properties:
+        prompt:
+          type: string
+
+    AgentRunResult:
+      type: object
+      required: [agentId, prompt, result, runAt]
+      properties:
+        agentId:
+          type: integer
+        prompt:
+          type: string
+        result:
+          type: string
+        runAt:
+          type: string
+          format: date-time
+
+    # ─── SKILL ───────────────────────────────────────────────────
     Skill:
       type: object
-      required: [id, name, category, description, level, status, xpValue, icon, color, principles, createdAt]
+      required: [id, name, category, description, rarity, createdAt]
       properties:
         id:
           type: integer
@@ -442,27 +950,15 @@ components:
           type: string
         description:
           type: string
-        level:
-          type: integer
-        status:
+        rarity:
           type: string
-          description: "acquired | pending | fused"
-        xpValue:
-          type: integer
+          enum: [Common, Rare, Epic, Legendary]
         icon:
-          type: string
-        color:
-          type: string
-        principles:
-          type: array
-          items:
-            type: string
-        parentSkillIds:
-          type: ["array", "null"]
-          items:
-            type: integer
-        studySource:
           type: ["string", "null"]
+        behavior:
+          type: ["string", "null"]
+        pluggedCount:
+          type: integer
         createdAt:
           type: string
           format: date-time
@@ -477,9 +973,12 @@ components:
           type: string
         description:
           type: string
+        rarity:
+          type: string
+          enum: [Common, Rare, Epic, Legendary]
         icon:
           type: string
-        color:
+        behavior:
           type: string
 
     SkillUpdate:
@@ -489,61 +988,119 @@ components:
           type: string
         description:
           type: string
+        category:
+          type: string
+        icon:
+          type: string
+        behavior:
+          type: string
+
+    SkillPlugRequest:
+      type: object
+      required: [targetType, targetId]
+      properties:
+        targetType:
+          type: string
+          enum: [agent, project]
+        targetId:
+          type: integer
+
+    SkillPlugResult:
+      type: object
+      required: [success, message]
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+
+    # ─── PROJECT ─────────────────────────────────────────────────
+    Project:
+      type: object
+      required: [id, name, rarity, status, createdAt]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: ["string", "null"]
+        rarity:
+          type: string
+          enum: [Common, Rare, Epic, Legendary]
         status:
           type: string
-
-    StudyRequest:
-      type: object
-      required: [topic]
-      properties:
-        topic:
-          type: string
-          description: Topic, URL, or repository to study
-        filter:
-          type: ["string", "null"]
-          description: What to include/exclude from study
-
-    StudyResult:
-      type: object
-      required: [summary, proposedSkills]
-      properties:
-        summary:
-          type: string
-        proposedSkills:
+          enum: [draft, building, complete, archived]
+        themeId:
+          type: ["integer", "null"]
+        agentIds:
           type: array
           items:
-            $ref: "#/components/schemas/Skill"
-
-    FuseRequest:
-      type: object
-      required: [skillIds]
-      properties:
+            type: integer
         skillIds:
           type: array
           items:
             type: integer
-          minItems: 2
-        fusionName:
+        previewUrl:
           type: ["string", "null"]
-
-    FuseResult:
-      type: object
-      required: [fusedSkill, description]
-      properties:
-        fusedSkill:
-          $ref: "#/components/schemas/Skill"
-        description:
+        createdAt:
           type: string
+          format: date-time
 
-    SkillCategory:
+    ProjectInput:
       type: object
-      required: [name, count, icon, color]
+      required: [name]
       properties:
         name:
           type: string
-        count:
+        description:
+          type: string
+        rarity:
+          type: string
+          enum: [Common, Rare, Epic, Legendary]
+        themeId:
           type: integer
-        icon:
+        agentIds:
+          type: array
+          items:
+            type: integer
+        skillIds:
+          type: array
+          items:
+            type: integer
+
+    ProjectUpdate:
+      type: object
+      properties:
+        name:
           type: string
-        color:
+        description:
           type: string
+        status:
+          type: string
+          enum: [draft, building, complete, archived]
+        themeId:
+          type: integer
+        agentIds:
+          type: array
+          items:
+            type: integer
+        skillIds:
+          type: array
+          items:
+            type: integer
+
+    ProjectBuildResult:
+      type: object
+      required: [success, message, projectId, generatedFiles]
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        projectId:
+          type: integer
+        generatedFiles:
+          type: array
+          items:
+            type: string

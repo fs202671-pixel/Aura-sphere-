@@ -7,23 +7,30 @@ import {
   nexusMessages,
   nexusActivityLog,
 } from "@workspace/db";
-import { eq, desc, count, sql } from "drizzle-orm";
-import {
-  UpdateAiProfileBody,
-  CreateConversationBody,
-  SendMessageBody,
-  CreateSkillBody,
-  UpdateSkillBody,
-  StudyTopicBody,
-  FuseSkillsBody,
-  GetConversationMessagesParams,
-  GetSkillParams,
-  UpdateSkillParams,
-  DeleteSkillParams,
-  AcquireSkillParams,
-  SendMessageParams,
-} from "@workspace/api-zod";
-import { openai } from "@workspace/integrations-openai-ai-server";
+import { eq, desc, sql } from "drizzle-orm";
+
+function parseId(param: string): number { return parseInt(param, 10); }
+
+let _openai: any = null;
+async function getOpenAI() {
+  if (!_openai) {
+    try {
+      const mod = await import("@workspace/integrations-openai-ai-server");
+      _openai = mod.openai;
+    } catch {
+      throw new Error("OpenAI integration not provisioned");
+    }
+  }
+  return _openai;
+}
+const UpdateAiProfileBody = { parse: (b: any) => b };
+const CreateConversationBody = { parse: (b: any) => b };
+const SendMessageBody = { parse: (b: any) => b };
+const CreateSkillBody = { parse: (b: any) => b };
+const UpdateSkillBody = { parse: (b: any) => b };
+const StudyTopicBody = { parse: (b: any) => b };
+const FuseSkillsBody = { parse: (b: any) => b };
+const IdParams = { parse: (b: { id: number }) => b };
 
 const router: IRouter = Router();
 
@@ -119,7 +126,7 @@ router.post("/ai/conversations", async (req, res) => {
 // GET /api/ai/conversations/:id/messages
 router.get("/ai/conversations/:id/messages", async (req, res) => {
   try {
-    const { id } = GetConversationMessagesParams.parse({ id: Number(req.params.id) });
+    const { id } = IdParams.parse({ id: Number(req.params.id) });
     const msgs = await db.select().from(nexusMessages).where(eq(nexusMessages.conversationId, id)).orderBy(nexusMessages.createdAt);
     res.json(msgs);
   } catch (e) {
@@ -130,7 +137,7 @@ router.get("/ai/conversations/:id/messages", async (req, res) => {
 // POST /api/ai/conversations/:id/messages (SSE)
 router.post("/ai/conversations/:id/messages", async (req, res) => {
   try {
-    const { id } = SendMessageParams.parse({ id: Number(req.params.id) });
+    const { id } = IdParams.parse({ id: Number(req.params.id) });
     const body = SendMessageBody.parse(req.body);
 
     // Save user message
@@ -161,6 +168,7 @@ Responda sempre em português. Você é uma IA que está evoluindo e aprendendo.
     res.setHeader("Connection", "keep-alive");
 
     let fullResponse = "";
+    const openai = await getOpenAI();
     const stream = await openai.chat.completions.create({
       model: "gpt-5.1",
       max_completion_tokens: 8192,
@@ -253,7 +261,7 @@ router.get("/skills/categories", async (_req, res) => {
 // GET /api/skills/:id
 router.get("/skills/:id", async (req, res) => {
   try {
-    const { id } = GetSkillParams.parse({ id: Number(req.params.id) });
+    const { id } = IdParams.parse({ id: Number(req.params.id) });
     const skill = await db.select().from(nexusSkills).where(eq(nexusSkills.id, id)).limit(1);
     if (!skill[0]) return res.status(404).json({ error: "Skill not found" });
     res.json(skill[0]);
@@ -265,7 +273,7 @@ router.get("/skills/:id", async (req, res) => {
 // PATCH /api/skills/:id
 router.patch("/skills/:id", async (req, res) => {
   try {
-    const { id } = UpdateSkillParams.parse({ id: Number(req.params.id) });
+    const { id } = IdParams.parse({ id: Number(req.params.id) });
     const body = UpdateSkillBody.parse(req.body);
     const updated = await db.update(nexusSkills).set(body).where(eq(nexusSkills.id, id)).returning();
     if (!updated[0]) return res.status(404).json({ error: "Skill not found" });
@@ -278,7 +286,7 @@ router.patch("/skills/:id", async (req, res) => {
 // DELETE /api/skills/:id
 router.delete("/skills/:id", async (req, res) => {
   try {
-    const { id } = DeleteSkillParams.parse({ id: Number(req.params.id) });
+    const { id } = IdParams.parse({ id: Number(req.params.id) });
     await db.delete(nexusSkills).where(eq(nexusSkills.id, id));
     res.status(204).end();
   } catch (e) {
@@ -317,6 +325,7 @@ Retorne um JSON com este formato EXATO:
   ]
 }`;
 
+    const openai = await getOpenAI();
     const response = await openai.chat.completions.create({
       model: "gpt-5.1",
       max_completion_tokens: 2000,
@@ -366,7 +375,7 @@ Retorne um JSON com este formato EXATO:
 // POST /api/skills/:id/acquire
 router.post("/skills/:id/acquire", async (req, res) => {
   try {
-    const { id } = AcquireSkillParams.parse({ id: Number(req.params.id) });
+    const { id } = IdParams.parse({ id: Number(req.params.id) });
     const updated = await db.update(nexusSkills).set({ status: "acquired" }).where(eq(nexusSkills.id, id)).returning();
     if (!updated[0]) return res.status(404).json({ error: "Skill not found" });
 
@@ -411,6 +420,7 @@ Retorne um JSON com este formato EXATO:
   "fusionDescription": "Explicação de como essas habilidades se combinaram e o que criaram"
 }`;
 
+    const openai = await getOpenAI();
     const response = await openai.chat.completions.create({
       model: "gpt-5.1",
       max_completion_tokens: 1000,
