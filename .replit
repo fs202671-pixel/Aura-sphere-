@@ -22,10 +22,6 @@ args = "API Server"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "CAOS Nexus"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
 args = "CAOS Hub"
 
 [[workflows.workflow]]
@@ -39,18 +35,6 @@ outputType = "console"
 task = "shell.exec"
 args = "PORT=8081 pnpm --filter @workspace/api-server run dev"
 waitForPort = 8081
-
-[[workflows.workflow]]
-name = "CAOS Nexus"
-author = "agent"
-
-[workflows.workflow.metadata]
-outputType = "webview"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "PORT=22706 BASE_PATH=/ pnpm --filter @workspace/caos-nexus run dev"
-waitForPort = 22706
 
 [[workflows.workflow]]
 name = "CAOS Hub"

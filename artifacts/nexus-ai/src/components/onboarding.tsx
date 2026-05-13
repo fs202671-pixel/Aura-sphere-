@@ -19,6 +19,10 @@ export function useOnboarding() {
   return { needsOnboarding: !done };
 }
 
+export function skipOnboarding() {
+  if (typeof window !== "undefined") localStorage.setItem(ONBOARDING_KEY, "1");
+}
+
 export function markOnboardingDone() {
   localStorage.setItem(ONBOARDING_KEY, "1");
 }

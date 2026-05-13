@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppLayout } from "@/components/layout";
-import { OnboardingModal, useOnboarding } from "@/components/onboarding";
+import { OnboardingModal, useOnboarding, skipOnboarding } from "@/components/onboarding";
 import { FloatingSphere } from "@/components/floating-sphere";
 import { AnimatePresence } from "framer-motion";
 import { loadSavedTheme } from "@/lib/themes";
@@ -44,14 +44,14 @@ if (typeof document !== "undefined") {
 }
 
 function AppRouter() {
-  const { needsOnboarding } = useOnboarding();
-  const [showOnboarding, setShowOnboarding] = useState(needsOnboarding);
+  useOnboarding();
+  const [showOnboarding, _setShowOnboarding] = useState(false);
 
   return (
     <>
       <AppLayout>
         <Switch>
-          <Route path="/" component={Home} />
+          <Route path="/" component={Shell} />
           <Route path="/shell" component={Shell} />
           <Route path="/builder" component={Builder} />
           <Route path="/professor" component={Professor} />

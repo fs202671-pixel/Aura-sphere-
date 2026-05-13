@@ -71,3 +71,16 @@ export const nexusActivityLog = pgTable("caos_nexus_activity_log", {
 export const insertNexusActivityLogSchema = createInsertSchema(nexusActivityLog).omit({ id: true, createdAt: true });
 export type InsertNexusActivityLog = z.infer<typeof insertNexusActivityLogSchema>;
 export type NexusActivityLog = typeof nexusActivityLog.$inferSelect;
+
+export const caosKnowledge = pgTable("caos_knowledge", {
+  id: serial("id").primaryKey(),
+  topic: text("topic").notNull(),
+  content: text("content").notNull(),
+  category: text("category").notNull().default("Geral"),
+  xpValue: integer("xp_value").notNull().default(30),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const insertCaosKnowledgeSchema = createInsertSchema(caosKnowledge).omit({ id: true, createdAt: true });
+export type InsertCaosKnowledge = z.infer<typeof insertCaosKnowledgeSchema>;
+export type CaosKnowledge = typeof caosKnowledge.$inferSelect;
