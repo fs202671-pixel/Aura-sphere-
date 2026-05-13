@@ -48,7 +48,7 @@ export default function StudioHome() {
   const { data: recentItems } = useGetRecentItems({ limit: 3 });
 
   return (
-    <div className="min-h-full px-4 py-6 md:px-8 md:py-8 max-w-4xl mx-auto space-y-6">
+    <div className="max-w-4xl mx-auto space-y-6">
       <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }}>
         <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-amber-400/60 mb-1">// Central de Criação</p>
         <h1 className="text-2xl font-black uppercase tracking-widest text-foreground">Studio CAOS</h1>

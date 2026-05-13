@@ -195,23 +195,36 @@ export default function Dashboard() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.6 }}
-        className="grid grid-cols-1 md:grid-cols-3 gap-4"
+        className="space-y-3"
       >
-        {[
-          { href: "/caos/estudar", label: "Estudar Novo Tópico", desc: "Adicionar conhecimento à IA", icon: BookOpen, color: "text-cyan-400 border-cyan-400/20 hover:border-cyan-400/50" },
-          { href: "/caos/terminal", label: "Terminal IA", desc: "Comunicação direta com a IA", icon: TrendingUp, color: "text-purple-400 border-purple-400/20 hover:border-purple-400/50" },
-          { href: "/caos/fusao", label: "Fundir Habilidades", desc: "Combinar poderes existentes", icon: Zap, color: "text-pink-400 border-pink-400/20 hover:border-pink-400/50" },
-        ].map(action => (
-          <Link key={action.href} href={action.href}>
-            <div className={cn("rounded-sm border bg-card/40 p-4 flex items-center gap-4 cursor-pointer transition-all duration-200 hover:bg-card/80 group", action.color)}>
-              <action.icon className={cn("h-8 w-8 flex-shrink-0 group-hover:drop-shadow-[0_0_10px_currentColor] transition-all")} />
-              <div>
-                <p className="font-medium text-sm">{action.label}</p>
-                <p className="text-xs text-muted-foreground">{action.desc}</p>
-              </div>
-            </div>
-          </Link>
-        ))}
+        <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Ações Rápidas</h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+          {[
+            { href: "/caos/estudar", label: "Estudar Tópico", desc: "Adicionar conhecimento à IA", icon: BookOpen, color: "text-cyan-400 border-cyan-400/20 hover:border-cyan-400/50" },
+            { href: "/builder", label: "CAOS Builder", desc: "Assistente de codificação", icon: TrendingUp, color: "text-green-400 border-green-400/20 hover:border-green-400/50" },
+            { href: "/professor", label: "Modo Professor", desc: "Ensino em 3 passos guiados", icon: Star, color: "text-yellow-400 border-yellow-400/20 hover:border-yellow-400/50" },
+            { href: "/caos/fusao", label: "Fundir Habilidades", desc: "Combinar poderes existentes", icon: Zap, color: "text-pink-400 border-pink-400/20 hover:border-pink-400/50" },
+            { href: "/seguranca", label: "Dashboard de Segurança", desc: "Formigas, Lobos e Auditoria", icon: Shield, color: "text-red-400 border-red-400/20 hover:border-red-400/50" },
+            { href: "/caos/terminal", label: "Terminal IA", desc: "Sessões com histórico", icon: Activity, color: "text-purple-400 border-purple-400/20 hover:border-purple-400/50" },
+          ].map((action, i) => (
+            <motion.div
+              key={action.href}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.7 + i * 0.05 }}
+            >
+              <Link href={action.href}>
+                <div className={cn("rounded-sm border bg-card/40 p-4 flex items-center gap-3 cursor-pointer transition-all duration-200 hover:bg-card/80 group", action.color)}>
+                  <action.icon className="h-7 w-7 flex-shrink-0 group-hover:drop-shadow-[0_0_10px_currentColor] transition-all" />
+                  <div>
+                    <p className="font-medium text-sm">{action.label}</p>
+                    <p className="text-xs text-muted-foreground">{action.desc}</p>
+                  </div>
+                </div>
+              </Link>
+            </motion.div>
+          ))}
+        </div>
       </motion.div>
     </div>
   );

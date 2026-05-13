@@ -68,7 +68,7 @@ export default function Arsenal() {
   );
 
   return (
-    <div className="min-h-full px-4 py-6 md:px-8 md:py-8 max-w-6xl mx-auto space-y-6">
+    <div className="max-w-6xl mx-auto space-y-6">
       <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} className="flex items-start justify-between gap-4">
         <div>
           <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-blue-400/60 mb-1">// Studio</p>

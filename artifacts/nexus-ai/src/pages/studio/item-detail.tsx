@@ -50,7 +50,7 @@ export default function ItemDetail() {
 
   if (isLoading) {
     return (
-      <div className="px-4 py-6 md:px-8 md:py-8 max-w-3xl mx-auto space-y-4">
+      <div className="max-w-3xl mx-auto space-y-4">
         <Skeleton className="h-8 w-32 bg-card" />
         <Skeleton className="h-64 w-full bg-card rounded-xl" />
       </div>
@@ -59,7 +59,7 @@ export default function ItemDetail() {
 
   if (!item) {
     return (
-      <div className="px-4 py-6 md:px-8 text-center mt-16">
+      <div className="max-w-3xl mx-auto text-center mt-16">
         <h2 className="text-xl font-bold font-mono uppercase">Artefato Não Encontrado</h2>
         <p className="text-muted-foreground mt-2 text-sm">Este artefato não existe ou foi destruído.</p>
         <Link href="/studio/arsenal">
@@ -70,7 +70,7 @@ export default function ItemDetail() {
   }
 
   return (
-    <div className="min-h-full px-4 py-6 md:px-8 md:py-8 max-w-3xl mx-auto space-y-5">
+    <div className="max-w-3xl mx-auto space-y-5">
       <Link href="/studio/arsenal" className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground font-mono uppercase tracking-wider transition-colors">
         <ArrowLeft className="w-4 h-4 mr-2" /> Arsenal
       </Link>
