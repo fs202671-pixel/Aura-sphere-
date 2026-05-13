@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Shield, AlertTriangle, CheckCircle, XCircle, Activity,
-  Eye, Lock, Unlock, RefreshCw, Bug, Zap, Clock,
-  ChevronRight, Info, AlertOctagon, TrendingUp, Users
+  Eye, Lock, Unlock, RefreshCw, Bug, Clock,
+  Info, AlertOctagon, Users
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -16,20 +16,50 @@ interface LobosStatus {
 }
 
 interface SecurityIssue {
-  id: string;
+  id: number;
   type: "suspicious" | "blocked" | "warning" | "info";
   title: string;
   description: string;
-  timestamp: number;
+  severity: "low" | "medium" | "high";
+  ip?: string | null;
+  pattern?: string | null;
+  createdAt: string;
   resolved: boolean;
 }
 
 interface AuditEntry {
-  id: string;
+  id: number;
   action: string;
   ip: string;
-  timestamp: number;
+  route?: string | null;
+  method?: string | null;
+  createdAt: string;
   severity: "low" | "medium" | "high";
+  pattern?: string | null;
+}
+
+interface FormigasPattern {
+  id: string;
+  name: string;
+  description: string;
+  severity: "low" | "medium" | "high";
+  count: number;
+  status: "ativo" | "normal";
+}
+
+interface FormigasStatus {
+  active: boolean;
+  patternsMonitored: number;
+  alertsLast24h: number;
+  autoBlocks: number;
+  patterns: FormigasPattern[];
+}
+
+interface AbelhasStatus {
+  score: number;
+  reactionsToday: number;
+  quarantinedCount: number;
+  activeQuarantine: { ip: string; reason: string; retryInSec: number }[];
 }
 
 const SEVERITY_COLOR = {
@@ -52,103 +82,69 @@ const ISSUE_TYPE_COLOR = {
   info: "text-blue-400 border-blue-400/20 bg-blue-400/5",
 };
 
-function generateMockAuditLog(): AuditEntry[] {
-  const actions = [
-    { action: "Rate limit excedido — Chat", severity: "high" as const },
-    { action: "Requisição bloqueada por Lobos", severity: "high" as const },
-    { action: "Padrão suspeito detectado (Formiga)", severity: "medium" as const },
-    { action: "Tentativa de acesso não autorizado", severity: "high" as const },
-    { action: "Requisição normal processada", severity: "low" as const },
-    { action: "Fusão de habilidade executada", severity: "low" as const },
-    { action: "Estudo de tópico iniciado", severity: "low" as const },
-    { action: "Chat com IA — consulta normal", severity: "low" as const },
-    { action: "Padrão de flood detectado (Formiga)", severity: "medium" as const },
-    { action: "IP adicionado à lista de observação", severity: "medium" as const },
-  ];
-
-  return actions.map((a, i) => ({
-    id: `audit_${i}`,
-    action: a.action,
-    ip: `192.168.${Math.floor(Math.random() * 255)}.***`,
-    timestamp: Date.now() - i * 1000 * 60 * (i + 1),
-    severity: a.severity,
-  }));
-}
-
-function generateMockIssues(): SecurityIssue[] {
-  return [
-    {
-      id: "issue_1",
-      type: "suspicious",
-      title: "Padrão de requisições anômalas detectado",
-      description: "As Formigas identificaram um padrão de 47 requisições em 30 segundos do mesmo IP. Possível bot ou scraper.",
-      timestamp: Date.now() - 5 * 60 * 1000,
-      resolved: false,
-    },
-    {
-      id: "issue_2",
-      type: "blocked",
-      title: "IP bloqueado por violação repetida",
-      description: "O sistema Lobos bloqueou automaticamente o IP 203.0.1.*** após 3 violações de limite de taxa consecutivas.",
-      timestamp: Date.now() - 12 * 60 * 1000,
-      resolved: false,
-    },
-    {
-      id: "issue_3",
-      type: "warning",
-      title: "Tentativa de injeção de prompt detectada",
-      description: "Formiga de padrão identificou uma mensagem tentando sobrescrever as instruções do sistema da IA.",
-      timestamp: Date.now() - 28 * 60 * 1000,
-      resolved: true,
-    },
-    {
-      id: "issue_4",
-      type: "info",
-      title: "Taxa de uso de API acima da média",
-      description: "O uso da API nas últimas 2 horas está 2.3x acima da média histórica. Monitoramento ativo.",
-      timestamp: Date.now() - 45 * 60 * 1000,
-      resolved: true,
-    },
-  ];
-}
-
 export default function Security() {
   const [lobosStatus, setLobosStatus] = useState<LobosStatus | null>(null);
-  const [issues, setIssues] = useState<SecurityIssue[]>(generateMockIssues());
-  const [auditLog] = useState<AuditEntry[]>(generateMockAuditLog());
+  const [issues, setIssues] = useState<SecurityIssue[]>([]);
+  const [auditLog, setAuditLog] = useState<AuditEntry[]>([]);
+  const [formigasStatus, setFormigasStatus] = useState<FormigasStatus | null>(null);
+  const [abelhasStatus, setAbelhasStatus] = useState<AbelhasStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<"overview" | "formigas" | "audit" | "lobos">("overview");
   const [refreshing, setRefreshing] = useState(false);
-  const [score] = useState(87);
 
-  const fetchStatus = async () => {
-    try {
-      const res = await fetch(`${BASE}/api/security/lobos/status`);
-      if (res.ok) {
-        const data = await res.json();
-        setLobosStatus(data);
-      }
-    } catch {
-      setLobosStatus({ blockedIps: [], trackedIps: 0, trackedUsers: 0 });
-    } finally {
-      setLoading(false);
-    }
-  };
+  const score = abelhasStatus?.score ?? 100;
+
+  const fetchAll = useCallback(async () => {
+    await Promise.allSettled([
+      fetch(`${BASE}/api/security/lobos/status`)
+        .then(r => r.ok ? r.json() : null)
+        .then(d => d && setLobosStatus(d))
+        .catch(() => {}),
+
+      fetch(`${BASE}/v1/security/issues`)
+        .then(r => r.ok ? r.json() : null)
+        .then(d => d?.issues && setIssues(d.issues))
+        .catch(() => {}),
+
+      fetch(`${BASE}/api/security/audit-log?limit=50`)
+        .then(r => r.ok ? r.json() : null)
+        .then(d => d?.logs && setAuditLog(d.logs))
+        .catch(() => {}),
+
+      fetch(`${BASE}/api/security/formigas/status`)
+        .then(r => r.ok ? r.json() : null)
+        .then(d => d && setFormigasStatus(d))
+        .catch(() => {}),
+
+      fetch(`${BASE}/api/security/abelhas/status`)
+        .then(r => r.ok ? r.json() : null)
+        .then(d => d && setAbelhasStatus(d))
+        .catch(() => {}),
+    ]);
+    setLoading(false);
+  }, []);
 
   useEffect(() => {
-    fetchStatus();
-    const interval = setInterval(fetchStatus, 30000);
+    fetchAll();
+    const interval = setInterval(fetchAll, 30_000);
     return () => clearInterval(interval);
-  }, []);
+  }, [fetchAll]);
 
   const refresh = async () => {
     setRefreshing(true);
-    await fetchStatus();
+    await fetchAll();
     setTimeout(() => setRefreshing(false), 800);
   };
 
-  const resolveIssue = (id: string) => {
+  const resolveIssue = async (id: number) => {
     setIssues(prev => prev.map(i => i.id === id ? { ...i, resolved: true } : i));
+    try {
+      await fetch(`${BASE}/v1/security/issues/${id}/status`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ resolved: true }),
+      });
+    } catch {}
   };
 
   const openIssues = issues.filter(i => !i.resolved);
@@ -169,7 +165,7 @@ export default function Security() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-black uppercase tracking-widest">Segurança</h1>
-            <p className="text-sm text-muted-foreground mt-1">Monitoramento em tempo real — Lobos · Formigas · Audit</p>
+            <p className="text-sm text-muted-foreground mt-1">Monitoramento em tempo real — Lobos · Formigas · Abelhas</p>
           </div>
           <button
             onClick={refresh}
@@ -216,12 +212,15 @@ export default function Security() {
           </div>
           <div className="flex-1">
             <h2 className="text-lg font-bold text-foreground">Score de Segurança</h2>
-            <p className="text-sm text-muted-foreground mt-0.5">Sistema em boas condições — monitoramento ativo</p>
+            <p className="text-sm text-muted-foreground mt-0.5">
+              {score >= 90 ? "Sistema em excelentes condições" : score >= 70 ? "Sistema em boas condições" : "Atenção requerida"} — monitoramento ativo
+            </p>
             <div className="flex flex-wrap gap-2 mt-3">
               {[
                 { label: `${openIssues.length} abertos`, color: openIssues.length > 0 ? "text-yellow-400 bg-yellow-400/10 border-yellow-400/20" : "text-green-400 bg-green-400/10 border-green-400/20" },
                 { label: `${lobosStatus?.trackedIps ?? 0} IPs rastreados`, color: "text-blue-400 bg-blue-400/10 border-blue-400/20" },
                 { label: `${lobosStatus?.blockedIps?.length ?? 0} bloqueados`, color: "text-red-400 bg-red-400/10 border-red-400/20" },
+                { label: `${abelhasStatus?.reactionsToday ?? 0} reações hoje`, color: "text-purple-400 bg-purple-400/10 border-purple-400/20" },
               ].map(b => (
                 <span key={b.label} className={cn("px-2 py-1 rounded-full text-xs border font-medium", b.color)}>
                   {b.label}
@@ -255,7 +254,6 @@ export default function Security() {
       <AnimatePresence mode="wait">
         {activeTab === "overview" && (
           <motion.div key="overview" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-4">
-            {/* Stats grid */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {[
                 { label: "Problemas Abertos", value: openIssues.length, icon: AlertTriangle, color: "text-yellow-400" },
@@ -277,12 +275,13 @@ export default function Security() {
               ))}
             </div>
 
-            {/* Active issues */}
             <div>
               <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3 flex items-center gap-2">
                 <AlertTriangle className="w-3.5 h-3.5 text-yellow-400" /> Problemas Ativos ({openIssues.length})
               </h3>
-              {openIssues.length === 0 ? (
+              {loading ? (
+                <div className="text-center py-8 text-muted-foreground text-sm">Carregando...</div>
+              ) : openIssues.length === 0 ? (
                 <div className="text-center py-8 rounded-xl border border-green-500/20 bg-green-500/5">
                   <CheckCircle className="w-8 h-8 text-green-400 mx-auto mb-2" />
                   <p className="text-sm text-green-400 font-medium">Nenhum problema ativo</p>
@@ -291,7 +290,7 @@ export default function Security() {
               ) : (
                 <div className="space-y-2">
                   {openIssues.map(issue => {
-                    const IssueIcon = ISSUE_TYPE_ICON[issue.type];
+                    const IssueIcon = ISSUE_TYPE_ICON[issue.type] ?? Info;
                     return (
                       <motion.div
                         key={issue.id}
@@ -304,7 +303,7 @@ export default function Security() {
                           <p className="text-xs text-muted-foreground mt-1 leading-relaxed">{issue.description}</p>
                           <p className="text-[10px] text-muted-foreground/60 mt-1 font-mono">
                             <Clock className="inline w-3 h-3 mr-1" />
-                            {new Date(issue.timestamp).toLocaleTimeString("pt-BR")}
+                            {new Date(issue.createdAt).toLocaleTimeString("pt-BR")}
                           </p>
                         </div>
                         <button
@@ -341,9 +340,9 @@ export default function Security() {
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 {[
-                  { label: "Padrões Monitorados", value: "12", icon: Eye, color: "text-blue-400" },
-                  { label: "Alertas nas últimas 24h", value: "3", icon: AlertTriangle, color: "text-yellow-400" },
-                  { label: "Bloqueios automáticos", value: "1", icon: Lock, color: "text-red-400" },
+                  { label: "Padrões Monitorados", value: formigasStatus?.patternsMonitored ?? 0, icon: Eye, color: "text-blue-400" },
+                  { label: "Alertas nas últimas 24h", value: formigasStatus?.alertsLast24h ?? 0, icon: AlertTriangle, color: "text-yellow-400" },
+                  { label: "Bloqueios automáticos", value: formigasStatus?.autoBlocks ?? 0, icon: Lock, color: "text-red-400" },
                 ].map(stat => (
                   <div key={stat.label} className="p-3 rounded-lg bg-black/20 border border-border/20">
                     <stat.icon className={cn("w-4 h-4 mb-2", stat.color)} />
@@ -355,30 +354,23 @@ export default function Security() {
             </div>
 
             <div>
-              <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">Padrões Detectados</h3>
+              <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">Padrões Monitorados</h3>
               <div className="space-y-2">
-                {[
-                  { pattern: "Flood de Requisições", desc: "Mais de 30 req/min do mesmo IP", status: "ativo", count: 2 },
-                  { pattern: "Injeção de Prompt", desc: "Tentativas de sobrescrever sistema da IA", status: "ativo", count: 1 },
-                  { pattern: "Scraping Automatizado", desc: "Padrão de user-agent suspeito", status: "observando", count: 0 },
-                  { pattern: "Acesso a Endpoints Sensíveis", desc: "Tentativas repetidas em rotas protegidas", status: "normal", count: 0 },
-                  { pattern: "Anomalia de Horário", desc: "Uso fora do padrão de horário do usuário", status: "normal", count: 0 },
-                ].map((p, i) => (
+                {(formigasStatus?.patterns ?? []).map((p, i) => (
                   <motion.div
-                    key={p.pattern}
+                    key={p.id}
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.08 }}
+                    transition={{ delay: i * 0.07 }}
                     className="flex items-center gap-3 p-3.5 rounded-xl border border-border/30 bg-card/40"
                   >
                     <div className={cn(
                       "w-2 h-2 rounded-full flex-shrink-0",
-                      p.status === "ativo" ? "bg-red-400 animate-pulse" :
-                      p.status === "observando" ? "bg-yellow-400" : "bg-green-400"
+                      p.status === "ativo" ? "bg-red-400 animate-pulse" : "bg-green-400"
                     )} />
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium">{p.pattern}</p>
-                      <p className="text-xs text-muted-foreground">{p.desc}</p>
+                      <p className="text-sm font-medium">{p.name}</p>
+                      <p className="text-xs text-muted-foreground">{p.description}</p>
                     </div>
                     <div className="flex items-center gap-2 flex-shrink-0">
                       {p.count > 0 && (
@@ -388,48 +380,76 @@ export default function Security() {
                       )}
                       <span className={cn(
                         "text-xs px-2 py-0.5 rounded-full border font-medium",
-                        p.status === "ativo" ? "text-red-400 border-red-400/30 bg-red-400/10" :
-                        p.status === "observando" ? "text-yellow-400 border-yellow-400/30 bg-yellow-400/10" :
-                        "text-green-400 border-green-400/30 bg-green-400/10"
+                        p.status === "ativo"
+                          ? "text-red-400 border-red-400/30 bg-red-400/10"
+                          : "text-green-400 border-green-400/30 bg-green-400/10"
                       )}>
                         {p.status}
                       </span>
                     </div>
                   </motion.div>
                 ))}
+                {!formigasStatus && (
+                  <div className="text-center py-6 text-muted-foreground text-sm">Carregando padrões...</div>
+                )}
               </div>
             </div>
+
+            {/* Abelhas quarantine */}
+            {abelhasStatus && abelhasStatus.activeQuarantine.length > 0 && (
+              <div>
+                <h3 className="text-xs font-semibold uppercase tracking-widest text-purple-400 mb-3 flex items-center gap-2">
+                  <Shield className="w-3.5 h-3.5" /> Quarentena Abelhas ({abelhasStatus.quarantinedCount})
+                </h3>
+                <div className="space-y-2">
+                  {abelhasStatus.activeQuarantine.map((q, i) => (
+                    <div key={i} className="flex items-center gap-3 p-3 rounded-lg border border-purple-500/20 bg-purple-500/5">
+                      <Shield className="w-4 h-4 text-purple-400 flex-shrink-0" />
+                      <span className="font-mono text-sm text-foreground flex-1">{q.ip}</span>
+                      <span className="text-xs text-muted-foreground truncate max-w-32">{q.reason}</span>
+                      <span className="text-xs text-purple-400 font-mono">{q.retryInSec}s</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </motion.div>
         )}
 
         {activeTab === "audit" && (
           <motion.div key="audit" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-3">
             <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
-              <Activity className="w-3.5 h-3.5" /> Registro de Auditoria (últimas ações)
+              <Activity className="w-3.5 h-3.5" /> Registro de Auditoria ({auditLog.length} entradas)
             </h3>
-            <div className="space-y-1.5">
-              {auditLog.map((entry, i) => (
-                <motion.div
-                  key={entry.id}
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.04 }}
-                  className="flex items-center gap-3 p-3 rounded-lg border border-border/20 bg-card/30 hover:bg-card/50 transition-colors"
-                >
-                  <span className={cn(
-                    "flex-shrink-0 px-2 py-0.5 rounded text-[10px] font-bold border uppercase",
-                    SEVERITY_COLOR[entry.severity]
-                  )}>
-                    {entry.severity}
-                  </span>
-                  <span className="flex-1 text-sm text-foreground/80 font-mono text-xs truncate">{entry.action}</span>
-                  <span className="text-[10px] text-muted-foreground/50 font-mono flex-shrink-0">{entry.ip}</span>
-                  <span className="text-[10px] text-muted-foreground/40 font-mono flex-shrink-0 hidden sm:block">
-                    {new Date(entry.timestamp).toLocaleTimeString("pt-BR")}
-                  </span>
-                </motion.div>
-              ))}
-            </div>
+            {auditLog.length === 0 ? (
+              <div className="text-center py-10 text-muted-foreground text-sm">
+                {loading ? "Carregando..." : "Nenhuma entrada no log ainda. O sistema registrará eventos conforme requisições chegam."}
+              </div>
+            ) : (
+              <div className="space-y-1.5">
+                {auditLog.map((entry, i) => (
+                  <motion.div
+                    key={entry.id}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: Math.min(i * 0.03, 0.5) }}
+                    className="flex items-center gap-3 p-3 rounded-lg border border-border/20 bg-card/30 hover:bg-card/50 transition-colors"
+                  >
+                    <span className={cn(
+                      "flex-shrink-0 px-2 py-0.5 rounded text-[10px] font-bold border uppercase",
+                      SEVERITY_COLOR[entry.severity as keyof typeof SEVERITY_COLOR] ?? SEVERITY_COLOR.low
+                    )}>
+                      {entry.severity}
+                    </span>
+                    <span className="flex-1 text-sm text-foreground/80 font-mono text-xs truncate">{entry.action}</span>
+                    <span className="text-[10px] text-muted-foreground/50 font-mono flex-shrink-0">{entry.ip}</span>
+                    <span className="text-[10px] text-muted-foreground/40 font-mono flex-shrink-0 hidden sm:block">
+                      {new Date(entry.createdAt).toLocaleTimeString("pt-BR")}
+                    </span>
+                  </motion.div>
+                ))}
+              </div>
+            )}
           </motion.div>
         )}
 
