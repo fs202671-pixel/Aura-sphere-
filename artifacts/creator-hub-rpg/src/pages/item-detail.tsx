@@ -1,9 +1,9 @@
 import { useParams } from "wouter";
-import { useGetItem, useDeleteItem } from "@workspace/api-client-react";
+import { useGetItem, useDeleteItem, useCloneItem } from "@workspace/api-client-react";
 import { RarityBadge, TypeBadge } from "@/components/ui-rpg";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
-import { Trash2, Copy, ArrowLeft } from "lucide-react";
+import { Trash2, Copy, ArrowLeft, Loader2 } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { useToast } from "@/hooks/use-toast";
 
@@ -15,6 +15,7 @@ export default function ItemDetail() {
 
   const { data: item, isLoading } = useGetItem(id, { query: { enabled: !!id } });
   const deleteItem = useDeleteItem();
+  const cloneItem = useCloneItem();
 
   const handleDelete = () => {
     deleteItem.mutate({ id }, {
@@ -24,6 +25,18 @@ export default function ItemDetail() {
       },
       onError: (err: any) => {
         toast({ title: "Falha ao destruir", description: err.message, variant: "destructive" });
+      }
+    });
+  };
+
+  const handleClone = () => {
+    cloneItem.mutate({ id }, {
+      onSuccess: (cloned) => {
+        toast({ title: "Artefato Clonado", description: `"${cloned.name}" adicionado ao arsenal.` });
+        setLocation(`/itens/${cloned.id}`);
+      },
+      onError: (err: any) => {
+        toast({ title: "Falha ao clonar", description: err.message, variant: "destructive" });
       }
     });
   };
@@ -49,6 +62,8 @@ export default function ItemDetail() {
     );
   }
 
+  const isFused = Array.isArray((item.metadata as any)?.fusedFrom);
+
   return (
     <div className="p-4 md:p-8 max-w-4xl mx-auto space-y-6">
       <Link href="/arsenal" className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground font-mono uppercase tracking-wider transition-colors">
@@ -63,9 +78,14 @@ export default function ItemDetail() {
         <div className="p-5 md:p-8 relative z-10">
           <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4 mb-6">
             <div className="space-y-2">
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 flex-wrap">
                 <TypeBadge type={item.type} />
                 <RarityBadge rarity={item.rarity} />
+                {isFused && (
+                  <span className="px-2 py-0.5 text-[10px] uppercase tracking-wider font-bold rounded-sm border bg-amber-500/20 text-amber-400 border-amber-500/30">
+                    ⚡ Fundido
+                  </span>
+                )}
               </div>
               <h1 className="text-2xl md:text-4xl font-bold tracking-tight text-foreground">{item.name}</h1>
               <p className="text-xs text-muted-foreground font-mono">
@@ -78,6 +98,17 @@ export default function ItemDetail() {
             <h3 className="font-mono uppercase tracking-widest text-xs text-muted-foreground mb-3">Lore do Artefato</h3>
             <p className="text-base leading-relaxed">{item.description || "Nenhum lore registrado para este artefato."}</p>
           </div>
+
+          {isFused && (
+            <div className="mt-6 md:mt-8">
+              <h3 className="font-mono uppercase tracking-widest text-xs text-muted-foreground mb-3">Origem da Fusão</h3>
+              <p className="text-sm text-muted-foreground font-mono">
+                Forjado a partir de:{" "}
+                {((item.metadata as any)?.originNames as string[] | undefined)?.join(" × ")
+                  ?? `IDs ${((item.metadata as any)?.fusedFrom as number[])?.join(" × ")}`}
+              </p>
+            </div>
+          )}
 
           {item.tags && item.tags.length > 0 && (
             <div className="mt-6 md:mt-8">
@@ -92,12 +123,26 @@ export default function ItemDetail() {
             </div>
           )}
 
-          <div className="mt-8 md:mt-12 pt-5 border-t border-border flex gap-3">
-            <Button variant="outline" className="font-mono uppercase tracking-wider text-xs">
-              <Copy className="w-4 h-4 mr-2" /> Clonar
+          <div className="mt-8 md:mt-12 pt-5 border-t border-border flex gap-3 flex-wrap">
+            <Button
+              variant="outline"
+              className="font-mono uppercase tracking-wider text-xs"
+              onClick={handleClone}
+              disabled={cloneItem.isPending}
+            >
+              {cloneItem.isPending
+                ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Clonando...</>
+                : <><Copy className="w-4 h-4 mr-2" /> Clonar</>
+              }
             </Button>
-            <Button variant="destructive" className="font-mono uppercase tracking-wider text-xs" onClick={handleDelete} disabled={deleteItem.isPending}>
-              <Trash2 className="w-4 h-4 mr-2" /> {deleteItem.isPending ? "Destruindo..." : "Destruir"}
+            <Button
+              variant="destructive"
+              className="font-mono uppercase tracking-wider text-xs"
+              onClick={handleDelete}
+              disabled={deleteItem.isPending}
+            >
+              <Trash2 className="w-4 h-4 mr-2" />
+              {deleteItem.isPending ? "Destruindo..." : "Destruir"}
             </Button>
           </div>
         </div>

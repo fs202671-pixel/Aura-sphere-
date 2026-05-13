@@ -1,5 +1,6 @@
 import { Router, type IRouter, type Request, type Response } from "express";
 import { getAuth } from "@clerk/express";
+import { lobosChat } from "../security/lobos";
 
 let _openai: any = null;
 async function getOpenAI() {
@@ -16,47 +17,10 @@ async function getOpenAI() {
 
 const router: IRouter = Router();
 
-// Simple in-memory rate limiter for unauthenticated (local) requests.
-// Limits to 30 requests per minute per IP to prevent API quota abuse.
-const localRateMap = new Map<string, { count: number; resetAt: number }>();
-const LOCAL_RATE_LIMIT = 30;
-const RATE_WINDOW_MS = 60_000;
-
-function checkLocalRateLimit(ip: string): boolean {
-  const now = Date.now();
-  const entry = localRateMap.get(ip);
-  if (!entry || now > entry.resetAt) {
-    localRateMap.set(ip, { count: 1, resetAt: now + RATE_WINDOW_MS });
-    return true;
-  }
-  if (entry.count >= LOCAL_RATE_LIMIT) return false;
-  entry.count += 1;
-  return true;
-}
-
-// Periodically purge stale entries to avoid memory growth.
-setInterval(() => {
-  const now = Date.now();
-  for (const [key, entry] of localRateMap) {
-    if (now > entry.resetAt) localRateMap.delete(key);
-  }
-}, RATE_WINDOW_MS * 2);
+// 🐺 LOBOS — rate limiter do chat (30 req/min IP, 100 auth)
+router.use("/chat", lobosChat);
 
 router.post("/chat", async (req: Request, res: Response) => {
-  const auth = getAuth(req);
-  const isClerkAuth = Boolean(auth?.userId);
-
-  // Local/demo requests are rate-limited by IP.
-  if (!isClerkAuth) {
-    const ip = (req.headers["x-forwarded-for"] as string | undefined)?.split(",")[0]?.trim()
-      ?? req.socket.remoteAddress
-      ?? "unknown";
-    if (!checkLocalRateLimit(ip)) {
-      res.status(429).json({ error: "Taxa limite excedida. Tente novamente em um minuto." });
-      return;
-    }
-  }
-
   const body = req.body as {
     messages?: { role: string; content: string }[];
     aiName?: string;
