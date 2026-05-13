@@ -11,14 +11,21 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useState } from "react";
-import { Plus, Bot } from "lucide-react";
+import { Plus, Cpu } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
+const raridadeLabels: Record<string, string> = {
+  Common: "Comum",
+  Rare: "Raro",
+  Epic: "Épico",
+  Legendary: "Lendário",
+};
+
 const formSchema = z.object({
-  name: z.string().min(2, "Name is required"),
+  name: z.string().min(2, "Nome obrigatório"),
   rarity: z.enum(["Common", "Rare", "Epic", "Legendary"]).default("Common"),
-  behavior: z.string().min(2, "Behavior required"),
-  promptBase: z.string().min(10, "Base prompt required"),
+  behavior: z.string().min(2, "Comportamento obrigatório"),
+  promptBase: z.string().min(10, "Prompt base obrigatório"),
   description: z.string().optional(),
 });
 
@@ -33,7 +40,7 @@ export default function Agents() {
     defaultValues: {
       name: "",
       rarity: "Common",
-      behavior: "helpful",
+      behavior: "assistente",
       promptBase: "",
       description: "",
     },
@@ -50,69 +57,69 @@ export default function Agents() {
       }
     }, {
       onSuccess: () => {
-        toast({ title: "Agent Summoned", description: "Your new agent has dropped!" });
+        toast({ title: "Entidade Invocada", description: "Nova entidade CAOS adicionada ao sistema." });
         setOpen(false);
         form.reset();
         refetch();
       },
       onError: (err: any) => {
-        toast({ title: "Failed to summon", description: err.message, variant: "destructive" });
+        toast({ title: "Falha na invocação", description: err.message, variant: "destructive" });
       }
     });
   };
 
   return (
-    <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-8">
-      <div className="flex justify-between items-end">
-        <div className="flex flex-col gap-2">
-          <h1 className="text-3xl font-bold font-mono uppercase tracking-widest text-foreground flex items-center gap-3">
-            <Bot className="w-8 h-8 text-primary" /> IA Builder
+    <div className="p-4 md:p-8 max-w-7xl mx-auto space-y-6 md:space-y-8">
+      <div className="flex justify-between items-start md:items-end gap-3">
+        <div className="flex flex-col gap-1">
+          <h1 className="text-2xl md:text-3xl font-bold font-mono uppercase tracking-widest text-foreground flex items-center gap-2">
+            <Cpu className="w-6 h-6 md:w-8 md:h-8 text-primary" /> Entidades
           </h1>
-          <p className="text-muted-foreground text-sm">Summon and configure AI companions.</p>
+          <p className="text-muted-foreground text-sm">Invoque e configure IAs companheiras do CAOS.</p>
         </div>
 
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
-            <Button className="font-mono uppercase tracking-wider">
-              <Plus className="w-4 h-4 mr-2" /> Summon Agent
+            <Button className="font-mono uppercase tracking-wider text-xs md:text-sm shrink-0">
+              <Plus className="w-4 h-4 mr-1.5" /> Invocar
             </Button>
           </DialogTrigger>
-          <DialogContent className="bg-card border-border sm:max-w-[500px]">
+          <DialogContent className="bg-card border-border w-[95vw] max-w-[500px] rounded-xl">
             <DialogHeader>
-              <DialogTitle className="font-mono uppercase tracking-wider text-xl">Summon New Agent</DialogTitle>
+              <DialogTitle className="font-mono uppercase tracking-wider text-lg">Invocar Nova Entidade</DialogTitle>
             </DialogHeader>
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 pt-4">
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 pt-2">
                 <FormField
                   control={form.control}
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="font-mono text-xs uppercase text-muted-foreground">Agent Name</FormLabel>
+                      <FormLabel className="font-mono text-xs uppercase text-muted-foreground">Nome da Entidade</FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g. Code Wizard" className="bg-background" {...field} />
+                        <Input placeholder="ex: Sentinela do Código" className="bg-background" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-                
-                <div className="grid grid-cols-2 gap-4">
+
+                <div className="grid grid-cols-2 gap-3">
                   <FormField
                     control={form.control}
                     name="rarity"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="font-mono text-xs uppercase text-muted-foreground">Rarity</FormLabel>
+                        <FormLabel className="font-mono text-xs uppercase text-muted-foreground">Raridade</FormLabel>
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                           <FormControl>
                             <SelectTrigger className="bg-background">
-                              <SelectValue placeholder="Select rarity" />
+                              <SelectValue placeholder="Selecionar" />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
                             {Object.values(AgentRarity).map(r => (
-                              <SelectItem key={r} value={r}>{r}</SelectItem>
+                              <SelectItem key={r} value={r}>{raridadeLabels[r] ?? r}</SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
@@ -126,9 +133,9 @@ export default function Agents() {
                     name="behavior"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="font-mono text-xs uppercase text-muted-foreground">Behavior</FormLabel>
+                        <FormLabel className="font-mono text-xs uppercase text-muted-foreground">Comportamento</FormLabel>
                         <FormControl>
-                          <Input placeholder="e.g. strict, creative" className="bg-background" {...field} />
+                          <Input placeholder="ex: analítico, criativo" className="bg-background" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -141,20 +148,18 @@ export default function Agents() {
                   name="promptBase"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="font-mono text-xs uppercase text-muted-foreground">System Prompt</FormLabel>
+                      <FormLabel className="font-mono text-xs uppercase text-muted-foreground">Prompt Base</FormLabel>
                       <FormControl>
-                        <Textarea placeholder="You are a helpful assistant..." className="bg-background min-h-[100px]" {...field} />
+                        <Textarea placeholder="Você é uma entidade CAOS que..." className="bg-background min-h-[90px]" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                <div className="pt-4 flex justify-end">
-                  <Button type="submit" disabled={createAgent.isPending} className="w-full font-mono uppercase tracking-wider">
-                    {createAgent.isPending ? "Summoning..." : "Summon Agent"}
-                  </Button>
-                </div>
+                <Button type="submit" disabled={createAgent.isPending} className="w-full font-mono uppercase tracking-wider">
+                  {createAgent.isPending ? "Invocando..." : "Confirmar Invocação"}
+                </Button>
               </form>
             </Form>
           </DialogContent>
@@ -162,31 +167,31 @@ export default function Agents() {
       </div>
 
       {isLoading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {Array.from({ length: 3 }).map((_, i) => (
-            <Skeleton key={i} className="h-48 rounded-lg bg-card" />
+            <Skeleton key={i} className="h-44 rounded-lg bg-card" />
           ))}
         </div>
       ) : agents && agents.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {agents.map(agent => (
-            <div key={agent.id} className={`p-5 border rounded-md bg-card rarity-${agent.rarity} relative overflow-hidden flex flex-col h-[200px]`}>
-               <div className="flex justify-between items-start mb-2">
-                 <Bot className="w-6 h-6 text-muted-foreground" />
-                 <RarityBadge rarity={agent.rarity} />
-               </div>
-               <h3 className="font-bold text-lg">{agent.name}</h3>
-               <p className="text-xs text-muted-foreground font-mono mt-1 mb-2">Behavior: {agent.behavior}</p>
-               <div className="flex-1" />
-               <div className="text-[10px] bg-background/50 p-2 rounded border border-border/50 text-muted-foreground font-mono truncate">
-                 {agent.promptBase}
-               </div>
+            <div key={agent.id} className={`p-4 border rounded-md bg-card rarity-${agent.rarity} relative overflow-hidden flex flex-col min-h-[160px]`}>
+              <div className="flex justify-between items-start mb-2">
+                <Cpu className="w-5 h-5 text-muted-foreground" />
+                <RarityBadge rarity={agent.rarity} />
+              </div>
+              <h3 className="font-bold text-base">{agent.name}</h3>
+              <p className="text-xs text-muted-foreground font-mono mt-1 mb-2">Modo: {agent.behavior}</p>
+              <div className="flex-1" />
+              <div className="text-[10px] bg-background/50 p-2 rounded border border-border/50 text-muted-foreground font-mono truncate">
+                {agent.promptBase}
+              </div>
             </div>
           ))}
         </div>
       ) : (
-        <div className="h-64 border border-dashed border-border rounded-lg flex flex-col items-center justify-center bg-card/20 gap-4">
-          <p className="text-muted-foreground font-mono uppercase tracking-widest">No agents summoned.</p>
+        <div className="h-56 border border-dashed border-border rounded-lg flex flex-col items-center justify-center bg-card/20 gap-4">
+          <p className="text-muted-foreground font-mono uppercase tracking-widest text-sm">Nenhuma entidade invocada.</p>
         </div>
       )}
     </div>

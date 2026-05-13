@@ -10,14 +10,21 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useState } from "react";
-import { Plus, Sparkles } from "lucide-react";
+import { Plus, Zap } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
+const raridadeLabels: Record<string, string> = {
+  Common: "Comum",
+  Rare: "Raro",
+  Epic: "Épico",
+  Legendary: "Lendário",
+};
+
 const formSchema = z.object({
-  name: z.string().min(2, "Name is required"),
-  category: z.string().min(2, "Category is required"),
+  name: z.string().min(2, "Nome obrigatório"),
+  category: z.string().min(2, "Categoria obrigatória"),
   rarity: z.enum(["Common", "Rare", "Epic", "Legendary"]).default("Common"),
-  description: z.string().min(5, "Description required"),
+  description: z.string().min(5, "Descrição obrigatória"),
 });
 
 export default function Skills() {
@@ -30,7 +37,7 @@ export default function Skills() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      category: "combat",
+      category: "combate",
       rarity: "Common",
       description: "",
     },
@@ -46,69 +53,69 @@ export default function Skills() {
       }
     }, {
       onSuccess: () => {
-        toast({ title: "Skill Learned", description: "New skill added to spellbook!" });
+        toast({ title: "Protocolo Instalado", description: "Novo protocolo carregado no sistema CAOS." });
         setOpen(false);
         form.reset();
         refetch();
       },
       onError: (err: any) => {
-        toast({ title: "Failed to learn", description: err.message, variant: "destructive" });
+        toast({ title: "Falha na instalação", description: err.message, variant: "destructive" });
       }
     });
   };
 
   return (
-    <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-8">
-      <div className="flex justify-between items-end">
-        <div className="flex flex-col gap-2">
-          <h1 className="text-3xl font-bold font-mono uppercase tracking-widest text-foreground flex items-center gap-3">
-            <Sparkles className="w-8 h-8 text-primary" /> Skill System
+    <div className="p-4 md:p-8 max-w-7xl mx-auto space-y-6 md:space-y-8">
+      <div className="flex justify-between items-start md:items-end gap-3">
+        <div className="flex flex-col gap-1">
+          <h1 className="text-2xl md:text-3xl font-bold font-mono uppercase tracking-widest text-foreground flex items-center gap-2">
+            <Zap className="w-6 h-6 md:w-8 md:h-8 text-primary" /> Protocolos
           </h1>
-          <p className="text-muted-foreground text-sm">Pluggable modules to empower your projects and agents.</p>
+          <p className="text-muted-foreground text-sm">Módulos instaláveis que potencializam missões e entidades.</p>
         </div>
 
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
-            <Button className="font-mono uppercase tracking-wider">
-              <Plus className="w-4 h-4 mr-2" /> Learn Skill
+            <Button className="font-mono uppercase tracking-wider text-xs md:text-sm shrink-0">
+              <Plus className="w-4 h-4 mr-1.5" /> Instalar
             </Button>
           </DialogTrigger>
-          <DialogContent className="bg-card border-border sm:max-w-[425px]">
+          <DialogContent className="bg-card border-border w-[95vw] max-w-[425px] rounded-xl">
             <DialogHeader>
-              <DialogTitle className="font-mono uppercase tracking-wider text-xl">Learn New Skill</DialogTitle>
+              <DialogTitle className="font-mono uppercase tracking-wider text-lg">Instalar Protocolo</DialogTitle>
             </DialogHeader>
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 pt-4">
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 pt-2">
                 <FormField
                   control={form.control}
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="font-mono text-xs uppercase text-muted-foreground">Skill Name</FormLabel>
+                      <FormLabel className="font-mono text-xs uppercase text-muted-foreground">Nome do Protocolo</FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g. File Reader" className="bg-background" {...field} />
+                        <Input placeholder="ex: Leitor de Arquivos" className="bg-background" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-                
-                <div className="grid grid-cols-2 gap-4">
+
+                <div className="grid grid-cols-2 gap-3">
                   <FormField
                     control={form.control}
                     name="rarity"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="font-mono text-xs uppercase text-muted-foreground">Rarity</FormLabel>
+                        <FormLabel className="font-mono text-xs uppercase text-muted-foreground">Raridade</FormLabel>
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                           <FormControl>
                             <SelectTrigger className="bg-background">
-                              <SelectValue placeholder="Select rarity" />
+                              <SelectValue placeholder="Selecionar" />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
                             {Object.values(SkillRarity).map(r => (
-                              <SelectItem key={r} value={r}>{r}</SelectItem>
+                              <SelectItem key={r} value={r}>{raridadeLabels[r] ?? r}</SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
@@ -122,9 +129,9 @@ export default function Skills() {
                     name="category"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="font-mono text-xs uppercase text-muted-foreground">Category</FormLabel>
+                        <FormLabel className="font-mono text-xs uppercase text-muted-foreground">Categoria</FormLabel>
                         <FormControl>
-                          <Input placeholder="e.g. utility" className="bg-background" {...field} />
+                          <Input placeholder="ex: análise" className="bg-background" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -137,20 +144,18 @@ export default function Skills() {
                   name="description"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="font-mono text-xs uppercase text-muted-foreground">Description</FormLabel>
+                      <FormLabel className="font-mono text-xs uppercase text-muted-foreground">Descrição</FormLabel>
                       <FormControl>
-                        <Input placeholder="What does it do?" className="bg-background" {...field} />
+                        <Input placeholder="O que esse protocolo executa?" className="bg-background" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                <div className="pt-4 flex justify-end">
-                  <Button type="submit" disabled={createSkill.isPending} className="w-full font-mono uppercase tracking-wider">
-                    {createSkill.isPending ? "Learning..." : "Learn Skill"}
-                  </Button>
-                </div>
+                <Button type="submit" disabled={createSkill.isPending} className="w-full font-mono uppercase tracking-wider">
+                  {createSkill.isPending ? "Instalando..." : "Confirmar Instalação"}
+                </Button>
               </form>
             </Form>
           </DialogContent>
@@ -158,33 +163,34 @@ export default function Skills() {
       </div>
 
       {isLoading ? (
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-4">
           {Array.from({ length: 6 }).map((_, i) => (
-            <Skeleton key={i} className="h-32 rounded-lg bg-card" />
+            <Skeleton key={i} className="h-28 rounded-lg bg-card" />
           ))}
         </div>
       ) : skills && skills.length > 0 ? (
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-4">
           {skills.map(skill => (
-            <div key={skill.id} className={`p-4 border rounded-md bg-card rarity-${skill.rarity} relative flex flex-col justify-between hover:-translate-y-1 transition-transform`}>
-               <div className="flex justify-between items-start mb-2">
-                 <div className="p-2 rounded bg-background border border-border">
-                   <Sparkles className="w-4 h-4 text-primary" />
-                 </div>
-               </div>
-               <div>
-                 <h3 className="font-bold text-sm leading-tight">{skill.name}</h3>
-                 <p className="text-[10px] text-muted-foreground font-mono mt-1 uppercase tracking-wider">{skill.category}</p>
-               </div>
-               <div className="mt-2 text-[10px] text-muted-foreground line-clamp-2">
-                 {skill.description}
-               </div>
+            <div key={skill.id} className={`p-3 border rounded-md bg-card rarity-${skill.rarity} relative flex flex-col justify-between hover:-translate-y-1 transition-transform`}>
+              <div className="flex justify-between items-start mb-2">
+                <div className="p-1.5 rounded bg-background border border-border">
+                  <Zap className="w-3.5 h-3.5 text-primary" />
+                </div>
+                <RarityBadge rarity={skill.rarity} />
+              </div>
+              <div>
+                <h3 className="font-bold text-xs leading-tight">{skill.name}</h3>
+                <p className="text-[10px] text-muted-foreground font-mono mt-1 uppercase tracking-wider">{skill.category}</p>
+              </div>
+              <div className="mt-1.5 text-[10px] text-muted-foreground line-clamp-2">
+                {skill.description}
+              </div>
             </div>
           ))}
         </div>
       ) : (
-        <div className="h-64 border border-dashed border-border rounded-lg flex flex-col items-center justify-center bg-card/20 gap-4">
-          <p className="text-muted-foreground font-mono uppercase tracking-widest">No skills in spellbook.</p>
+        <div className="h-56 border border-dashed border-border rounded-lg flex flex-col items-center justify-center bg-card/20 gap-4">
+          <p className="text-muted-foreground font-mono uppercase tracking-widest text-sm">Nenhum protocolo instalado.</p>
         </div>
       )}
     </div>

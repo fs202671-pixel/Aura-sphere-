@@ -1,6 +1,22 @@
 import { cn } from "@/lib/utils";
-import { ItemRarity, ItemType, Item } from "@workspace/api-client-react";
+import { Item } from "@workspace/api-client-react";
 import { Link } from "wouter";
+
+const rarityLabels: Record<string, string> = {
+  Common: "Comum",
+  Rare: "Raro",
+  Epic: "Épico",
+  Legendary: "Lendário",
+};
+
+const typeLabels: Record<string, string> = {
+  design: "Design",
+  theme: "Fragmento",
+  agent: "Entidade",
+  skill: "Protocolo",
+  project: "Missão",
+  component: "Componente",
+};
 
 export function RarityBadge({ rarity, className }: { rarity: string; className?: string }) {
   return (
@@ -10,11 +26,11 @@ export function RarityBadge({ rarity, className }: { rarity: string; className?:
         rarity === "Common" && "bg-gray-500/20 text-gray-400 border-gray-500/30",
         rarity === "Rare" && "bg-blue-500/20 text-blue-400 border-blue-500/30",
         rarity === "Epic" && "bg-purple-500/20 text-purple-400 border-purple-500/30",
-        rarity === "Legendary" && "bg-amber-500/20 text-amber-400 border-amber-500/30 legendary-shimmer text-shadow-sm",
+        rarity === "Legendary" && "bg-amber-500/20 text-amber-400 border-amber-500/30 legendary-shimmer",
         className
       )}
     >
-      {rarity}
+      {rarityLabels[rarity] ?? rarity}
     </span>
   );
 }
@@ -27,7 +43,7 @@ export function TypeBadge({ type, className }: { type: string; className?: strin
         className
       )}
     >
-      {type}
+      {typeLabels[type] ?? type}
     </span>
   );
 }
@@ -36,7 +52,7 @@ export function ItemCard({ item, onClick }: { item: Item; onClick?: () => void }
   const content = (
     <div
       className={cn(
-        "relative p-4 rounded-md bg-card border transition-all duration-300 item-card-hover group cursor-pointer flex flex-col h-48",
+        "relative p-4 rounded-md bg-card border transition-all duration-300 item-card-hover group cursor-pointer flex flex-col h-44",
         `rarity-${item.rarity}`,
         item.rarity === "Common" && "border-gray-500/30",
         item.rarity === "Rare" && "border-blue-500/50 shadow-[0_0_15px_rgba(59,130,246,0.1)] hover:shadow-[0_0_20px_rgba(59,130,246,0.3)]",
@@ -48,34 +64,31 @@ export function ItemCard({ item, onClick }: { item: Item; onClick?: () => void }
       {item.rarity === "Legendary" && (
         <div className="absolute inset-0 rounded-md legendary-shimmer pointer-events-none opacity-50" />
       )}
-      
-      <div className="relative z-10 flex justify-between items-start mb-4">
+      <div className="relative z-10 flex justify-between items-start mb-3">
         <TypeBadge type={item.type} />
         <RarityBadge rarity={item.rarity} />
       </div>
-      
       <div className="relative z-10 flex-1">
-        <h3 className="font-bold text-lg text-foreground group-hover:text-primary transition-colors truncate">
+        <h3 className="font-bold text-base text-foreground group-hover:text-primary transition-colors truncate">
           {item.name}
         </h3>
         {item.description && (
-          <p className="text-xs text-muted-foreground mt-2 line-clamp-3 leading-relaxed">
+          <p className="text-xs text-muted-foreground mt-1.5 line-clamp-2 leading-relaxed">
             {item.description}
           </p>
         )}
       </div>
-      
-      <div className="relative z-10 flex items-center justify-between mt-4 pt-3 border-t border-border/50">
+      <div className="relative z-10 flex items-center justify-between mt-3 pt-2 border-t border-border/50">
         <span className="text-[10px] text-muted-foreground font-mono">
-          ID: {item.id.toString().padStart(4, "0")}
+          #{item.id.toString().padStart(4, "0")}
         </span>
         <span className="text-[10px] text-muted-foreground font-mono">
-          {new Date(item.createdAt).toLocaleDateString()}
+          {new Date(item.createdAt).toLocaleDateString("pt-BR")}
         </span>
       </div>
     </div>
   );
 
   if (onClick) return content;
-  return <Link href={`/items/${item.id}`}>{content}</Link>;
+  return <Link href={`/itens/${item.id}`}>{content}</Link>;
 }

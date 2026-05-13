@@ -20,12 +20,12 @@ function Router() {
     <AppLayout>
       <Switch>
         <Route path="/" component={Dashboard} />
-        <Route path="/library" component={Library} />
-        <Route path="/themes" component={Themes} />
-        <Route path="/agents" component={Agents} />
-        <Route path="/skills" component={Skills} />
-        <Route path="/projects" component={Projects} />
-        <Route path="/items/:id" component={ItemDetail} />
+        <Route path="/arsenal" component={Library} />
+        <Route path="/fragmentos" component={Themes} />
+        <Route path="/entidades" component={Agents} />
+        <Route path="/protocolos" component={Skills} />
+        <Route path="/missoes" component={Projects} />
+        <Route path="/itens/:id" component={ItemDetail} />
         <Route component={NotFound} />
       </Switch>
     </AppLayout>
