@@ -101,7 +101,7 @@ export default function Security() {
         .then(d => d && setLobosStatus(d))
         .catch(() => {}),
 
-      fetch(`${BASE}/v1/security/issues`)
+      fetch(`${BASE}/api/security/issues`)
         .then(r => r.ok ? r.json() : null)
         .then(d => d?.issues && setIssues(d.issues))
         .catch(() => {}),
@@ -139,7 +139,7 @@ export default function Security() {
   const resolveIssue = async (id: number) => {
     setIssues(prev => prev.map(i => i.id === id ? { ...i, resolved: true } : i));
     try {
-      await fetch(`${BASE}/v1/security/issues/${id}/status`, {
+      await fetch(`${BASE}/api/security/issues/${id}/status`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ resolved: true }),

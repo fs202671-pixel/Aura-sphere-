@@ -1,8 +1,8 @@
 openapi: 3.1.0
 info:
-  title: Api
+  title: CAOS API
   version: 0.1.0
-  description: Creator Hub RPG - Modular creative studio with RPG item system
+  description: CAOS — Creative AI Operating System. API unificada do ecossistema CAOS (Shell, Nexus, Studio).
 
 servers:
   - url: /api

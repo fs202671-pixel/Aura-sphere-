@@ -19,5 +19,5 @@
 
 export * from "./caos-shell";
 export * from "./caos-nexus";
-export * from "./creator-hub";
+export * from "./caos-studio";
 export * from "./security";

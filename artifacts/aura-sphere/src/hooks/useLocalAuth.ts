@@ -26,15 +26,15 @@ const LOCAL_MESSAGES_KEY = 'caos_local_messages';
 
 // One-time key migration (runs synchronously at module load, before any React render)
 if (typeof window !== 'undefined') {
-  const oldUser = localStorage.getItem('aura_sphere_local_user');
+  const oldUser = localStorage.getItem('caos_local_user');
   if (oldUser && !localStorage.getItem(LOCAL_USER_KEY)) {
     localStorage.setItem(LOCAL_USER_KEY, oldUser);
-    localStorage.removeItem('aura_sphere_local_user');
+    localStorage.removeItem('caos_local_user');
   }
-  const oldMsgs = localStorage.getItem('aura_sphere_local_messages');
+  const oldMsgs = localStorage.getItem('caos_local_messages');
   if (oldMsgs && !localStorage.getItem(LOCAL_MESSAGES_KEY)) {
     localStorage.setItem(LOCAL_MESSAGES_KEY, oldMsgs);
-    localStorage.removeItem('aura_sphere_local_messages');
+    localStorage.removeItem('caos_local_messages');
   }
 }
 

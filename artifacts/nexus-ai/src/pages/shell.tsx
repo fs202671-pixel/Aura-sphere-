@@ -62,7 +62,7 @@ function useShellChat() {
     });
 
     try {
-      const response = await fetch(`${BASE_URL}/api/aura/chat`, {
+      const response = await fetch(`${BASE_URL}/api/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

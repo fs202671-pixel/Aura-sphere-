@@ -34,7 +34,7 @@ describe('ThemeBuilder', () => {
     const saveButton = screen.getByRole('button', { name: /Salvar Tema/i });
     await userEvent.click(saveButton);
 
-    const stored = JSON.parse(localStorage.getItem('aura_sphere_custom_themes') ?? '[]');
+    const stored = JSON.parse(localStorage.getItem('caos_custom_themes') ?? '[]');
     expect(stored.length).toBe(1);
     expect(stored[0].primary).toBe('#ff0000');
 

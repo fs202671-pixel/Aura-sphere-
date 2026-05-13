@@ -76,7 +76,7 @@ export function ThemeBuilder() {
 
   useEffect(() => {
     // Carregar temas salvos do localStorage
-    const saved = localStorage.getItem('aura_sphere_custom_themes');
+    const saved = localStorage.getItem('caos_custom_themes');
     if (saved) {
       setSavedThemes(JSON.parse(saved));
     }
@@ -108,7 +108,7 @@ export function ThemeBuilder() {
     const theme = { ...currentTheme, name: themeName };
     const updated = [...savedThemes, theme];
     setSavedThemes(updated);
-    localStorage.setItem('aura_sphere_custom_themes', JSON.stringify(updated));
+    localStorage.setItem('caos_custom_themes', JSON.stringify(updated));
   };
 
   const resetToDefault = () => {
@@ -122,7 +122,7 @@ export function ThemeBuilder() {
   const deleteCustomTheme = (themeName: string) => {
     const updated = savedThemes.filter(t => t.name !== themeName);
     setSavedThemes(updated);
-    localStorage.setItem('aura_sphere_custom_themes', JSON.stringify(updated));
+    localStorage.setItem('caos_custom_themes', JSON.stringify(updated));
   };
 
   const getLayoutPadding = () => {

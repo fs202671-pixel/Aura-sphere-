@@ -232,4 +232,167 @@ router.get("/caos/capacidades", async (req, res) => {
   }
 });
 
+// ── POST /caos/capacidades/busca — Busca cross-sistema ───────────────────
+router.post("/caos/capacidades/busca", async (req, res) => {
+  try {
+    const { query, sistemas, user_id } = req.body as {
+      query?: string;
+      sistemas?: string[];
+      user_id?: string;
+    };
+
+    if (!query || query.trim().length < 2) {
+      res.status(400).json({ error: "query deve ter ao menos 2 caracteres" });
+      return;
+    }
+
+    const { ilike, or } = await import("drizzle-orm");
+    const q = `%${query.trim()}%`;
+    const filtros = sistemas ?? ["nexus", "studio", "shell"];
+
+    const results: {
+      origem: string;
+      tipo: string;
+      id: number | string;
+      nome: string;
+      descricao: string;
+      categoria: string;
+      nivel?: number;
+      icone?: string;
+      status?: string;
+      relevancia: number;
+    }[] = [];
+
+    // ── Nexus Skills ────────────────────────────────────────────
+    if (filtros.includes("nexus")) {
+      const nSkills = await db
+        .select()
+        .from(nexusSkills)
+        .where(
+          or(
+            ilike(nexusSkills.name, q),
+            ilike(nexusSkills.description, q),
+            ilike(nexusSkills.category, q),
+          ),
+        )
+        .limit(20);
+
+      for (const s of nSkills) {
+        const nomeMatch = s.name.toLowerCase().includes(query.toLowerCase());
+        results.push({
+          origem: "caos-nexus",
+          tipo: "skill-rpg",
+          id: s.id,
+          nome: s.name,
+          descricao: s.description ?? "",
+          categoria: s.category,
+          nivel: s.level,
+          icone: s.icon ?? "🧠",
+          status: s.status,
+          relevancia: nomeMatch ? 1.0 : 0.6,
+        });
+      }
+    }
+
+    // ── Hub Skills ──────────────────────────────────────────────
+    if (filtros.includes("studio")) {
+      const hSkills = await db
+        .select()
+        .from(hubSkills)
+        .where(
+          or(
+            ilike(hubSkills.name, q),
+            ilike(hubSkills.description, q),
+            ilike(hubSkills.category, q),
+          ),
+        )
+        .limit(20);
+
+      for (const s of hSkills) {
+        results.push({
+          origem: "caos-studio",
+          tipo: "protocolo",
+          id: s.id,
+          nome: s.name,
+          descricao: s.description ?? "",
+          categoria: s.category ?? "geral",
+          icone: s.icon ?? "🔧",
+          relevancia: s.name.toLowerCase().includes(query.toLowerCase()) ? 1.0 : 0.6,
+        });
+      }
+
+      // Hub Agents
+      const hAgents = await db
+        .select()
+        .from(hubAgents)
+        .where(
+          or(
+            ilike(hubAgents.name, q),
+            ilike(hubAgents.description, q),
+            ilike(hubAgents.behavior, q),
+          ),
+        )
+        .limit(10);
+
+      for (const a of hAgents) {
+        results.push({
+          origem: "caos-studio",
+          tipo: "agente",
+          id: a.id,
+          nome: a.name,
+          descricao: a.description ?? "",
+          categoria: a.behavior ?? "agente",
+          icone: "🤖",
+          relevancia: a.name.toLowerCase().includes(query.toLowerCase()) ? 1.0 : 0.5,
+        });
+      }
+    }
+
+    // ── Shell Skills (por usuário) ───────────────────────────────
+    if (filtros.includes("shell") && user_id) {
+      const { eq } = await import("drizzle-orm");
+      const sSkills = await db
+        .select()
+        .from(skillsTable)
+        .where(
+          or(
+            ilike(skillsTable.name, q),
+            ilike(skillsTable.description, q),
+            ilike(skillsTable.category, q),
+          ),
+        )
+        .limit(20);
+
+      const userSkills = sSkills.filter((s) => s.userId === user_id);
+      for (const s of userSkills) {
+        results.push({
+          origem: "caos-shell",
+          tipo: "skill-usuario",
+          id: s.id,
+          nome: s.name,
+          descricao: s.description ?? "",
+          categoria: s.category,
+          nivel: s.level,
+          icone: s.icon ?? "⚡",
+          status: s.status,
+          relevancia: s.name.toLowerCase().includes(query.toLowerCase()) ? 1.0 : 0.6,
+        });
+      }
+    }
+
+    // Ordenar por relevância
+    results.sort((a, b) => b.relevancia - a.relevancia);
+
+    res.json({
+      query,
+      total: results.length,
+      sistemas: filtros,
+      resultados: results,
+    });
+  } catch (err) {
+    res.status(500).json({ error: "Erro na busca", detail: String(err) });
+  }
+});
+
 export default router;
+
