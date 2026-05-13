@@ -6,13 +6,15 @@ import { getAuth } from "@clerk/express";
 
 const router: IRouter = Router();
 
+/** Returns the authenticated userId (Clerk) or a validated local/demo ID. Returns null if neither. */
 function resolveUserId(req: Request): string | null {
   const auth = getAuth(req);
   if (auth?.userId) return auth.userId;
   const fromQuery = req.query?.user_id as string | undefined;
   const fromBody = (req.body as Record<string, unknown>)?.userId as string | undefined;
-  const candidate = fromQuery || fromBody;
-  if (candidate?.startsWith("local_") || candidate?.startsWith("demo_")) return candidate;
+  const candidate = (fromQuery || fromBody || "").trim();
+  // Only accept local_ or demo_ prefixed IDs for unauthenticated requests
+  if (/^(local_|demo_)[a-zA-Z0-9_-]{4,}$/.test(candidate)) return candidate;
   return null;
 }
 
